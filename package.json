@@ -18,7 +18,6 @@
   },
   "homepage": "https://github.com/fi6/sephiroth#readme",
   "dependencies": {
-    "@amap/amap-jsapi-loader": "0.0.7",
     "address-parse": "^1.2.8",
     "kaiheila-bot-root": "0.0.5",
     "mongoose": "^5.11.9"
