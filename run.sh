@@ -1,1 +1,1 @@
-nohup node index.js &> test.log & echo $! > pid.txt
+nohup node index.js &> test.log & echo $! > run.pid
