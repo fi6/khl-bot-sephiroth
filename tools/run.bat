@@ -1,1 +1,0 @@
-.\gost-windows-amd64.exe -L rtcp://:20600/localhost:20600 -F socks5://98.126.16.165:20601

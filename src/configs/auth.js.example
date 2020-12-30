@@ -1,6 +1,0 @@
-export default
-{
-    "token": "your dc bot token",
-    "smashggtoken": "your smashgg token",
-    "mongourl": "your mongourl"
-}
