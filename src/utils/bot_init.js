@@ -31,7 +31,13 @@ bot.on('message', (msg) => {
 
         execute(command, args, msg);
     } else if (msg.mention.user[0] == '2159166971') {
-        execute('帮助', [], msg);
+        const args = msg.content.trim().split(/ +/).splice(1);
+        let command;
+        if (!args.length) { command = '' } else {
+            command = args.shift().toLowerCase();
+        }
+        console.log(args);
+        execute(command, args, msg);
     }
 })
 
@@ -64,9 +70,11 @@ async function execute(command, args, msg) {
                 }
             }
             if (regex.test(command)) {
-                bot.sendChannelMessage(1, msg.channelId, '不是有效的命令。查看帮助请发送[.帮助]')
+                bot.sendChannelMessage(1, msg.channelId, '不是有效的命令。查看帮助请发送[.帮助]');
+                break;
             }
-            break;
+            return help(command, args, msg);
+
     }
     // console.log(command, args)
 }
