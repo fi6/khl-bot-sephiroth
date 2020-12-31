@@ -1,9 +1,12 @@
 import Profile from '../models/Profile.js'
 import bot from '../utils/bot_init.js'
+import {
+    fighterParse
+} from '../utils/utils.js'
 
 async function profileCommand(command, args, msg) {
     // console.log(command, args, msg);
-    if (args.length == 4) {  //.档案 创建 奈斯，露琪娜 日港裸 北京，天津 娱乐向玩家
+    if (args.length == 4) { //.档案 创建 奈斯，露琪娜 日港裸 北京，天津 娱乐向玩家
         return createProfile(args, msg);
     }
     let subCommand = args.shift();
@@ -53,8 +56,8 @@ async function createProfile(args, msg) {
     })
 
     let regions = args[2].split(/[, ，]/);
-    for(let [i, r ]of regions.entries()){
-        regions[i] = parseFighter(r);
+    for (let [i, r] of regions.entries()) {
+        regions[i] = fighterParse(r);
     }
     const bio = args[3];
     Profile.findByIdAndUpdate(msg.authorId, {

@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const ArenaSchema = new mongoose.Schema({
     _id: {
         type: String,
-        required: true
+        required: true,
     },
     userNick: String,
     arenaId: String,
@@ -13,8 +13,13 @@ const ArenaSchema = new mongoose.Schema({
     alertedAt: Date,
     isTraining: Boolean,
     trainingLimit: Number,
-    trainingQueue: [new mongoose.Schema({ _id: String, userNick: String, time: Date, tag: Number})],
-    createdAt: Date
+    trainingQueue: [new mongoose.Schema({
+        _id: String,
+        userNick: String,
+        time: Date,
+        tag: Number
+    })],
+    createdAt: Date,
 });
 
-export default mongoose.model('Arena', ArenaSchema)
+export default mongoose.model('Arena', ArenaSchema);
