@@ -74,5 +74,15 @@ function checkRoles(user, roleStrings) {
     return result
 }
 
+import ParseAddress from 'address-parse';
 
-export { formatTime, dynamicSort, checkRoles, callCloud }
+function addParse(address) {
+    return ParseAddress.default.parse(address)[0];
+}
+
+function fighterParse(fighterString) {
+
+}
+
+
+export { formatTime, dynamicSort, checkRoles, callCloud, addParse, fighterParse }

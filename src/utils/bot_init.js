@@ -43,8 +43,10 @@ bot.on('message', (msg) => {
 
 
 async function execute(command, args, msg) {
-    if (msg.channelId != 4873200132116685) {
+    const channelList = ['4873200132116685', '3072169336937497'];
+    if (!channelList.includes(msg.channelId)) {
         bot.sendChannelMessage(1, msg.channelId, 'bot当前仅在闲聊频道使用，仅内测用户可用', msg.msgId);
+        return;
     }
     switch (command) {
         case '开房':

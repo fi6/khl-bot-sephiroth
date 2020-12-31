@@ -1,8 +1,9 @@
 import Profile from '../models/Profile.js'
+import bot from '../utils/bot_init.js'
 
 async function profileCommand(command, args, msg) {
     // console.log(command, args, msg);
-    if (args.length == 5) {  //.档案 创建 奈斯，露琪娜 日港裸 北京，天津 娱乐向玩家
+    if (args.length == 4) {  //.档案 创建 奈斯，露琪娜 日港裸 北京，天津 娱乐向玩家
         return createProfile(args, msg);
     }
     let subCommand = args.shift();
@@ -28,24 +29,54 @@ async function profileSubCommand(subCommand, args, msg) {
     }
 }
 
-async function createProfile(args, msg) {
-    //.档案 创建 奈斯，露琪娜 日港裸 北京，天津 娱乐向玩家
+async function checkProfile() {
 
+}
+
+async function modifyProfile() {
+
+}
+
+async function createProfile(args, msg) {
+    //.档案 创建 [奈斯，露琪娜 日港裸 北京，天津 娱乐向玩家]
+    if (args.length !== 4) {
+        return sendMsg('help', null, msg);
+    }
+
+    const smashMain = args[0].split(/[, ，]/);
+    const networkRegex = [/日/, /港/, /裸/];
+    let network = [];
+    networkRegex.forEach(regex => {
+        if (regex.test(args[1])) {
+            network.push(networkRegex.toString().substr(1, 1));
+        }
+    })
+
+    let regions = args[2].split(/[, ，]/);
+    for(let [i, r ]of regions.entries()){
+        regions[i] = parseFighter(r);
+    }
+    const bio = args[3];
+    Profile.findByIdAndUpdate(msg.authorId, {
+
+    })
 }
 
 async function sendMsg(command, type, vars) {
     if (!Array.isArray(vars)) {
         vars = [vars];
     }
+    let msg;
     try {
-        const msg = vars[0];
+        msg = vars[0];
     } catch (error) {
         console.error('msg error!', error);
+        return
     }
     const arenaMsg = await profileMsgBuilder(command, type, vars);
     // console.log(arenaMsg);
     if (arenaMsg) {
-        bot.sendChannelMessage(9, vars[0].channelId, arenaMsg, vars[0].msgId);
+        bot.sendChannelMessage(9, msg.channelId, arenaMsg, msg.msgId);
     }
 }
 

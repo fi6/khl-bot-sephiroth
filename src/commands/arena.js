@@ -133,7 +133,7 @@ async function findArenaMsg() {
 
 async function findArena(args, msg) {
     const content = await findArenaMsg(args, msg);
-    console.log('content', content)
+    // console.log('content', content)
     if (!content) { return sendMsg('find', 'fail', [msg]) }
     // console.log('run to here! find arena')
     return sendMsg('find', 'success', [msg, null, content])
@@ -287,7 +287,7 @@ async function arenaMsgBuilder(command, type, vars = []) {
                 '```\n【查看房间】查看房间列表中的房间\n[.找房]\n[.房间 查看]```\n',
                 '```\n【关闭房间】删除房间列表中自己的房间\n[.关房]\n[.房间 关闭/删除]```\n',
                 '```\n【广播找人】将自己创建的房间发送广播提醒\n[.房间 广播 广播语]```\n',
-                '```\n【特训】：教练组专属，可自动发送提醒，其他人需排队加入房间。\n[.房间 特训 房间号 密码 加速 人数限制 留言]\n[.房间 排队 @房主]```'
+                '```\n【特训】：教练组专属，可自动发送提醒，其他人需排队加入房间。\n[.房间 特训 房间号 密码 加速 人数限制 留言]\n[.房间 管理], [.房间 排队 @房主]```'
             );
             return content
         },
