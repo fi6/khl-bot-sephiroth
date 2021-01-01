@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "rootDir": "./src",
+    "target": "es2018",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": [
+        "es2018"
+    ],
+    "outDir": "./lib",
+    "strict": true,
+    "baseUrl": ".",
+    "typeRoots": [
+        "./typings",
+        "node_modules/@types"
+    ],
+    "esModuleInterop": true,
+    "sourceMap": true
+  },
+  "include": [
+    "./src/**/*.ts"
+  ]
+}

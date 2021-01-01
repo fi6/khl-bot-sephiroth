@@ -52,7 +52,7 @@ async function mainArenaMsg(args, msg) {
                 return deleteArena(args, msg);
             case '广播':
                 return alertArena(args, msg);
-                //以下为特训相关，需做跳转
+            //以下为特训相关，需做跳转
             case '管理':
             case '排队':
             case '特训':
@@ -106,15 +106,20 @@ async function createArena(args, msg) {
 
 async function findArenaMsg() {
     let content = '当前房间：\n';
-    let arenas = await Arena.find({
-        createdAt: {
-            $gte: Date.now() - arenaExpireTime
-        }
-    }).sort([
-        ['isTraining', -1],
-        ['createdAt', -1]
-    ]).exec()
+    try {
 
+        let arenas = await Arena.find({
+            createdAt: {
+                $gte: Date.now() - arenaExpireTime
+            }
+        }).sort([
+            ['isTraining', -1],
+            ['createdAt', -1]
+        ]).exec()
+
+    } catch (e) {
+        console.log(e)
+    }
     // console.log(arenas)
     if (arenas.length == 0) {
         return false

@@ -1,15 +1,16 @@
-import Profile from '../models/Profile.js'
-import bot from '../utils/bot_init.js'
+import Profile from '../models/Profile'
+import bot from '../utils/bot_init'
 import {
     fighterParse,
-} from '../utils/utils.js'
+} from '../utils/utils'
 import {
     Data,
     pipeline
-} from '../utils/pipeline.js'
+} from '../utils/pipeline'
+import { Document } from 'mongoose'
 
-class ProfileData extends Data {
-    
+interface ProfileData extends Data {
+    profile: Document<{}>
 }
 
 async function profileCommand(command, args, msg) {

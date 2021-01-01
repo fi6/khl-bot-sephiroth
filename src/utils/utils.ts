@@ -1,3 +1,10 @@
+import {
+    TextMessage, ImageMessage, VideoMessage,
+    FileMesage as FileMessage, AudioMessage, KMarkDownMessage
+} from 'kaiheila-bot-root/dist/types'
+
+export type KHLMessage = TextMessage | ImageMessage | VideoMessage | FileMessage | AudioMessage | KMarkDownMessage
+
 function formatTime(s) {
     const dtFormat = new Intl.DateTimeFormat('en-GB', {
         timeStyle: 'short',
