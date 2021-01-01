@@ -85,4 +85,5 @@ function fighterParse(fighterString) {
 }
 
 
+
 export { formatTime, dynamicSort, checkRoles, callCloud, addParse, fighterParse }

@@ -1,36 +1,45 @@
 import Profile from '../models/Profile.js'
 import bot from '../utils/bot_init.js'
 import {
-    fighterParse
+    fighterParse,
 } from '../utils/utils.js'
+import {
+    Data,
+    pipeline
+} from '../utils/pipeline.js'
+
+class ProfileData extends Data {
+    
+}
 
 async function profileCommand(command, args, msg) {
+    const data = {
+        command: command,
+        args: args,
+        authorId: msg.authorId,
+        channelId: msg.channelId
+    }
     // console.log(command, args, msg);
     if (args.length == 4) { //.档案 创建 奈斯，露琪娜 日港裸 北京，天津 娱乐向玩家
-        return createProfile(args, msg);
+        return pipeline(data, createProfile, sendMsg)
     }
+
     let subCommand = args.shift();
-    profileSubCommand(subCommand, args, msg);
-}
+    data.command = subCommand;
+    data.args = args;
+    switch (subCommand) {
+        case '创建': // <== .档案 创建
+            return pipeline(data, createProfile, sendMsg)
+        case '查看':
+            return pipeline(data, checkProfile, sendMsg)
+        case '修改':
+            return pipeline(data, modifyProfile, sendMsg);
+        default:
+            return sendMsg('help', null, msg)
 
-async function profileSubCommand(subCommand, args, msg) {
-
-    let content = '';
-    content = await dist(subCommand, msg);
-
-    async function dist(subCommand) {
-        switch (subCommand) {
-            case '创建': // <== .档案 创建
-                return createProfile(args, msg);
-            case '查看':
-                return checkProfile(args, msg);
-            case '修改':
-                return modifyProfile(args, msg);
-            default:
-                return sendMsg('help', null, msg)
-        }
     }
 }
+
 
 async function checkProfile() {
 
@@ -40,27 +49,29 @@ async function modifyProfile() {
 
 }
 
-async function createProfile(args, msg) {
+async function createProfile(data) {
     //.档案 创建 [奈斯，露琪娜 日港裸 北京，天津 娱乐向玩家]
-    if (args.length !== 4) {
-        return sendMsg('help', null, msg);
+
+    if (data.args.length !== 4) {
+        data.command = 'help';
+        return sendMsg(data);
     }
 
-    const smashMain = args[0].split(/[, ，]/);
+    const smashMain = data.args[0].split(/[, ，]/);
     const networkRegex = [/日/, /港/, /裸/];
     let network = [];
     networkRegex.forEach(regex => {
-        if (regex.test(args[1])) {
+        if (regex.test(data.args[1])) {
             network.push(networkRegex.toString().substr(1, 1));
         }
     })
 
-    let regions = args[2].split(/[, ，]/);
+    let regions = data.args[2].split(/[, ，]/);
     for (let [i, r] of regions.entries()) {
         regions[i] = fighterParse(r);
     }
-    const bio = args[3];
-    Profile.findByIdAndUpdate(msg.authorId, {
+    const bio = data.args[3];
+    Profile.findByIdAndUpdate(data.authorId, {
 
     })
 }

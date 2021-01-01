@@ -172,13 +172,14 @@ async function trainingMsgBuilder(command, type, vars = []) {
     }
     let msgCreator = {
         'create': async (type) => {
+            let content = '';
             switch (type) {
                 case 'fail':
                     return '权限不足，只有教练组可以发起特训房。'
                 case 'help':
                     return '特训功能为教练组专属。创建房间请输入：\n`.房间 特训 房间号 密码 加速 人数限制 留言`\n如：`.房间 特训 76VR2 147 裸连 5人 今天用库巴`\n创建时会自动发送全体提醒，创建后可查看和移除排队人员：`.房间 管理`';
                 case 'success':
-                    let content = `@所有人（未来会改） ${msg.author.nickname} 刚刚创建了特训房！\n请输入\`.房间 排队 @${msg.author.nickname}\`进行排队。\n取消排队或退出房间后请发送\`.房间 退出\`。\n> 多次不主动退出会被暂时禁止参加特训。`
+                    content = `@所有人（未来会改） ${msg.author.nickname} 刚刚创建了特训房！\n请输入\`.房间 排队 @${msg.author.nickname}\`进行排队。\n取消排队或退出房间后请发送\`.房间 退出\`。\n> 多次不主动退出会被暂时禁止参加特训。`
                     setTimeout(() => {
                         bot.sendChannelMessage(9, msg.channelId, content)
                     }, 5 * 1e3);
@@ -190,9 +191,10 @@ async function trainingMsgBuilder(command, type, vars = []) {
             }
         },
         'join': (type) => {
+            let content = '';
             switch (type) {
                 case 'success':
-                    let content = ''.concat(
+                    content = ''.concat(
                         '成功加入排队：', `\`${arena.userNick}的特训房\`\n`,
                         '房间号/密码：', `[${arena.arenaId} ${arena.password}] `,
                         '当前排队人数：', `${arena.trainingQueue.length}/${arena.trainingLimit}`
@@ -208,9 +210,10 @@ async function trainingMsgBuilder(command, type, vars = []) {
             }
         },
         'leave': (type) => {
+            let content = '';
             switch (type) {
                 case 'success':
-                    let content = '';
+                    
                     for (let a of arena) {
                         content += `\`${arena.userNick}的特训房\`\n`;
                     }
@@ -222,17 +225,19 @@ async function trainingMsgBuilder(command, type, vars = []) {
             }
         },
         'manage': (type) => {
+            let queue = '';
+            let content;
             switch (type) {
                 case 'permissionFail':
                     return '权限不足，只有教练组可以发起和管理特训房'
                 case 'check':
-                    let queue = '';
+                    
                     // console.log(arena)
                     for (const user of arena.trainingQueue) {
                         console.log(user)
                         queue += `${user.tag}\. ${user.userNick}(${formatTime(user.time)})\n`
                     }
-                    const content = ''.concat(
+                    content = ''.concat(
                         '```markdown\n',
                         `${msg.author.nickname}的特训房\n`,
                         '当前排队：\n',
