@@ -1,36 +1,23 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import { createSchema, ExtractDoc, Type, typedModel } from 'ts-mongoose';
 
-export interface IArena extends Document {
-    _id: string;
-    userNick?: string;
-    arenaId?: string;
-    password: string;
-    arenaInfo: string;
-    remark: string;
-    trainingLimit: number;
-    trainingQueue: mongoose.Types.Array<any>;
-    createdAt: Date
-}
-
-const ArenaSchema: Schema = new mongoose.Schema({
-    _id: {
-        type: String,
-        required: true,
-    },
-    userNick: String,
-    arenaId: String,
-    password: String,
-    arenaInfo: String,
-    remark: String,
-    isTraining: Boolean,
-    trainingLimit: Number,
-    trainingQueue: [{
-        _id: String,
-        userNick: String,
-        time: Date,
-        tag: Number
-    }],
-    createdAt: Date,
+const ArenaSchema = createSchema({
+    _id: Type.string({ required: true }),
+    userNick: Type.string({ required: true }),
+    arenaId: Type.string({ required: true }),
+    password: Type.string({ required: true }),
+    arenaInfo: Type.string({ required: true }),
+    remark: Type.string(),
+    isTraining: Type.boolean(),
+    createdAt: Type.date({ required: true }),
+    trainingLimit: Type.number(),
+    trainingQueue: Type.array().of({
+        _id: Type.string({ required: true }),
+        userNick: Type.string({ required: true }),
+        time: Type.date({ required: true }),
+        tag: Type.number(),
+    }),
 });
 
-export default mongoose.model<IArena>('Arena', ArenaSchema);
+export type ArenaDoc = ExtractDoc<typeof ArenaSchema>;
+
+export default typedModel('Arena', ArenaSchema);

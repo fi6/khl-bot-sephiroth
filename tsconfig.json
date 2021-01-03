@@ -1,4 +1,11 @@
 {
+  "ts-node": {
+    // these options are overrides used only by ts-node
+    // same as our --compilerOptions flag and our TS_NODE_COMPILER_OPTIONS environment variable
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  },
   "compilerOptions": {
     "declaration": true,
     "emitDecoratorMetadata": true,
@@ -8,17 +15,18 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "lib": [
-        "es2018"
+      "es2018"
     ],
     "outDir": "./lib",
     "strict": true,
-    "baseUrl": ".",
+    "baseUrl": "./src/",
     "typeRoots": [
-        "./typings",
-        "node_modules/@types"
+      "./typings",
+      "node_modules/@types"
     ],
     "esModuleInterop": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "skipLibCheck": true,
   },
   "include": [
     "./src/**/*.ts"

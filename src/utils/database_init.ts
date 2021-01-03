@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
-import auth from "../configs/auth.js";
+import auth from "configs/auth";
+
 
 mongoose.connect(auth.mongourl, {
     user: auth.mongouser,

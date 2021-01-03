@@ -105,5 +105,6 @@ dist
 
 
 tools
-src/configs/auth.js
 src/configs/mongo-init.js
+lib
+src/configs/auth.ts

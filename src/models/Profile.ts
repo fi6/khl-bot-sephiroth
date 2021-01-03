@@ -1,25 +1,14 @@
-import mongoose, { Document } from 'mongoose';
+import { createSchema, ExtractDoc, Type, typedModel } from "ts-mongoose";
 
-interface IProfile extends Document{
-    _id: string;
-    nickName: String;
-    smashMain?: mongoose.Types.Array<number>;
-    network?: mongoose.Types.Array<string>;
-    region: mongoose.Types.Array<string>;
-    alertUsedAt: Date;
-}
-
-
-const ProfileSchema = new mongoose.Schema({
-    _id: {
-        type: String,
-        required: true
-    },
-    nickName: String, // khl nickname in author
-    smashMain: [Number],
-    network: [String],
-    region: [String],
-    alertUsedAt: { type: Date, default: 0 }
+const ProfileSchema = createSchema({
+    _id: Type.string({ required: true }),
+    userNick: Type.string({ required: true }), // khl nickname in author
+    smashMain: Type.array({ required: true }).of(Type.number()),
+    network: Type.array().of(Type.string()),
+    region: Type.array().of(Type.number),
+    alertUsedAt: Type.date({ default: new Date(0) }),
 });
 
-export default mongoose.model<IProfile>('Profile', ProfileSchema)
+export type ProfileDoc = ExtractDoc<typeof ProfileSchema>;
+
+export default typedModel("Arena", ProfileSchema);

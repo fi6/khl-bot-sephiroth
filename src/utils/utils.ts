@@ -1,35 +1,32 @@
-import {
-    TextMessage, ImageMessage, VideoMessage,
-    FileMesage as FileMessage, AudioMessage, KMarkDownMessage
-} from 'kaiheila-bot-root/dist/types'
-
-export type KHLMessage = TextMessage | ImageMessage | VideoMessage | FileMessage | AudioMessage | KMarkDownMessage
-
-function formatTime(s) {
-    const dtFormat = new Intl.DateTimeFormat('en-GB', {
-        timeStyle: 'short',
-        timeZone: "Asia/Shanghai"
-    });
-
-    return dtFormat.format(new Date(s));
+function formatTime(s: Date): string {
+    const options = {
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'Asia/Shanghai',
+    };
+    const dtFormat = new Intl.DateTimeFormat('en-GB', options);
+    return dtFormat.format(s);
 }
 
-function dynamicSort(property) {
-    var sortOrder = 1;
-    if (property[0] === "-") {
+function dynamicSort(property: string): (a: never, b: never) => number {
+    let sortOrder = 1;
+    if (property[0] === '-') {
         sortOrder = -1;
         property = property.substr(1);
     }
-    return function (a, b) {
-        /* next line works with strings and numbers, 
+    return function (a: { [x: string]: number }, b: { [x: string]: number }) {
+        /* next line works with strings and numbers,
          * and you may want to customize it to your needs
          */
-        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+        const result =
+            a[property] < b[property] ? -1 : a[property] > b[property] ? 1 : 0;
         return result * sortOrder;
-    }
+    };
 }
 
 class cloudLines {
+    lines: string[];
+    calls: number[];
     constructor() {
         this.lines = [
             '失落已久的知识宝藏。古代种的智慧……',
@@ -47,50 +44,51 @@ class cloudLines {
             '不要想太多了，恐怖只有一瞬间',
             '即使是黑暗也会燃烧殆尽。',
             '与绝望同眠吧',
-            '我……是不可能成为回忆的……'
+            '我……是不可能成为回忆的……',
         ];
         this.calls = [];
     }
     call() {
-        this.calls.push(Date.now())
+        this.calls.push(Date.now());
         while (this.calls.length > 3) {
             this.calls.shift();
         }
         if (this.calls.length > 1 && Date.now() - this.calls[0] < 40 * 1e3) {
-            return this.lines[Math.floor(Math.random() * this.lines.length)]
+            return this.lines[Math.floor(Math.random() * this.lines.length)];
         }
-        return false
+        return false;
     }
 }
 
-let callCloud = new cloudLines();
+const callCloud = new cloudLines();
 
-function checkRoles(user, roleStrings) {
+function checkRoles(
+    user: { roles: string | any[] },
+    roleStrings: string | any[]
+): boolean {
     if (!Array.isArray(roleStrings)) {
         roleStrings = [roleStrings];
     }
-    const roleMap = {
-        'coach': 20684,
-    }
+    const roleMap: any = {
+        coach: 20684,
+    };
     let result = true;
-    for (let roleString of roleStrings) {
+    for (const roleString of roleStrings) {
         // console.log(user.roles);
         // console.log(roleMap[roleString])
         result = result && user.roles.includes(roleMap[roleString]);
     }
-    return result
+    return result;
 }
 
-import ParseAddress from 'address-parse';
+// import ParseAddress from 'address-parse';
 
-function addParse(address) {
-    return ParseAddress.default.parse(address)[0];
-}
+// function addParse(address: any) {
+//     return ParseAddress.default.parse(address)[0];
+// }
 
-function fighterParse(fighterString) {
+// function fighterParse(fighterString: any) {
 
-}
+// }
 
-
-
-export { formatTime, dynamicSort, checkRoles, callCloud, addParse, fighterParse }
+export { formatTime, dynamicSort, checkRoles, callCloud };
