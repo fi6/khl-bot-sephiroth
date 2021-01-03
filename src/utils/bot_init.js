@@ -43,7 +43,7 @@ bot.on('message', (msg) => {
 
 
 async function execute(command, args, msg) {
-    const channelList = ['4873200132116685', '3072169336937497'];
+    const channelList = ['4873200132116685', '3072169336937497', '9451421743134446'];
     if (!channelList.includes(msg.channelId)) {
         bot.sendChannelMessage(1, msg.channelId, 'bot当前仅在闲聊频道使用，仅内测用户可用', msg.msgId);
         return;
