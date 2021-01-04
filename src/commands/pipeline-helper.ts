@@ -15,14 +15,18 @@ function createPipe<T>(): Pipe<T> {
 
 interface BaseData {
     command: string;
+    commandCode: string;
     args: string[];
     msg: TextMessage;
     content?: string;
+    result_status: string;
     result: {
-        status: string;
-        details?: unknown;
+        details?: any;
     };
+    generateContent?: () => unknown;
 }
+
+type CommandEnum<T> = { [P in keyof Required<T>]: P };
 
 enum BaseCommandStatus {
     'PENDING',
@@ -32,4 +36,4 @@ enum BaseCommandStatus {
     'ERROR',
 }
 
-export { PipeMapper, BaseData, createPipe, BaseCommandStatus };
+export { PipeMapper, BaseData, createPipe, BaseCommandStatus, CommandEnum };

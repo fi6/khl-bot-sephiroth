@@ -2,18 +2,19 @@ import { TextMessage } from 'kaiheila-bot-root/dist/types';
 import { ArenaDoc } from '../../models/Arena';
 import bot from '../../utils/bot_init';
 import { formatTime } from '../../utils/utils';
+import { findArena } from './arena-exec';
 import {
     arenaMsgCreator,
     ArenaData,
-    ArenaCommandStatus,
-    ArenaCommandList,
+    ArenaResultStatus,
+    ArenaCommands,
+    arenaMsgBlock,
 } from './arena-helper';
-import { arenaFind } from './arena-exec';
 
 async function sendArenaMsg(data: ArenaData): Promise<ArenaData> {
     const msg = data.msg;
-    const mention = `(met)${msg.authorId}(met) `;
-    const arenaMsg = (mention + data.content) as string;
+
+    const arenaMsg = data.content as string;
 
     bot.sendChannelMessage(9, msg.channelId, arenaMsg, msg.msgId);
 
@@ -29,85 +30,85 @@ async function sendArenaMsg(data: ArenaData): Promise<ArenaData> {
  */
 async function arenaMsgBuilder(data: ArenaData): Promise<string> {
     const [command, type, msg, arena, arenas] = [
-        data.command as keyof arenaMsgCreator,
-        data.result.status as string,
+        data.commandCode as keyof arenaMsgCreator,
+        data.result_status as string,
         data.msg as TextMessage,
         data.arena as ArenaDoc,
         data.arenas as ArenaDoc[],
     ];
+    const mention = `(met)${msg.authorId}(met) `;
 
     const creator: arenaMsgCreator = {
         create: async (type: string): Promise<string> => {
             switch (type) {
-                case ArenaCommandStatus.success:
+                case ArenaResultStatus.success:
                     return (
                         '建房成功！\n关闭房间后记得发送`.关房`删除记录。\n---\n' +
-                        (await arenaFind(data)).content
-                    );
-                    break;
+                        (await findArena(data)).content
+                    ); // added findArena content in function
                 case 'FAIL':
                     return '创建失败，请检查房间号、密码格式，并确认房间信息文字不长于8。';
-                    break;
-                case 'help':
+                case 'HELP':
                 default:
                     return '创建房间请发送：`.建房 房间号 密码 房间信息 (留言)`\n如：`.建房 BPTC1 147 港服3人 娱乐房，随便玩~`\n房间号、密码、房间信息必填，留言选填。';
             }
         },
         find: async (type: string) => {
             let trainingFlag = false;
-            let content = '当前房间：\n';
+            let content = '';
             switch (type) {
-                case 'FAIL':
-                    data.command = ArenaCommandList.create;
-                    data.result.status = ArenaCommandStatus.help;
-                    return (
-                        '当前没有房间。\n---\n' + (await arenaMsgBuilder(data))
+                case ArenaResultStatus.no_arena:
+                    data.commandCode = ArenaCommands.create;
+                    data.result_status = ArenaResultStatus.help;
+                    content = mention.concat(
+                        '当前没有房间。\n---\n',
+                        await arenaMsgBuilder(data)
                     );
-                case 'SUCCESS':
+                    return content;
+                case ArenaResultStatus.success:
+                    content = '当前房间：\n';
                     for (const arena of arenas) {
-                        const arenaMsgBlock = ''.concat(
-                            `房主：${arena.userNick}\n`,
-                            `房间：[${arena.arenaId} ${arena.password}] (${arena.arenaInfo})\n`,
-                            `留言：${arena.remark} (创建于${formatTime(
-                                arena.createdAt
-                            )})`
-                        );
                         if (arena.isTraining) {
                             trainingFlag = true;
-                            const trainingMsgBlock = ''; //`\n排队中/房间大小：${arena.trainingQueue.length}/${arena.trainingLimit}人\n`;
                             content +=
                                 '```plain\n**特训房**\n' +
-                                arenaMsgBlock +
-                                trainingMsgBlock +
+                                arenaMsgBlock(arena) +
                                 '```\n';
                         } else if (!arena.isTraining && trainingFlag === true) {
                             content +=
                                 '---\n> ' +
                                 '```markdown\n' +
-                                arenaMsgBlock +
+                                arenaMsgBlock(arena) +
                                 '```\n';
                             trainingFlag = false;
                         } else {
                             content +=
-                                '```markdown\n' + arenaMsgBlock + '```\n';
+                                '```markdown\n' +
+                                arenaMsgBlock(arena) +
+                                '```\n';
                         }
                     }
                     return content;
                 default:
+                    console.log(data);
                     return '';
             }
         },
         delete: async (type: string) => {
+            let content = mention;
             switch (type) {
-                case 'SUCCESS':
-                    return `(met)${msg.authorId}(met) 房间\`${arena.arenaId}\`已删除。`;
+                case ArenaResultStatus.success:
+                    content += `房间\`${arena.arenaId}\`已删除。`;
+                    return content;
+                case ArenaResultStatus.no_arena:
                 default:
-                    return `(met)${msg.authorId}(met) 未找到可删除的房间。`;
+                    content += `未找到可删除的房间。`;
+                    return content;
             }
         },
         alert: async (type: string) => {
             switch (type) {
-                case 'SUCCESS':
+                case ArenaResultStatus.success:
                     // console.log(arena, 'arena');
                     // eslint-disable-next-line no-case-declarations
                     const msgBlock = ''.concat(
@@ -123,13 +124,11 @@ async function arenaMsgBuilder(data: ArenaData): Promise<string> {
                         msgBlock,
                         '\n(met)all(met)'
                     );
-                // case 'no_account':
-                //     return;
-                // case 'time_limit':
-                //     return;
-                // case 'error':
-                //     return '出bug了';
-                case 'help':
+                case ArenaResultStatus.fail:
+                    return 'no profile';
+                case ArenaResultStatus.time_limit:
+                    return 'time limit';
+                case ArenaResultStatus.help:
                 default:
                     return '请发送`.房间 广播 广播语`，房间将被广播给所有人。\n如：`.房间 广播 求个剑人，想练对策`';
             }

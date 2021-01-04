@@ -8,12 +8,12 @@ const ArenaSchema = createSchema({
     arenaInfo: Type.string({ required: true }),
     remark: Type.string(),
     isTraining: Type.boolean(),
-    createdAt: Type.date({ required: true }),
+    createdAt: Type.date({ required: true, default: new Date() }),
     trainingLimit: Type.number(),
-    trainingQueue: Type.array().of({
+    trainingQueue: Type.array({ required: true, default: [] }).of({
         _id: Type.string({ required: true }),
         userNick: Type.string({ required: true }),
-        time: Type.date({ required: true }),
+        time: Type.date({ required: true, default: new Date() }),
         tag: Type.number(),
     }),
 });

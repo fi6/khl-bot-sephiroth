@@ -1,11 +1,16 @@
-import Arena from '../../models/Arena';
+import Arena, { ArenaDoc } from '../../models/Arena';
 import { arenaMsgBuilder } from './arena-msg';
 import arenaConfig from '../../configs/arena';
 import { checkRoles } from '../../utils/utils';
-import { ArenaCommandStatus, ArenaData } from './arena-helper';
+import { ArenaResultStatus, ArenaData, ArenaCommands } from './arena-helper';
 
-async function arenaCreate(data: ArenaData): Promise<ArenaData> {
-    data.command = 'create';
+/**
+ * Create arena and add arenaFind as content.
+ *
+ * @param data
+ * @return {*}
+ */
+async function createArena(data: ArenaData): Promise<ArenaData> {
     const arenaReg = /^\w{5}$/;
     const passReg = /^\d{0,8}$/;
     const args = data.args;
@@ -14,7 +19,7 @@ async function arenaCreate(data: ArenaData): Promise<ArenaData> {
     let remark = '';
     if (args.length < 3) {
         // no args found, return menu
-        data.result.status = ArenaCommandStatus.help;
+        data.result_status = ArenaResultStatus.help;
         data.content = await arenaMsgBuilder(data);
         return data;
     }
@@ -40,7 +45,7 @@ async function arenaCreate(data: ArenaData): Promise<ArenaData> {
         remark = '';
     }
 
-    await Arena.findByIdAndUpdate(
+    data.arena = await Arena.findByIdAndUpdate(
         msg.authorId,
         {
             userNick: msg.author.nickname,
@@ -54,20 +59,24 @@ async function arenaCreate(data: ArenaData): Promise<ArenaData> {
         {
             upsert: true,
         }
-    );
-    data.result.status = ArenaCommandStatus.success;
-    data.content =
-        (await arenaMsgBuilder(data)) + '\n' + (await arenaFind(data)).content;
+    ).exec();
+    data.result_status = ArenaResultStatus.success;
+    data.content = await arenaMsgBuilder(data);
     return data;
 }
 
-async function arenaFind(data: ArenaData): Promise<ArenaData> {
-    data.command = 'find';
+/**
+ * Get arenas from database and return a data which content is block of arenas.
+ *
+ * @param data Data in pipeline. In this case, only data.arenas is changed.
+ * @return {*}
+ */
+async function findArena(data: ArenaData): Promise<ArenaData> {
     const arenaExpireTime = new Date(
         new Date().valueOf() - arenaConfig.validTime
     );
     try {
-        const arenas = await Arena.find({
+        data.arenas = await Arena.find({
             createdAt: {
                 $gte: arenaExpireTime,
             },
@@ -77,16 +86,18 @@ async function arenaFind(data: ArenaData): Promise<ArenaData> {
                 ['createdAt', -1],
             ])
             .exec();
-        if (arenas.length == 0) {
+        if (data.arenas.length == 0) {
+            data.result_status = ArenaResultStatus.no_arena;
             data.content = await arenaMsgBuilder(data);
         } else {
+            data.result_status = ArenaResultStatus.success;
             data.content = await arenaMsgBuilder(data);
         }
         return data;
     } catch (e) {
-        console.log(e);
-        data.result.status = 'ERROR';
-        data.result.details = e;
+        console.error('Error when trying to find arena', e);
+        data.result_status = 'ERROR';
+        data.result = { details: e };
         return data;
     }
     // console.log(arenas)
@@ -96,22 +107,21 @@ async function arenaFind(data: ArenaData): Promise<ArenaData> {
  *
  * @param data
  */
-async function arenaDelete(data: ArenaData): Promise<ArenaData> {
-    data.command = 'delete';
+async function deleteArena(data: ArenaData): Promise<ArenaData> {
     try {
-        const arena = Arena.findByIdAndDelete(data.msg.authorId).exec();
-        if (!arena) {
-            data.result.status = ArenaCommandStatus.no_arena;
+        data.arena = await Arena.findByIdAndDelete(data.msg.authorId).exec();
+        if (!data.arena) {
+            data.result_status = ArenaResultStatus.no_arena;
             data.content = await arenaMsgBuilder(data);
         } else {
-            data.result.status = ArenaCommandStatus.success;
+            data.result_status = ArenaResultStatus.success;
             data.content = await arenaMsgBuilder(data);
         }
         return data;
     } catch (e) {
-        console.log(e);
-        data.result.status = ArenaCommandStatus.error;
-        data.result.details = e;
+        console.error('Error when deleting arena', e, data);
+        // data.result_status = ArenaResultStatus.error;
+        // data.result.details = e;
         return data;
     }
 }
@@ -122,9 +132,7 @@ async function arenaDelete(data: ArenaData): Promise<ArenaData> {
  * @param data data in the pipeline
  * @return {*}
  */
-async function arenaAlert(data: ArenaData): Promise<ArenaData> {
-    data.command = 'alert';
-
+async function alertArena(data: ArenaData): Promise<ArenaData> {
     let timeLimit;
     if (checkRoles(data.msg.author, 'up')) {
         timeLimit = 10 * 6e4;
@@ -133,7 +141,7 @@ async function arenaAlert(data: ArenaData): Promise<ArenaData> {
     }
     // check args
     if (data.args.length != 1) {
-        data.result.status = ArenaCommandStatus.help;
+        data.result_status = ArenaResultStatus.help;
         data.content = await arenaMsgBuilder(data);
         return data;
     }
@@ -149,7 +157,7 @@ async function arenaAlert(data: ArenaData): Promise<ArenaData> {
     // find arena for alert
     const arena = await Arena.findById(data.msg.authorId).exec();
     if (!arena) {
-        data.result.status = ArenaCommandStatus.no_arena;
+        data.result_status = ArenaResultStatus.no_arena;
         data.content = await arenaMsgBuilder(data);
         return data;
     }
@@ -161,9 +169,15 @@ async function arenaAlert(data: ArenaData): Promise<ArenaData> {
     //     }
     //     return sendMsg('alert', 'success', [msg, arena, args]);
     // })
-    data.result.status = ArenaCommandStatus.success;
+    data.result_status = ArenaResultStatus.success;
     data.content = await arenaMsgBuilder(data);
     return data;
 }
 
-export { arenaCreate, arenaFind, arenaDelete, arenaAlert };
+async function helpArena(data: ArenaData): Promise<ArenaData> {
+    data.commandCode = ArenaCommands.help;
+    data.content = await arenaMsgBuilder(data);
+    return data;
+}
+
+export { createArena, findArena, deleteArena, alertArena, helpArena };

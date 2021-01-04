@@ -8,7 +8,7 @@ function formatTime(s: Date): string {
     return dtFormat.format(s);
 }
 
-function dynamicSort(property: string): (a: never, b: never) => number {
+function dynamicSort(property: string): (a: any, b: any) => number {
     let sortOrder = 1;
     if (property[0] === '-') {
         sortOrder = -1;

@@ -1,23 +1,21 @@
+import auth from 'configs/auth';
 import { KaiheilaBot } from 'kaiheila-bot-root';
 import {
     KMarkDownMessage,
     MessageType,
     TextMessage,
 } from 'kaiheila-bot-root/dist/types';
-import dotenv from 'dotenv'
-import arenaCommand from '../commands/arena/arena-commands';
+import arena from '../commands/arena/arena';
 // import profileCommand from '../commands/profile'
 import help from '../commands/help';
 import { callCloud } from './utils';
 
-dotenv.config()
-
 const bot = new KaiheilaBot({
     mode: 'webhook',
     port: 20600,
-    key: process.env.KHLKEY,
-    token: process.env.KHLTOKEN as string,
-    verifyToken: process.env.KHLVERIFY as string,
+    key: auth.khlkey,
+    token: auth.khltoken,
+    verifyToken: auth.khlverify,
     ignoreDecryptError: false,
 });
 
@@ -79,7 +77,7 @@ async function execute(
         case '找房':
         case '关房':
         case '房间':
-            arenaCommand(command, args, msg);
+            arena(command, args, msg);
             break;
         case '帮助':
             help(command, args, msg);
@@ -117,5 +115,4 @@ async function execute(
     // console.log(command, args)
 }
 
-
-export default bot
+export default bot;
