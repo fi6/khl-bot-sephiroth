@@ -1,5 +1,4 @@
-import { ArenaData } from 'commands/arena/arena-helper';
-import { CommandEnum } from '../pipeline-helper';
+
 
 export interface trainingMsgCreator {
     create(type: string): Promise<string>;
@@ -10,14 +9,14 @@ export interface trainingMsgCreator {
     help(type: string): Promise<string>;
 }
 
-export const TrainingCommands: CommandEnum<trainingMsgCreator> = {
-    create: 'create',
-    join: 'join',
-    leave: 'leave',
-    manage: 'manage',
-    kick: 'kick',
-    help: 'help',
-};
+// export const TrainingCommands: CommandEnum<trainingMsgCreator> = {
+//     create: 'create',
+//     join: 'join',
+//     leave: 'leave',
+//     manage: 'manage',
+//     kick: 'kick',
+//     help: 'help',
+// };
 
 export enum TrainingResultStatus {
     no_arena = 'NO_ARENA',

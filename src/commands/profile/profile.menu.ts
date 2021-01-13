@@ -1,13 +1,16 @@
-import { FuncResult, MenuCommand, ResultTypes } from 'commands/command.helpers';
 import { TextMessage } from 'kaiheila-bot-root/dist/types';
+import { MenuCommand } from 'kbotify';
+import { FuncResult, ResultTypes } from 'kbotify/dist/commands/shared/types';
+import { pipeline } from 'stream';
+import createProfile from './profile.create';
 import { ProfileData } from './profile.types';
 
-const profileMenu = new MenuCommand<ProfileData>({
-    code: 'profile',
-    alias: ['档案'],
-    menu: '',
-    func: profileMenuFunc,
-});
+class profileMenu extends MenuCommand<ProfileData> {
+    code = 'profile';
+    trigger = '档案';
+    menu = '';
+    func = profileMenuFunc;
+}
 
 async function profileMenuFunc(
     command: string,

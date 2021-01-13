@@ -1,7 +1,7 @@
 import { AppCommand, AppCommandFunc } from 'kbotify';
 import { ProfileData } from './profile.types';
 
-class ProfileCreate extends AppCommand<ProfileData> {
+class ProfileReview extends AppCommand<ProfileData> {
     code = 'createProfile';
     trigger = '创建';
     help = '';
@@ -11,4 +11,4 @@ class ProfileCreate extends AppCommand<ProfileData> {
     };
 }
 
-export const profileCreate = new ProfileCreate();
+export const profileReview = new ProfileReview();

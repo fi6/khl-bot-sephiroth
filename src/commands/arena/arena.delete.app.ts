@@ -5,7 +5,7 @@ import { ArenaData } from './arena.types';
 
 class ArenaDelete extends AppCommand<ArenaData> {
     code = 'delete';
-    aliases = ['关闭'];
+    trigger = '关闭';
     help = '如需关闭房间，请输入\n`.关房`';
     intro = '';
     func = async (

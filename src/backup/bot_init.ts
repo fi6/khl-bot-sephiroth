@@ -1,38 +1,36 @@
-import { arenaCreate } from 'commands/arena/arena.create.app';
-import { arenaDelete } from 'commands/arena/arena.delete.app';
-import { arenaList } from 'commands/arena/arena.list.app';
-import { arenaMenu } from 'commands/arena/arena.menu';
-import auth from 'configs/auth';
-import { KMarkDownMessage, TextMessage } from 'kaiheila-bot-root/dist/types';
-import { KBotify } from 'kbotify';
+// import auth from 'configs/auth';
+// import { KaiheilaBot } from 'kaiheila-bot-root';
+// import {
+//     KMarkDownMessage,
+//     MessageType,
+//     TextMessage,
+// } from 'kaiheila-bot-root/dist/types';
 
-// import profileCommand from '../commands/profile'
-import { callCloud } from '../utils/utils';
+// // import profileCommand from '../commands/profile'
 
-const bot = new KBotify({
-    mode: 'webhook',
-    port: auth.khlport,
-    key: auth.khlkey,
-    token: auth.khltoken,
-    verifyToken: auth.khlverify,
-    ignoreDecryptError: false,
-});
+// import { callCloud } from './utils';
 
-bot.listen();
-const botId = '806285597';
+// const bot = new KaiheilaBot({
+//     mode: 'webhook',
+//     port: 20600,
+//     key: auth.khlkey,
+//     token: auth.khltoken,
+//     verifyToken: auth.khlverify,
+//     ignoreDecryptError: false,
+// });
 
-bot.botId = botId;
+// bot.listen();
 
-bot.addCommands(arenaMenu);
-bot.addAlias(arenaCreate, '建房');
-bot.addAlias(arenaList, '找房');
-bot.addAlias(arenaDelete, '关房');
+// const botId = '806285597';
 
-// bot.execute = async (
+
+
+
+// async function execute(
 //     command: string,
 //     args: string[],
 //     msg: TextMessage | KMarkDownMessage
-// ) => {
+// ) {
 //     // const channelList = ['4873200132116685', '3072169336937497'];
 //     // if (!channelList.includes(msg.channelId)) {
 //     //     bot.sendChannelMessage(
@@ -43,22 +41,18 @@ bot.addAlias(arenaDelete, '关房');
 //     //     );
 //     //     return;
 //     // }
-//     const input: [string, string[], TextMessage] = [command, args, msg];
-//     console.debug(input);
 //     const cloudReg = /克劳德/;
 //     const regex = /^[\u4e00-\u9fa5]/;
 //     switch (command) {
 //         case '开房':
 //         case '建房':
-//             return arenaCreate.exec(...input);
 //         case '找房':
-//             return arenaList.exec(...input);
 //         case '关房':
-//             return arenaDelete.exec(...input);
 //         case '房间':
-//             return arenaMenu.exec(...input);
+//             arena(command, args, msg);
+//             break;
 //         case '帮助':
-//             bot.sendChannelMessage(9, msg.channelId, '帮助文字还没写，别急');
+//             help(command, args, msg);
 //             break;
 //             // case '档案':
 //             //     profileCommand(command, args, msg)
@@ -88,13 +82,9 @@ bot.addAlias(arenaDelete, '关房');
 //                 );
 //                 break;
 //             }
-//             return bot.sendChannelMessage(
-//                 9,
-//                 msg.channelId,
-//                 '帮助文字还没写，别急'
-//             );
+//             return help(command, args, msg);
 //     }
 //     // console.log(command, args)
-// };
+// }
 
-export default bot;
+// export default bot;

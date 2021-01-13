@@ -1,7 +1,7 @@
 import { ArenaDoc } from 'models/Arena';
-import { formatTime } from 'utils/utils';
+import { formatTime } from 'utils/format-time';
 
-export const arenaInfoMsg = (arena: ArenaDoc, kmd = false): string => {
+export const arenaInfoMsg = (arena: ArenaDoc, kmd = true): string => {
     let content;
     content = ''.concat(
         `房主：${arena.userNick}\n`,
@@ -14,7 +14,7 @@ export const arenaInfoMsg = (arena: ArenaDoc, kmd = false): string => {
     if (kmd) {
         if (arena.isTraining) content = '```plain\n***特训房***\n' + content;
         else content = '```markdown\n' + content;
-        content = content + +'```\n';
+        content = content + '```\n';
     }
 
     return content;

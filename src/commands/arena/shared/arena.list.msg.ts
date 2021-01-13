@@ -2,7 +2,7 @@ import { ArenaDoc } from 'models/Arena';
 import { arenaInfoMsg } from './arena.info.msg';
 
 export const arenaListMsg = (arenas: ArenaDoc[]): string => {
-    let trainingFlag;
+    let trainingFlag = false;
     let content = '当前房间：\n';
     for (const arena of arenas) {
         if (arena.isTraining) {

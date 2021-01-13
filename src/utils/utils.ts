@@ -1,28 +1,5 @@
-function formatTime(s: Date): string {
-    const options = {
-        hour: '2-digit',
-        minute: '2-digit',
-        timeZone: 'Asia/Shanghai',
-    };
-    const dtFormat = new Intl.DateTimeFormat('en-GB', options);
-    return dtFormat.format(s);
-}
 
-function dynamicSort(property: string): (a: any, b: any) => number {
-    let sortOrder = 1;
-    if (property[0] === '-') {
-        sortOrder = -1;
-        property = property.substr(1);
-    }
-    return function (a: { [x: string]: number }, b: { [x: string]: number }) {
-        /* next line works with strings and numbers,
-         * and you may want to customize it to your needs
-         */
-        const result =
-            a[property] < b[property] ? -1 : a[property] > b[property] ? 1 : 0;
-        return result * sortOrder;
-    };
-}
+
 
 class cloudLines {
     lines: string[];
@@ -62,25 +39,6 @@ class cloudLines {
 
 const callCloud = new cloudLines();
 
-function checkRoles(
-    roles: number[] ,
-    roleStrings: string | any[]
-): boolean {
-    if (!Array.isArray(roleStrings)) {
-        roleStrings = [roleStrings];
-    }
-    const roleMap: any = {
-        coach: 20684,
-    };
-    let result = true;
-    for (const roleString of roleStrings) {
-        // console.log(user.roles);
-        // console.log(roleMap[roleString])
-        result = result && roles.includes(roleMap[roleString]);
-    }
-    return result;
-}
-
 // import ParseAddress from 'address-parse';
 
 // function addParse(address: any) {
@@ -91,4 +49,4 @@ function checkRoles(
 
 // }
 
-export { formatTime, dynamicSort, checkRoles, callCloud };
+export { callCloud };

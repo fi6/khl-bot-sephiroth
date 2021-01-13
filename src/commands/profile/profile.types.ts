@@ -1,6 +1,5 @@
-import { CommandTypes, MenuCommand } from 'commands/command.helpers';
+import { BaseData } from 'kbotify';
 import { ProfileDoc } from '../../models/Profile';
-import { BaseData } from '../pipeline-helper';
 
 export interface ProfileData extends BaseData {
     profile?: ProfileDoc;

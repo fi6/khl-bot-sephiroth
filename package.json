@@ -22,7 +22,7 @@
     "address-parse": "^1.2.8",
     "dotenv": "^8.2.0",
     "kaiheila-bot-root": "0.0.8",
-    "kbotify": "0.0.5",
+    "kbotify": "0.0.20",
     "mongoose": "^5.11.9",
     "ts-mongoose": "0.0.24"
   },

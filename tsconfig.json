@@ -32,7 +32,8 @@
     "./src/**/*.ts"
   ],
   "exclude": [
-    "./test",
+    "./src/test",
+    "./src/backup",
     "node_modules"
   ]
 }

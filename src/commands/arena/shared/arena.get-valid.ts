@@ -1,20 +1,19 @@
-import arenaConfig from "configs/arena";
-import Arena from "models/Arena";
-import { ArenaData } from "../arena.types";
+import arenaConfig from 'configs/arena';
+import Arena, { ArenaDoc } from 'models/Arena';
 
-export async function arenaGetValid(data: ArenaData): Promise<ArenaData> {
+export async function arenaGetValid(): Promise<ArenaDoc[]> {
     const arenaExpireTime = new Date(
         new Date().valueOf() - arenaConfig.expireTime
     );
     try {
-        data.arenas = (await Arena.find({
+        const arenas = (await Arena.find({
             createdAt: {
                 $gte: arenaExpireTime,
             },
         })
             .sort([['createdAt', -1]])
             .exec()) as [];
-        return data;
+        return arenas;
     } catch (e) {
         console.error('Error when trying to find arena', e);
         throw e;
