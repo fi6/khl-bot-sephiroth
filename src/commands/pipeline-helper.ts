@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { TextMessage } from 'kaiheila-bot-root/dist/types';
+import { FuncResult } from './command.helpers';
 
 type PipeMapper<T> = (data: T) => Promise<T>;
 type PipeReducer<T> = (f: PipeMapper<T>, g: PipeMapper<T>) => PipeMapper<T>;
@@ -23,6 +24,7 @@ interface BaseData {
     result: {
         details?: any;
     };
+    other?: any;
     generateContent?: () => unknown;
 }
 

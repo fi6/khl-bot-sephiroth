@@ -7,14 +7,14 @@ const ArenaSchema = createSchema({
     password: Type.string({ required: true }),
     arenaInfo: Type.string({ required: true }),
     remark: Type.string(),
-    isTraining: Type.boolean(),
+    isTraining: Type.boolean({ required: true, default: false }),
     createdAt: Type.date({ required: true, default: new Date() }),
-    trainingLimit: Type.number(),
+    trainingLimit: Type.number({ required: true, default: 6 }),
     trainingQueue: Type.array({ required: true, default: [] }).of({
         _id: Type.string({ required: true }),
         userNick: Type.string({ required: true }),
         time: Type.date({ required: true, default: new Date() }),
-        tag: Type.number(),
+        tag: Type.number({ required: true }),
     }),
 });
 

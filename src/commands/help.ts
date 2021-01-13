@@ -1,5 +1,5 @@
 import { TextMessage } from 'kaiheila-bot-root/dist/types';
-import bot from 'utils/bot_init';
+import bot from 'init/bot_init';
 
 function help(command: string, args: string[], msg: TextMessage): void {
     command = '';

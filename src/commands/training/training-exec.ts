@@ -1,8 +1,7 @@
 import { ArenaData } from 'commands/arena/arena-helper';
-import { arenaMsgBuilder } from 'commands/arena/arena-msg';
 import { TextMessage } from 'kaiheila-bot-root/dist/types';
 import Arena, { ArenaDoc } from 'models/Arena';
-import { checkRoles, dynamicSort } from 'utils/utils';
+import { checkRoles } from 'utils/utils';
 import { TrainingCommands, TrainingResultStatus } from './training-helper';
 import { trainingMsgBuilder } from './training-msg';
 
@@ -20,7 +19,7 @@ export async function createTraining(data: ArenaData): Promise<ArenaData> {
     const passReg = /^\d{0,8}$/;
 
     // error handling
-    if (!checkRoles(msg.author, 'coach')) {
+    if (!checkRoles(msg.author.roles, 'coach')) {
         data.result_status = TrainingResultStatus.fail;
         data.content = await trainingMsgBuilder(data);
         return data;
@@ -90,10 +89,21 @@ export async function joinTraining(data: ArenaData): Promise<ArenaData> {
             return data.generateContent();
         }
     }
+    console.log('queue:', data.arena.trainingQueue);
+    const last_tag = data.arena.trainingQueue.length
+        ? data.arena.trainingQueue[data.arena.trainingQueue.length - 1].tag + 1
+        : 1;
+    // let last_tag;
+    // if (!data.arena.trainingQueue[-1].tag) {
+    //     last_tag = 1;
+    // } else {
+    //     last_tag = data.arena.trainingQueue[-1].tag + 1;
+    // }
     data.arena.trainingQueue.push({
         _id: msg.authorId,
         userNick: msg.author.nickname,
         time: new Date(),
+        tag: last_tag,
     });
     data.arena.isNew = false;
     data.arena.markModified('trainingQueue');
@@ -139,7 +149,7 @@ export async function manageTraining(data: ArenaData): Promise<ArenaData> {
     const [msg, args] = [data.msg, data.args];
 
     // check if coach
-    if (!checkRoles(msg.author, 'coach')) {
+    if (!checkRoles(msg.author.roles, 'coach')) {
         data.result_status = TrainingResultStatus.fail;
         return data.generateContent();
     }
@@ -156,20 +166,17 @@ export async function manageTraining(data: ArenaData): Promise<ArenaData> {
         return data.generateContent();
     }
 
-    if (!args.length) {
-        data.arena.trainingQueue.sort(dynamicSort('time'));
-        for (const [i, user] of data.arena.trainingQueue.entries()) {
-            user['tag'] = i + 1;
-        }
-        data.arena.markModified('trainingQueue');
-        data.arena.save();
-        data.result_status = TrainingResultStatus.success;
-    } else if (args[0] == 'all') {
-        data.content = '尚未完工';
-        //     return 'clear all, not finished';
-    } else {
-        data.content = '未知错误';
-    }
+    // if (!args.length) {
+    //     data.arena.trainingQueue.sort(dynamicSort('time'));
+    //     for (const [i, user] of data.arena.trainingQueue.entries()) {
+    //         user['tag'] = i + 1;
+    //     }
+    //     data.arena.markModified('trainingQueue');
+    //     data.arena.save();
+
+    // }
+
+    data.result_status = TrainingResultStatus.success;
     return data.generateContent();
 }
 
@@ -182,7 +189,7 @@ export async function manageTraining(data: ArenaData): Promise<ArenaData> {
  */
 export async function kickTraining(data: ArenaData): Promise<ArenaData> {
     const [msg, args] = [data.msg, data.args];
-    if (!checkRoles(msg.author, 'coach')) {
+    if (!checkRoles(msg.author.roles, 'coach')) {
         data.result_status = TrainingResultStatus.fail;
         return data.generateContent();
     }
@@ -194,17 +201,36 @@ export async function kickTraining(data: ArenaData): Promise<ArenaData> {
         data.result_status = TrainingResultStatus.no_arena;
         return data.generateContent();
     }
+    if (!args[0]) {
+        data.result_status = TrainingResultStatus.help;
+        return data.generateContent();
+    } else if (args[0] == 'all') {
+        data.content = '尚未完工';
+        //     return 'clear all, not finished';
+    }
+    try {
+        data.other = [] as string[];
+        for (const tag of args[0].split(/[,，]/)) {
+            const user = arena.trainingQueue.find((u) => {
+                return u.tag?.toString() === tag;
+            });
+            if (!user) {
+                throw new Error('user not found');
+            }
+            data.result.details = await Arena.updateOne(
+                { _id: arena._id },
+                { $pull: { trainingQueue: { tag: tag } } }
+            );
+            data.other.push(user._id);
+        }
 
-    const user = arena.trainingQueue.find((user) => {
-        return user.tag?.toString() === args[0];
-    });
-    // console.log(user);
-    data.result.details = await Arena.updateOne(
-        { _id: arena._id },
-        { $pull: { trainingQueue: { tag: args[0] } } }
-    );
-    arena.markModified('trainingQueue');
-    await arena.save();
+        // arena.markModified('trainingQueue');
+        // await arena.save();
+    } catch (error) {
+        console.error(error, data);
+        data.result_status = TrainingResultStatus.error;
+        return data.generateContent();
+    }
     data.arena = arena;
     data.result_status = TrainingResultStatus.success;
     return data.generateContent();

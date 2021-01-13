@@ -1,4 +1,4 @@
-import bot from './utils/bot_init';
+import bot from './init/bot_init';
 import db from './utils/database_init';
 
 bot.once('message', (e) => {

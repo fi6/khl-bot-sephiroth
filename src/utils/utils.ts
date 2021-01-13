@@ -63,7 +63,7 @@ class cloudLines {
 const callCloud = new cloudLines();
 
 function checkRoles(
-    user: { roles: string | any[] },
+    roles: number[] ,
     roleStrings: string | any[]
 ): boolean {
     if (!Array.isArray(roleStrings)) {
@@ -76,7 +76,7 @@ function checkRoles(
     for (const roleString of roleStrings) {
         // console.log(user.roles);
         // console.log(roleMap[roleString])
-        result = result && user.roles.includes(roleMap[roleString]);
+        result = result && roles.includes(roleMap[roleString]);
     }
     return result;
 }
