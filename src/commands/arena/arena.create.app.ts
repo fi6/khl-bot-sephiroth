@@ -11,7 +11,7 @@ class ArenaCreate extends AppCommand<ArenaData> {
         '如需将房间添加至房间列表（覆盖），请输入：\n`.建房/.开房 房间号 密码 加速/人数 (留言)`\n`.房间 创建 房间号 密码 加速/人数 (留言)`\n例：`.建房 BTPC1 147 帆游自动3人 娱乐房，随便打`\n留言为可选。';
     intro =
         '将房间添加至房间列表，将会覆盖之前创建的房间。\n`.房间 创建 房间号 密码 加速/人数 留言`';
-    func: AppCommandFunc<ArenaData> = async (data) => {
+    func: AppCommandFunc<ArenaData> = async (data: ArenaData) => {
         const arenaReg = /^\w{5}$/;
         const passReg = /^\d{0,8}$/;
         const args = data.args;

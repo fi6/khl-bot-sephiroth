@@ -10,7 +10,7 @@ class ArenaList extends AppCommand<ArenaData> {
     trigger = '查看';
     intro = '查看房间';
     help = '';
-    func: AppCommandFunc<ArenaData> = async (data) => {
+    func: AppCommandFunc<ArenaData> = async (data: ArenaData) => {
         data.arenas = await arenaGetValid();
         if (!data.arenas || !data.arenas?.length)
             return this.msgSender.reply(

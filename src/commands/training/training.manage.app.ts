@@ -8,7 +8,7 @@ class TrainingManage extends AppCommand<ArenaData> {
     trigger = '管理';
     help =
         '发送`.房间 管理`获取特训房内的排队列表及每个人的编号。\n如需将人移出队伍请输入`.房间 移除 对应编号`';
-    func: AppCommandFunc<ArenaData> = async (data) => {
+    func: AppCommandFunc<ArenaData> = async (data: ArenaData) => {
         const [msg, args] = [data.msg, data.args];
 
         // check if coach

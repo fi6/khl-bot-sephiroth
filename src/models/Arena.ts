@@ -9,6 +9,10 @@ const ArenaSchema = createSchema({
     remark: Type.string(),
     isTraining: Type.boolean({ required: true, default: false }),
     createdAt: Type.date({ required: true, default: new Date() }),
+    member: Type.array().of({
+        _id: Type.string({required: true}),
+        userNick: Type.string({required: true})
+    }),
     trainingLimit: Type.number({ required: true, default: 6 }),
     trainingQueue: Type.array({ required: true, default: [] }).of({
         _id: Type.string({ required: true }),

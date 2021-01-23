@@ -1,5 +1,5 @@
 import { AppCommand } from 'kbotify';
-import { FuncResult, ResultTypes } from 'kbotify/dist/commands/shared/types';
+import { FuncResult, ResultTypes } from 'kbotify';
 import Arena from 'models/Arena';
 import { ArenaData } from './arena.types';
 

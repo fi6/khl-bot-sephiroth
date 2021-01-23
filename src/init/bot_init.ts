@@ -5,6 +5,7 @@ import { arenaMenu } from 'commands/arena/arena.menu';
 import auth from 'configs/auth';
 import { KMarkDownMessage, TextMessage } from 'kaiheila-bot-root/dist/types';
 import { KBotify } from 'kbotify';
+import {CurrentUserInfo} from 'kaiheila-bot-root/dist/types/api'
 
 // import profileCommand from '../commands/profile'
 import { callCloud } from '../utils/utils';
@@ -18,10 +19,14 @@ const bot = new KBotify({
     ignoreDecryptError: false,
 });
 
-bot.listen();
-const botId = '806285597';
+bot.connect();
 
-bot.botId = botId;
+bot.getCurrentUserInfo().then((info:CurrentUserInfo )=> {bot.botId = info.id
+})
+
+console.log(bot.post('/v3/guild-role/grant', {user_id: '2321962160', guild_id: '4770323118755977', role_id: 12372}))
+
+bot.botId;
 
 bot.addCommands(arenaMenu);
 bot.addAlias(arenaCreate, '建房');

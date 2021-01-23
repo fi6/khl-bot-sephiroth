@@ -4,7 +4,7 @@ import Arena from 'models/Arena';
 
 class TrainingLeave extends AppCommand<ArenaData> {
     trigger = '退出';
-    func: AppCommandFunc<ArenaData> = async (data) => {
+    func: AppCommandFunc<ArenaData> = async (data: ArenaData) => {
         const msg = data.msg;
         if (!msg.mention.user.length) {
             data.arenas = await Arena.find({

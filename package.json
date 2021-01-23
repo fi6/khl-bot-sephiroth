@@ -21,8 +21,8 @@
     "@types/mongoose": "^5.10.3",
     "address-parse": "^1.2.8",
     "dotenv": "^8.2.0",
-    "kaiheila-bot-root": "0.0.8",
-    "kbotify": "0.0.20",
+    "kaiheila-bot-root": "0.0.9",
+    "kbotify": "^0.1.12",
     "mongoose": "^5.11.9",
     "ts-mongoose": "0.0.24"
   },
