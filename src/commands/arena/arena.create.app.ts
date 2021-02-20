@@ -1,17 +1,17 @@
 import { AppCommand, AppCommandFunc } from 'kbotify';
 import Arena from 'models/Arena';
-import { ArenaData } from './arena.types';
+import { ArenaSession } from './arena.types';
 import { arenaGetValid } from './shared/arena.get-valid';
 import { arenaListMsg } from './shared/arena.list.msg';
 
-class ArenaCreate extends AppCommand<ArenaData> {
+class ArenaCreate extends AppCommand<ArenaSession> {
     code = 'create';
     trigger = '创建';
     help =
         '如需将房间添加至房间列表（覆盖），请输入：\n`.建房/.开房 房间号 密码 加速/人数 (留言)`\n`.房间 创建 房间号 密码 加速/人数 (留言)`\n例：`.建房 BTPC1 147 帆游自动3人 娱乐房，随便打`\n留言为可选。';
     intro =
         '将房间添加至房间列表，将会覆盖之前创建的房间。\n`.房间 创建 房间号 密码 加速/人数 留言`';
-    func: AppCommandFunc<ArenaData> = async (data: ArenaData) => {
+    func: AppCommandFunc<ArenaSession> = async (session: ArenaSession) => {
         const arenaReg = /^\w{5}$/;
         const passReg = /^\d{0,8}$/;
         const args = data.args;
@@ -61,7 +61,7 @@ class ArenaCreate extends AppCommand<ArenaData> {
                 upsert: true,
             }
         ).exec();
-        data.arenas = await arenaGetValid()
+        data.arenas = await arenaGetValid();
         return this.msgSender.reply(
             `创建成功！当前的房间列表：\n${arenaListMsg(data.arenas!)}`,
             data

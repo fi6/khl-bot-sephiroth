@@ -6,7 +6,7 @@ import { MenuCommand } from 'kbotify';
 import { arenaCreate } from './arena.create.app';
 import { arenaDelete } from './arena.delete.app';
 import { arenaList } from './arena.list.app';
-import { ArenaData } from './arena.types';
+import { ArenaSession } from './arena.types';
 
 const content = ''.concat(
     '> **房间功能使用帮助**\n\r',
@@ -17,7 +17,7 @@ const content = ''.concat(
     '```\n【特训】：教练组专属，可自动发送提醒，其他人需排队加入房间。\n[.房间 特训 房间号 密码 加速 人数限制 留言]\n[.房间 管理], [.房间 排队 @房主]```'
 );
 
-class ArenaMenu extends MenuCommand<ArenaData> {
+class ArenaMenu extends MenuCommand<ArenaSession> {
     code = 'arena';
     trigger = '房间';
     help = content;

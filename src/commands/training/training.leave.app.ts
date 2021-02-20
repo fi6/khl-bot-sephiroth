@@ -1,10 +1,10 @@
-import { ArenaData } from 'commands/arena/arena.types';
+import { ArenaSession } from 'commands/arena/arena.types';
 import { AppCommand, AppCommandFunc } from 'kbotify';
 import Arena from 'models/Arena';
 
-class TrainingLeave extends AppCommand<ArenaData> {
+class TrainingLeave extends AppCommand<ArenaSession> {
     trigger = '退出';
-    func: AppCommandFunc<ArenaData> = async (data: ArenaData) => {
+    func: AppCommandFunc<ArenaSession> = async (data: ArenaSession) => {
         const msg = data.msg;
         if (!msg.mention.user.length) {
             data.arenas = await Arena.find({

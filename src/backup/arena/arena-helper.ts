@@ -20,12 +20,12 @@
 //  * Arena data in the pipeline. Arena is for single found arena, arenas for multiple(mainly for findArena command)
 //  *
 //  * @export
-//  * @interface ArenaData
+//  * @interface ArenaSession
 //  */
-// export interface ArenaData extends BaseData {
+// export interface ArenaSession extends BaseData {
 //     arena?: ArenaDoc | null;
 //     arenas?: ArenaDoc[] | null;
-//     generateContent: () => Promise<ArenaData>;
+//     generateContent: () => Promise<ArenaSession>;
 // }
 
 // export enum ArenaResultStatus {
@@ -46,7 +46,7 @@
 //     help: 'help',
 // };
 
-// export const arenaPipe: Pipe<ArenaData> = createPipe();
+// export const arenaPipe: Pipe<ArenaSession> = createPipe();
 
 // export const arenaMsgBlock = (arena: ArenaDoc):string => {
 //     let content;

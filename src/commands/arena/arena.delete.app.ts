@@ -1,16 +1,16 @@
 import { AppCommand } from 'kbotify';
 import { FuncResult, ResultTypes } from 'kbotify';
 import Arena from 'models/Arena';
-import { ArenaData } from './arena.types';
+import { ArenaSession } from './arena.types';
 
-class ArenaDelete extends AppCommand<ArenaData> {
+class ArenaDelete extends AppCommand<ArenaSession> {
     code = 'delete';
     trigger = '关闭';
     help = '如需关闭房间，请输入\n`.关房`';
     intro = '';
     func = async (
-        data: ArenaData
-    ): Promise<FuncResult<ArenaData> | ResultTypes> => {
+        data: ArenaSession
+    ): Promise<FuncResult<ArenaSession> | ResultTypes> => {
         try {
             data.arena = await Arena.findByIdAndDelete(
                 data.msg.authorId

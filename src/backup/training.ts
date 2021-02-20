@@ -1,4 +1,4 @@
-import { ArenaData, arenaPipe } from 'commands/arena/arena-helper';
+import { ArenaSession, arenaPipe } from 'commands/arena/arena-helper';
 import { sendArenaMsg } from 'commands/arena/arena-msg';
 import { TextMessage } from 'kaiheila-bot-root/dist/types';
 import {
@@ -16,8 +16,8 @@ async function training(
     subCommand: string,
     args: string[],
     msg: TextMessage
-): Promise<ArenaData> {
-    const data: ArenaData = {
+): Promise<ArenaSession> {
+    const data: ArenaSession = {
         command: subCommand,
         commandCode: '',
         args: args as string[],
@@ -54,8 +54,8 @@ async function training(
     //Write a wrapper for arenaPipe, which wraps sendArenaMsg and data inside.
 
     async function arenaPipeWrapper(
-        command: (data: ArenaData) => Promise<ArenaData>
-    ): Promise<ArenaData> {
+        command: (data: ArenaSession) => Promise<ArenaSession>
+    ): Promise<ArenaSession> {
         return await arenaPipe(command, sendArenaMsg)(data);
     }
 }

@@ -1,7 +1,7 @@
 // import { TextMessage } from 'kaiheila-bot-root/dist/types';
 // import {
 //     ArenaCommands,
-//     ArenaData,
+//     ArenaSession,
 //     arenaPipe,
 //     ArenaResultStatus,
 // } from './arena-helper';
@@ -19,9 +19,9 @@
 //     command: string,
 //     args: string[],
 //     msg: TextMessage
-// ): Promise<ArenaData> {
+// ): Promise<ArenaSession> {
 //     // console.log(command, args, msg);
-//     const data: ArenaData = {
+//     const data: ArenaSession = {
 //         command: command,
 //         commandCode: '',
 //         args: args,
@@ -82,8 +82,8 @@
 //     //Write a wrapper for arenaPipe, which wraps sendArenaMsg and data inside.
 
 //     async function arenaPipeWrapper(
-//         command: (x: ArenaData) => Promise<ArenaData>
-//     ): Promise<ArenaData> {
+//         command: (x: ArenaSession) => Promise<ArenaSession>
+//     ): Promise<ArenaSession> {
 //         return await arenaPipe(command, sendArenaMsg)(data);
 //     }
 // }

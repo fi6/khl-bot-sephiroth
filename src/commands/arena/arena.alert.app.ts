@@ -1,15 +1,15 @@
 import { AppCommand, AppCommandFunc } from 'kbotify';
 import Arena from 'models/Arena';
 import { checkRoles } from 'utils/check-roles';
-import { ArenaData } from './arena.types';
+import { ArenaSession } from './arena.types';
 import { arenaAlertMsg } from './shared/arena.alert.msg';
 
-class ArenaAlert extends AppCommand<ArenaData> {
+class ArenaAlert extends AppCommand<ArenaSession> {
     code = 'alert';
     trigger = '广播';
     help = '';
     intro = '';
-    func: AppCommandFunc<ArenaData> = async (data) => {
+    func: AppCommandFunc<ArenaSession> = async (data) => {
         let timeLimit;
         if (checkRoles(data.msg.author.roles, 'up')) {
             timeLimit = 10 * 6e4;

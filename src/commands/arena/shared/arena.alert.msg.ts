@@ -1,7 +1,7 @@
-import { ArenaData } from '../arena.types';
+import { ArenaSession } from '../arena.types';
 import { arenaInfoMsg } from './arena.info.msg';
 
-export const arenaAlertMsg = (data: ArenaData): string => {
+export const arenaAlertMsg = (data: ArenaSession): string => {
     if (!data.arena)
         throw new Error('AlertMsg Building but no Arena found in data.');
 

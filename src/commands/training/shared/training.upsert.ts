@@ -1,8 +1,11 @@
-import { ArenaData } from 'commands/arena/arena.types';
+import { ArenaSession } from 'commands/arena/arena.types';
 import { TextMessage } from 'kaiheila-bot-root/dist/types';
 import Arena, { ArenaDoc } from 'models/Arena';
 
-export async function trainingUpsert(data: ArenaData, limit: string): Promise<ArenaDoc> {
+export async function trainingUpsert(
+    data: ArenaSession,
+    limit: string
+): Promise<ArenaDoc> {
     return Arena.findByIdAndUpdate(
         data.msg.authorId,
         {

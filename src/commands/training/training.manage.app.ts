@@ -1,14 +1,14 @@
-import { ArenaData } from 'commands/arena/arena.types';
+import { ArenaSession } from 'commands/arena/arena.types';
 import { AppCommand, AppCommandFunc } from 'kbotify';
 import Arena from 'models/Arena';
 import { checkRoles } from 'utils/check-roles';
 import { formatTime } from 'utils/format-time';
 
-class TrainingManage extends AppCommand<ArenaData> {
+class TrainingManage extends AppCommand<ArenaSession> {
     trigger = '管理';
     help =
         '发送`.房间 管理`获取特训房内的排队列表及每个人的编号。\n如需将人移出队伍请输入`.房间 移除 对应编号`';
-    func: AppCommandFunc<ArenaData> = async (data: ArenaData) => {
+    func: AppCommandFunc<ArenaSession> = async (data: ArenaSession) => {
         const [msg, args] = [data.msg, data.args];
 
         // check if coach

@@ -2,7 +2,7 @@
 // import { arenaMsgBuilder } from './arena-msg';
 // import arenaConfig from '../../configs/arena';
 // import { checkRoles } from '../../utils/utils';
-// import { ArenaResultStatus, ArenaData, ArenaCommands } from './arena-helper';
+// import { ArenaResultStatus, ArenaSession, ArenaCommands } from './arena-helper';
 
 // /**
 //  * Create arena and add arenaFind as content.
@@ -10,7 +10,7 @@
 //  * @param data
 //  * @return {*}
 //  */
-// async function createArena(data: ArenaData): Promise<ArenaData> {
+// async function createArena(data: ArenaSession): Promise<ArenaSession> {
 //     const arenaReg = /^\w{5}$/;
 //     const passReg = /^\d{0,8}$/;
 //     const args = data.args;
@@ -71,7 +71,7 @@
 //  * @param data Data in pipeline. In this case, only data.arenas is changed.
 //  * @return {*}
 //  */
-// async function findArena(data: ArenaData): Promise<ArenaData> {
+// async function findArena(data: ArenaSession): Promise<ArenaSession> {
 //     const arenaExpireTime = new Date(
 //         new Date().valueOf() - arenaConfig.validTime
 //     );
@@ -107,7 +107,7 @@
 //  *
 //  * @param data
 //  */
-// async function deleteArena(data: ArenaData): Promise<ArenaData> {
+// async function deleteArena(data: ArenaSession): Promise<ArenaSession> {
 //     try {
 //         data.arena = await Arena.findByIdAndDelete(data.msg.authorId).exec();
 //         if (!data.arena) {
@@ -132,7 +132,7 @@
 //  * @param data data in the pipeline
 //  * @return {*}
 //  */
-// async function alertArena(data: ArenaData): Promise<ArenaData> {
+// async function alertArena(data: ArenaSession): Promise<ArenaSession> {
 //     let timeLimit;
 //     if (checkRoles(data.msg.author.roles, 'up')) {
 //         timeLimit = 10 * 6e4;
@@ -174,7 +174,7 @@
 //     return data;
 // }
 
-// async function helpArena(data: ArenaData): Promise<ArenaData> {
+// async function helpArena(data: ArenaSession): Promise<ArenaSession> {
 //     data.commandCode = ArenaCommands.help;
 //     data.content = await arenaMsgBuilder(data);
 //     return data;

@@ -1,4 +1,3 @@
-
 // import { TextMessage } from 'kaiheila-bot-root/dist/types';
 // import { ArenaDoc } from 'models/Arena';
 // import bot from 'init/bot_init';
@@ -8,7 +7,7 @@
 //     TrainingResultStatus,
 // } from './training-helper';
 
-// export async function sendTrainingMsg(data: ArenaData): Promise<ArenaData> {
+// export async function sendTrainingMsg(data: ArenaSession): Promise<ArenaSession> {
 //     const msg = data.msg;
 
 //     const arenaMsg = data.content as string;
@@ -18,7 +17,7 @@
 //     return data;
 // }
 
-// export async function trainingMsgBuilder(data: ArenaData): Promise<string> {
+// export async function trainingMsgBuilder(data: ArenaSession): Promise<string> {
 //     const [command, type, msg, arena, arenas] = [
 //         data.commandCode as keyof trainingMsgCreator,
 //         data.result_status as string,
@@ -70,7 +69,7 @@
 //                         `${arena.trainingQueue.length}/${arena.trainingLimit}`
 //                     );
 //                     return mention + content;
-                    
+
 //                 case TrainingResultStatus.no_arena:
 //                     content = '没有找到可加入的房间。';
 //                     return mention + content;

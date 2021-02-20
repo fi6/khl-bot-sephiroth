@@ -1,4 +1,3 @@
-
 // import { TextMessage } from 'kaiheila-bot-root/dist/types';
 // import Arena, { ArenaDoc } from 'models/Arena';
 // import { checkRoles } from 'utils/utils';
@@ -11,7 +10,7 @@
 //  * @param data Arena data, same as arena commands.
 //  * @return {*}
 //  */
-// // export async function createTraining(data: ArenaData): Promise<ArenaData> {
+// // export async function createTraining(data: ArenaSession): Promise<ArenaSession> {
 // //     // console.log('receive create training', data)
 // //     const [msg, args] = [data.msg as TextMessage, data.args as string[]];
 
@@ -68,7 +67,7 @@
 // //     return data.generateContent();
 // // }
 
-// export async function joinTraining(data: ArenaData): Promise<ArenaData> {
+// export async function joinTraining(data: ArenaSession): Promise<ArenaSession> {
 //     const [msg, args] = [data.msg as TextMessage, data.args as string[]];
 
 //     if (msg.mention.user.length != 1) {
@@ -113,7 +112,7 @@
 //     return data.generateContent();
 // }
 
-// export async function leaveTraining(data: ArenaData): Promise<ArenaData> {
+// export async function leaveTraining(data: ArenaSession): Promise<ArenaSession> {
 //     const msg = data.msg;
 //     if (!msg.mention.user.length) {
 //         data.arenas = await Arena.find({
@@ -145,7 +144,7 @@
 //     return data.generateContent();
 // }
 
-// export async function manageTraining(data: ArenaData): Promise<ArenaData> {
+// export async function manageTraining(data: ArenaSession): Promise<ArenaSession> {
 //     const [msg, args] = [data.msg, data.args];
 
 //     // check if coach
@@ -187,7 +186,7 @@
 //  * @param data
 //  * @return {*}
 //  */
-// export async function kickTraining(data: ArenaData): Promise<ArenaData> {
+// export async function kickTraining(data: ArenaSession): Promise<ArenaSession> {
 //     const [msg, args] = [data.msg, data.args];
 //     if (!checkRoles(msg.author.roles, 'coach')) {
 //         data.result_status = TrainingResultStatus.fail;
@@ -236,7 +235,7 @@
 //     return data.generateContent();
 // }
 
-// export async function helpTraining(data: ArenaData): Promise<ArenaData> {
+// export async function helpTraining(data: ArenaSession): Promise<ArenaSession> {
 //     data.commandCode = TrainingCommands.help;
 //     return data;
 // }

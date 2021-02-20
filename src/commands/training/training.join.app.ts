@@ -1,13 +1,13 @@
-import { ArenaData } from 'commands/arena/arena.types';
+import { ArenaSession } from 'commands/arena/arena.types';
 import { TextMessage } from 'kaiheila-bot-root/dist/types';
 import { AppCommand, AppCommandFunc } from 'kbotify';
 import Arena from 'models/Arena';
 
-class TrainingJoin extends AppCommand<ArenaData> {
+class TrainingJoin extends AppCommand<ArenaSession> {
     trigger = '排队';
-    
+
     help = '特训房排队请输入`.房间 排队 @房主`';
-    func: AppCommandFunc<ArenaData> = async (data: ArenaData) => {
+    func: AppCommandFunc<ArenaSession> = async (data: ArenaSession) => {
         const [msg, args] = [data.msg as TextMessage, data.args as string[]];
 
         if (msg.mention.user.length != 1) {

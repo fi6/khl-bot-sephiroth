@@ -1,7 +1,7 @@
-import { BaseData } from "kbotify";
-import { ArenaDoc } from "models/Arena";
+import { BaseData, BaseSession } from 'kbotify';
+import { ArenaDoc } from 'models/Arena';
 
-export interface ArenaData extends BaseData {
+export interface ArenaSession extends BaseSession {
     arena?: ArenaDoc | null;
     arenas?: ArenaDoc[] | null;
 }

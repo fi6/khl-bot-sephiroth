@@ -5,13 +5,13 @@
 // import { findArena } from './arena-exec';
 // import {
 //     arenaMsgCreator,
-//     ArenaData,
+//     ArenaSession,
 //     ArenaResultStatus,
 //     ArenaCommands,
 //     arenaMsgBlock,
 // } from './arena-helper';
 
-// async function sendArenaMsg(data: ArenaData): Promise<ArenaData> {
+// async function sendArenaMsg(data: ArenaSession): Promise<ArenaSession> {
 //     const msg = data.msg;
 
 //     const arenaMsg = data.content as string;
@@ -28,7 +28,7 @@
 //  * @param data
 //  * @return {*}
 //  */
-// async function arenaMsgBuilder(data: ArenaData): Promise<string> {
+// async function arenaMsgBuilder(data: ArenaSession): Promise<string> {
 //     const [command, type, msg, arena, arenas] = [
 //         data.commandCode as keyof arenaMsgCreator,
 //         data.result_status as string,
