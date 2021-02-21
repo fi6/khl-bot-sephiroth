@@ -22,7 +22,7 @@ export function arenaListCard(session: ArenaSession): string {
     // console.debug(JSON.stringify(arenaList));
     const card1 = {
         type: 'card',
-        theme: 'secondary',
+        theme: 'info',
         size: 'lg',
         modules: [
             {
@@ -65,7 +65,7 @@ export function arenaListCard(session: ArenaSession): string {
     };
     const card2 = {
         type: 'card',
-        theme: 'info',
+        theme: 'secondary',
         size: 'lg',
         modules: arenaList,
     };

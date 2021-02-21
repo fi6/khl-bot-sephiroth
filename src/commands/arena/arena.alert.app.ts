@@ -46,7 +46,7 @@ class ArenaAlert extends AppCommand {
         // find arena for alert
         const arena = await Arena.findById(session.user.id).exec();
         if (!arena)
-            return session.reply('没有找到可广播的房间。请先创建房间。');
+            return session.replyTemp('没有找到可广播的房间。请先发送`.建房`创建房间。');
         // --------alert--------
         // Profile.findByIdAndUpdate(msg.authorId, { alertUsedAt: Date.now() }, (err, res) => {
         //     if (err) {

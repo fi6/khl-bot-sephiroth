@@ -49,7 +49,7 @@ class ArenaCreate extends AppCommand {
             !passReg.test(args[1]) ||
             (args[2] && args[2].length > 7)
         ) {
-            return session.reply(
+            return session.replyTemp(
                 '创建失败，请检查房间号、密码格式，并确认加速/人数文字长度小于8。'
             );
         }

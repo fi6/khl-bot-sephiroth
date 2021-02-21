@@ -13,7 +13,9 @@ class ArenaList extends AppCommand {
     func: AppCommandFunc<ArenaSession> = async (session: ArenaSession) => {
         session.arenas = await arenaGetValid();
         if (!session.arenas || !session.arenas?.length)
-            return session.reply('当前没有房间。' + arenaCreate.help);
+            return session.replyTemp(
+                '当前没有房间。如需创建房间，可发送`.建房`'
+            );
         return session.replyCard(arenaListCard(session));
     };
 }
