@@ -1,0 +1,51 @@
+import { ArenaSession } from 'commands/arena/arena.types';
+import { TextMessage } from 'kaiheila-bot-root/dist/types';
+import { AppCommand, AppCommandFunc } from 'kbotify';
+import Arena from 'models/Arena';
+
+class ArenaJoin extends AppCommand {
+    trigger = '加入';
+
+    help = '仅可通过按钮加入';
+    func: AppCommandFunc<ArenaSession> = async (session: ArenaSession) => {
+        const [msg, args] = [
+            session.msg as TextMessage,
+            session.args as string[],
+        ];
+
+        // if (msg.mention.user.length != 1) {
+        //     session.reply(this.help);
+        // }
+        session.arena = await Arena.findOne({
+            _id: session.args[0],
+        }).exec();
+        if (!session.arena) return session.sendTemp('没有找到对应房间。');
+
+        if (session.arena.member?.length) {
+            for (const user of session.arena.member) {
+                if (user._id == session.userId) {
+                    return session.replyTemp(
+                        '你已经在此房间队伍中。如需更换房间请输入`.房间 退出`（暂未实装，请等待更新）。'
+                    );
+                }
+            }
+        }
+        console.log('queue:', session.arena.member);
+        if (!session.arena.member) {
+            session.arena.member = [];
+        }
+        session.arena.member.push({
+            _id: session.user.id,
+            userNick: session.user.username,
+        });
+        session.arena.isNew = false;
+        session.arena.markModified('member');
+        await session.arena.save();
+        const arena = session.arena;
+        return session.reply(
+            ''.concat('成功加入：', `\`${arena.userNick}的房间\``)
+        );
+    };
+}
+
+export const arenaJoin = new ArenaJoin();

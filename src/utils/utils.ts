@@ -1,6 +1,3 @@
-
-
-
 class cloudLines {
     lines: string[];
     calls: number[];

@@ -1,24 +1,38 @@
-import { AppCommand, AppCommandFunc } from 'kbotify';
+import { AppCommand, AppCommandFunc, BaseSession } from 'kbotify';
 import Arena from 'models/Arena';
 import { checkRoles } from 'utils/check-roles';
 import { ArenaSession } from './arena.types';
-import { arenaAlertMsg } from './shared/arena.alert.msg';
+import { arenaAlertCard, arenaAlertHelper } from './card/arena.alert.card';
+import LRUCache from 'lru-cache';
 
-class ArenaAlert extends AppCommand<ArenaSession> {
+class ArenaAlert extends AppCommand {
     code = 'alert';
     trigger = '广播';
     help = '';
     intro = '';
-    func: AppCommandFunc<ArenaSession> = async (data) => {
+    cache = new LRUCache<string, () => void>({ maxAge: 90 * 1e3 });
+    func: AppCommandFunc<ArenaSession> = async (session) => {
         let timeLimit;
-        if (checkRoles(data.msg.author.roles, 'up')) {
-            timeLimit = 10 * 6e4;
-        } else {
-            timeLimit = 30 * 6e4;
-        }
+        // if (checkRoles(session.msg.author.roles, 'up')) {
+        //     timeLimit = 10 * 6e4;
+        // } else {
+        //     timeLimit = 30 * 6e4;
+        // }
         // check args
-        if (data.args.length > 1) {
-            return this.msgSender.reply(this.help, data);
+        if (!session.args.length) {
+            let cancel_handle = session.setReplyTrigger('', 60 * 1e3, (msg) => {
+                this.func(new BaseSession(this, [msg.content], msg));
+            });
+            this.cache.set(session.userId, cancel_handle);
+            return session.sendCardTemp(arenaAlertHelper());
+        }
+        if (session.args[0] == 'cancel') {
+            let cancel_handle = this.cache.get(session.userId);
+            if (!cancel_handle) {
+                return session.sendTemp('出错了，不能取消……你好像没有在广播？');
+            }
+            cancel_handle();
+            return session.sendTemp('取消成功');
         }
         // --------find profile--------
         // let profile = Profile.findById(msg.authorId).exec();
@@ -30,12 +44,9 @@ class ArenaAlert extends AppCommand<ArenaSession> {
         //     return sendMsg('alert', 'time_limit', [msg])
         // }
         // find arena for alert
-        const arena = await Arena.findById(data.msg.authorId).exec();
+        const arena = await Arena.findById(session.user.id).exec();
         if (!arena)
-            return this.msgSender.reply(
-                '没有找到可广播的房间。请先创建房间。',
-                data
-            );
+            return session.reply('没有找到可广播的房间。请先创建房间。');
         // --------alert--------
         // Profile.findByIdAndUpdate(msg.authorId, { alertUsedAt: Date.now() }, (err, res) => {
         //     if (err) {
@@ -44,7 +55,12 @@ class ArenaAlert extends AppCommand<ArenaSession> {
         //     }
         //     return sendMsg('alert', 'success', [msg, arena, args]);
         // })
-        return this.msgSender.send(arenaAlertMsg(data), data);
+        await session.send(
+            `(met)all(met) ${arena.userNick} 的房间正在寻找小伙伴加入！\n留言：${session.args[0]}`
+        );
+        // sleep for 300 ms
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        return await session.sendCard(arenaAlertCard(arena));
     };
 }
 

@@ -1,10 +1,8 @@
-import { trainingCreate } from 'commands/training/training.create.app';
-import { trainingJoin } from 'commands/training/training.join.app';
-import { trainingLeave } from 'commands/training/training.leave.app';
-import { trainingManage } from 'commands/training/training.manage.app';
 import { MenuCommand } from 'kbotify';
+import { arenaAlert } from './arena.alert.app';
 import { arenaCreate } from './arena.create.app';
 import { arenaDelete } from './arena.delete.app';
+import { arenaJoin } from './arena.join.app';
 import { arenaList } from './arena.list.app';
 import { ArenaSession } from './arena.types';
 
@@ -17,18 +15,80 @@ const content = ''.concat(
     '```\n【特训】：教练组专属，可自动发送提醒，其他人需排队加入房间。\n[.房间 特训 房间号 密码 加速 人数限制 留言]\n[.房间 管理], [.房间 排队 @房主]```'
 );
 
-class ArenaMenu extends MenuCommand<ArenaSession> {
+class ArenaMenu extends MenuCommand {
     code = 'arena';
     trigger = '房间';
     help = content;
+    useCardMenu = true;
+    menu = cardMenu();
 }
 
 export const arenaMenu = new ArenaMenu(
     arenaCreate,
-    arenaDelete,
     arenaList,
-    trainingCreate,
-    trainingJoin,
-    trainingLeave,
-    trainingManage
+    arenaDelete,
+    arenaAlert,
+    arenaJoin
 );
+
+function cardMenu() {
+    return JSON.stringify([
+        {
+            type: 'card',
+            theme: 'info',
+            size: 'lg',
+            modules: [
+                {
+                    type: 'header',
+                    text: {
+                        type: 'plain-text',
+                        content: '房间菜单',
+                    },
+                },
+                {
+                    type: 'section',
+                    text: {
+                        type: 'kmarkdown',
+                        content:
+                            '- 创建房间：创建一个房间，将覆盖已创建的房间\n- 管理房间：管理已创建的房间，如关闭或广播\n- 查看房间列表：查看所有开放中的房间',
+                    },
+                },
+                {
+                    type: 'action-group',
+                    elements: [
+                        {
+                            type: 'button',
+                            theme: 'primary',
+                            value: '.房间 创建',
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: '创建房间',
+                            },
+                        },
+                        {
+                            type: 'button',
+                            theme: 'primary',
+                            value: 'cancel',
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: '管理房间',
+                            },
+                        },
+                        {
+                            type: 'button',
+                            theme: 'primary',
+                            value: 'cancel',
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: '查看房间列表',
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+    ]);
+}

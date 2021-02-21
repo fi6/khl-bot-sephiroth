@@ -8,10 +8,10 @@ const ArenaSchema = createSchema({
     arenaInfo: Type.string({ required: true }),
     remark: Type.string(),
     createdAt: Type.date({ required: true, default: new Date() }),
-    member: Type.array().of({
-        _id: Type.string({required: true}),
-        userNick: Type.string({required: true})
-    })
+    member: Type.array({ required: true, default: [] }).of({
+        _id: Type.string({ required: true }),
+        userNick: Type.string({ required: true }),
+    }),
 });
 
 export type ArenaDoc = ExtractDoc<typeof ArenaSchema>;
