@@ -20,7 +20,7 @@ export function createStartCard() {
                 text: {
                     type: 'kmarkdown',
                     content:
-                        '创建房间的完整指令格式：\n`.建房 房间号 密码 加速/人数 (留言)`',
+                        '如果你熟悉机器人的使用方法，可以使用命令创建。\n创建房间的完整指令格式：\n`.建房 房间号 密码 加速/人数 (留言)`',
                 },
             },
             {
@@ -44,7 +44,8 @@ export function createStartCard() {
                 type: 'section',
                 text: {
                     type: 'plain-text',
-                    content: '你也可以点击右侧按钮，机器人将协助你创建。',
+                    content:
+                        '如果你还不熟悉使用方法，可以点击右侧按钮，机器人将协助你创建。',
                 },
                 mode: 'right',
                 accessory: {
@@ -133,7 +134,7 @@ export function createSuccessCard(arena: ArenaDoc) {
                         `${mentionUser(
                             arena._id
                         )}房间创建成功！你的房间信息如下。` +
-                        '\n你可以点击`广播`以将房间广播给所有人。',
+                        '\n你可以点击`广播`以将房间广播给所有人。如需更新房间信息，重新创建即可。',
                 },
             },
         ],

@@ -38,7 +38,7 @@ export function arenaListCard(session: ArenaSession): string {
                     type: 'kmarkdown',
                     content: `${mentionUser(
                         session.userId
-                    )}房间列表如下。你也可以点击右侧按钮创建房间。`,
+                    )}房间列表如下。\n你也可以点击右侧按钮创建房间。`,
                 },
                 mode: 'right',
                 accessory: {
