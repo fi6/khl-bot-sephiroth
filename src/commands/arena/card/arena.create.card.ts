@@ -80,15 +80,15 @@ export function createHelpCard() {
                 type: 'section',
                 text: {
                     type: 'kmarkdown',
-                    content: '请输入房间号、密码、房间信息、备注，用空格分开。',
+                    content:
+                        '请输入房间号、密码、房间信息，用空格分开，房间必须为公开且有密码。',
                 },
             },
             {
                 type: 'section',
                 text: {
                     type: 'kmarkdown',
-                    content:
-                        '房间必须为公开且有密码，备注为可选。\n例: `5F23C 147 帆游自动3人 求个剑角练练`',
+                    content: '\n例: `5F23C  147  帆游自动3人`',
                 },
             },
             {
@@ -131,7 +131,7 @@ export function createSuccessCard(arena: ArenaDoc) {
                     type: 'kmarkdown',
                     content:
                         `${mentionUser(
-                            arena.id
+                            arena._id
                         )}房间创建成功！你的房间信息如下。` +
                         '\n你可以点击`广播`以将房间广播给所有人。',
                 },
@@ -182,15 +182,6 @@ export function createSuccessCard(arena: ArenaDoc) {
                         type: 'plain-text',
                         content: '广播',
                     },
-                },
-            },
-            {
-                type: 'section',
-                text: {
-                    type: 'kmarkdown',
-                    content: `留言：${
-                        arena.remark == '' ? '未填写' : arena.remark
-                    }`,
                 },
             },
             {

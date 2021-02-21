@@ -12,7 +12,7 @@ class ArenaManage extends AppCommand {
     func = async (
         session: ArenaSession
     ): Promise<FuncResult<ArenaSession> | ResultTypes> => {
-        session.arena = await Arena.findByIdAndDelete(session.user.id).exec();
+        session.arena = await Arena.findById(session.user.id).exec();
         if (!session.arena) {
             return session.replyTemp(
                 `未找到可管理的房间。如需创建房间，可发送\`.建房\``
@@ -29,7 +29,8 @@ class ArenaManage extends AppCommand {
             if (!session.arena) {
                 return session.reply(`未找到可删除的房间。`);
             }
-            return session.reply(`房间\`${session.arena.arenaId}\`已删除。`);
+            await Arena.findByIdAndDelete(session.user.id).exec();
+            return session.reply(`房间\`${session.arena.arenaId}\`已关闭。`);
         } catch (e) {
             console.error('Error when deleting arena', e, session);
             // data.result_status = ArenaResultStatus.error;

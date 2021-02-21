@@ -50,15 +50,7 @@ export function arenaInfoModules(arena: ArenaDoc): any[] {
                 },
             },
         },
-        {
-            type: 'section',
-            text: {
-                type: 'kmarkdown',
-                content: `留言：${
-                    arena.remark == '' ? '未填写' : arena.remark
-                }`,
-            },
-        },
+
         {
             type: 'context',
             elements: [

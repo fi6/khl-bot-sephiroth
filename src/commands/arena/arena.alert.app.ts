@@ -19,6 +19,11 @@ class ArenaAlert extends AppCommand {
         //     timeLimit = 30 * 6e4;
         // }
         // check args
+        const arena = await Arena.findById(session.user.id).exec();
+        if (!arena)
+            return session.replyTemp(
+                '没有找到可广播的房间。请先发送`.建房`创建房间。'
+            );
         if (!session.args.length) {
             let cancel_handle = session.setReplyTrigger('', 60 * 1e3, (msg) => {
                 this.func(new BaseSession(this, [msg.content], msg));
@@ -44,9 +49,7 @@ class ArenaAlert extends AppCommand {
         //     return sendMsg('alert', 'time_limit', [msg])
         // }
         // find arena for alert
-        const arena = await Arena.findById(session.user.id).exec();
-        if (!arena)
-            return session.replyTemp('没有找到可广播的房间。请先发送`.建房`创建房间。');
+
         // --------alert--------
         // Profile.findByIdAndUpdate(msg.authorId, { alertUsedAt: Date.now() }, (err, res) => {
         //     if (err) {

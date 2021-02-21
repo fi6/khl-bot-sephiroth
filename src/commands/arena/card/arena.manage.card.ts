@@ -91,15 +91,6 @@ export function arenaManageCard(session: ArenaSession) {
                     },
                 },
                 {
-                    type: 'section',
-                    text: {
-                        type: 'kmarkdown',
-                        content: `留言：${
-                            arena.remark == '' ? '未填写' : arena.remark
-                        }`,
-                    },
-                },
-                {
                     type: 'context',
                     elements: [
                         {

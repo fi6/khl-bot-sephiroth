@@ -56,11 +56,12 @@ class ArenaCreate extends AppCommand {
 
         session.arena = await this.create(session, args);
 
-        session.arenas = await arenaGetValid();
+        // session.arenas = await arenaGetValid();
         return session.sendCard(
             JSON.stringify(createSuccessCard(session.arena!))
         );
     };
+
     private async create(session: BaseSession, args: string[]) {
         if (args.length < 3) {
             console.error('args length < 3!');
@@ -78,8 +79,8 @@ class ArenaCreate extends AppCommand {
             remark = '';
         }
 
-        const arena = await Arena.findByIdAndUpdate(
-            session.userId,
+        let arena = await Arena.findByIdAndUpdate(
+            session.user.id,
             {
                 userNick: session.user.username,
                 arenaId: arenaId,
@@ -93,6 +94,9 @@ class ArenaCreate extends AppCommand {
                 upsert: true,
             }
         ).exec();
+        if (!arena?.id) {
+            arena = await Arena.findById(session.user.id).exec();
+        }
         return arena;
     }
 }
