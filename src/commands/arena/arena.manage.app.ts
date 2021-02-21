@@ -2,15 +2,23 @@ import { AppCommand } from 'kbotify';
 import { FuncResult, ResultTypes } from 'kbotify';
 import Arena from 'models/Arena';
 import { ArenaSession } from './arena.types';
+import { arenaManageCard } from './card/arena.manage.card';
 
-class ArenaDelete extends AppCommand {
-    code = 'delete';
-    trigger = '关闭';
+class ArenaManage extends AppCommand {
+    code = 'manage';
+    trigger = '管理';
     help = '如需关闭房间，请输入\n`.关房`';
     intro = '';
     func = async (
         session: ArenaSession
     ): Promise<FuncResult<ArenaSession> | ResultTypes> => {
+        if (session.args[0] == '关闭') {
+            return this.delete(session);
+        }
+        return session.sendCardTemp(JSON.stringify(arenaManageCard()));
+    };
+
+    private delete = async (session: ArenaSession) => {
         try {
             session.arena = await Arena.findByIdAndDelete(
                 session.msg.authorId
@@ -30,4 +38,4 @@ class ArenaDelete extends AppCommand {
     };
 }
 
-export const arenaDelete = new ArenaDelete();
+export const arenaManage = new ArenaManage();

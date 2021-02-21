@@ -1,7 +1,7 @@
 import { MenuCommand } from 'kbotify';
 import { arenaAlert } from './arena.alert.app';
 import { arenaCreate } from './arena.create.app';
-import { arenaDelete } from './arena.delete.app';
+import { arenaManage } from './arena.manage.app';
 import { arenaJoin } from './arena.join.app';
 import { arenaList } from './arena.list.app';
 import { ArenaSession } from './arena.types';
@@ -26,7 +26,7 @@ class ArenaMenu extends MenuCommand {
 export const arenaMenu = new ArenaMenu(
     arenaCreate,
     arenaList,
-    arenaDelete,
+    arenaManage,
     arenaAlert,
     arenaJoin
 );
@@ -69,7 +69,7 @@ function cardMenu() {
                         {
                             type: 'button',
                             theme: 'primary',
-                            value: 'cancel',
+                            value: '.房间 管理',
                             click: 'return-val',
                             text: {
                                 type: 'plain-text',
@@ -79,7 +79,7 @@ function cardMenu() {
                         {
                             type: 'button',
                             theme: 'primary',
-                            value: 'cancel',
+                            value: '.房间 查看',
                             click: 'return-val',
                             text: {
                                 type: 'plain-text',

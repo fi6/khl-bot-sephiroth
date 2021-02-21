@@ -10,6 +10,8 @@ import { CurrentUserInfo } from 'kaiheila-bot-root/dist/types/api';
 // import profileCommand from '../commands/profile'
 import { callCloud } from '../utils/utils';
 import { arenaMenu } from '../commands/arena/arena.menu';
+import { arenaManage } from '../commands/arena/arena.manage.app';
+import { arenaList } from '../commands/arena/arena.list.app';
 
 const bot = new KBotify({
     mode: 'websocket',
@@ -61,18 +63,17 @@ bot.execute = async (command: string, args: string[], msg: any) => {
         case '开房':
         case '建房':
             return arenaCreate.exec(...input);
-        // case '找房':
-        //     return arenaList.exec(...input);
-        // case '关房':
-        //     return arenaDelete.exec(...input);
+        case '找房':
+            return arenaList.exec(...input);
+        case '关房':
+            return arenaManage.exec(command, ['关闭'], msg);
         // case '房间':
         //     return arenaMenu.exec(...input);
         case '帮助':
             bot.sendChannelMessage(9, msg.channelId, '帮助文字还没写，别急');
             break;
-            // case '档案':
-            //     profileCommand(command, args, msg)
-            break;
+        // case '档案':
+        //     profileCommand(command, args, msg)
         default:
             if (cloudReg.test(command)) {
                 const line = callCloud.call();

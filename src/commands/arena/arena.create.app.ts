@@ -57,7 +57,7 @@ class ArenaCreate extends AppCommand {
         session.arena = await this.create(session, args);
 
         session.arenas = await arenaGetValid();
-        return session.sendCardTemp(
+        return session.sendCard(
             JSON.stringify(createSuccessCard(session.arena!))
         );
     };
