@@ -38,7 +38,7 @@ export function arenaListCard(session: ArenaSession): string {
                     type: 'kmarkdown',
                     content: `${mentionUser(
                         session.userId
-                    )}房间列表如下。\n你也可以点击右侧按钮创建房间。`,
+                    )}房间列表如下，点击加入获得房间密码。\n你也可以点击右侧按钮创建房间。`,
                 },
                 mode: 'right',
                 accessory: {
@@ -57,7 +57,7 @@ export function arenaListCard(session: ArenaSession): string {
                 elements: [
                     {
                         type: 'plain-text',
-                        content: '超过一小时的房间将不显示在房间列表中',
+                        content: '超过一小时的房间将不显示在房间列表中。',
                     },
                 ],
             },

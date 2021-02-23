@@ -18,6 +18,28 @@ export function createStartCard() {
             {
                 type: 'section',
                 text: {
+                    type: 'plain-text',
+                    content:
+                        '如果你还不熟悉使用方法，可以点击右侧按钮，机器人将协助你创建。',
+                },
+                mode: 'right',
+                accessory: {
+                    type: 'button',
+                    theme: 'success',
+                    click: 'return-val',
+                    value: '.房间 创建 hp',
+                    text: {
+                        type: 'plain-text',
+                        content: '开始创建',
+                    },
+                },
+            },
+            {
+                type: 'divider',
+            },
+            {
+                type: 'section',
+                text: {
                     type: 'kmarkdown',
                     content:
                         '如果你熟悉机器人的使用方法，可以使用命令创建。\n创建房间的完整指令格式：\n`.建房 房间号 密码 加速/人数 (留言)`',
@@ -35,28 +57,6 @@ export function createStartCard() {
                 text: {
                     type: 'kmarkdown',
                     content: '',
-                },
-            },
-            {
-                type: 'divider',
-            },
-            {
-                type: 'section',
-                text: {
-                    type: 'plain-text',
-                    content:
-                        '如果你还不熟悉使用方法，可以点击右侧按钮，机器人将协助你创建。',
-                },
-                mode: 'right',
-                accessory: {
-                    type: 'button',
-                    theme: 'success',
-                    click: 'return-val',
-                    value: '.房间 创建 hp',
-                    text: {
-                        type: 'plain-text',
-                        content: '开始创建',
-                    },
                 },
             },
         ],

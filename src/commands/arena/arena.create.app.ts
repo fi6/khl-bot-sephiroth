@@ -92,6 +92,7 @@ class ArenaCreate extends AppCommand {
             },
             {
                 upsert: true,
+                new: true,
             }
         ).exec();
         if (!arena?.id) {

@@ -12,6 +12,8 @@ import { callCloud } from '../utils/utils';
 import { arenaMenu } from '../commands/arena/arena.menu';
 import { arenaManage } from '../commands/arena/arena.manage.app';
 import { arenaList } from '../commands/arena/arena.list.app';
+import { utilApp } from '../commands/util.app';
+import { welcomeEntry } from '../commands/welcome/welcome.entry';
 
 const bot = new KBotify({
     mode: 'websocket',
@@ -29,7 +31,7 @@ bot.getCurrentUserInfo().then((info: CurrentUserInfo) => {
     bot.botId = info.id;
 });
 
-bot.addCommands(arenaMenu);
+bot.addCommands(arenaMenu, utilApp, welcomeEntry);
 bot.addAlias(arenaCreate, '建房');
 // bot.addAlias(arenaList, '找房');
 // bot.addAlias(arenaDelete, '关房');

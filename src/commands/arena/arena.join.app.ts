@@ -42,8 +42,11 @@ class ArenaJoin extends AppCommand {
         session.arena.markModified('member');
         await session.arena.save();
         const arena = session.arena;
-        return session.replyTemp(
-            ''.concat('成功加入：', `\`${arena.userNick}的房间\``)
+        return session.mentionTemp(
+            ''.concat(
+                `房间密码：${session.arena.password}\n成功加入`,
+                `\`${arena.userNick}的房间\``
+            )
         );
     };
 }
