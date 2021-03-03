@@ -45,7 +45,7 @@
 //     // start creating
 
 // //     data.arena = await Arena.findByIdAndUpdate(
-// //         msg.authorId,
+// //         session.userId,
 // //         {
 // //             userNick: msg.author.nickname,
 // //             arenaId: args[0].toUpperCase(),
@@ -83,7 +83,7 @@
 //         return data.generateContent();
 //     }
 //     for (const user of data.arena.trainingQueue) {
-//         if (user._id == msg.authorId) {
+//         if (user._id == session.userId) {
 //             data.result_status = TrainingResultStatus.in_queue;
 //             return data.generateContent();
 //         }
@@ -99,7 +99,7 @@
 //     //     last_tag = data.arena.trainingQueue[-1].tag + 1;
 //     // }
 //     data.arena.trainingQueue.push({
-//         _id: msg.authorId,
+//         _id: session.userId,
 //         userNick: msg.author.nickname,
 //         time: new Date(),
 //         tag: last_tag,
@@ -116,7 +116,7 @@
 //     const msg = data.msg;
 //     if (!msg.mention.user.length) {
 //         data.arenas = await Arena.find({
-//             'trainingQueue._id': msg.authorId,
+//             'trainingQueue._id': session.userId,
 //         }).exec();
 //         // console.log(arenas);
 //     } else {
@@ -132,7 +132,7 @@
 //         data.arenas.forEach(async (a) => {
 //             await Arena.updateOne(
 //                 { _id: a?._id },
-//                 { $pull: { trainingQueue: { _id: msg.authorId } } }
+//                 { $pull: { trainingQueue: { _id: session.userId } } }
 //             );
 //         });
 //     } catch (error) {
@@ -155,7 +155,7 @@
 
 //     // find arena
 //     data.arena = await Arena.findOne({
-//         _id: msg.authorId,
+//         _id: session.userId,
 //         isTraining: true,
 //     }).exec();
 
@@ -193,7 +193,7 @@
 //         return data.generateContent();
 //     }
 //     const arena = await Arena.findOne({
-//         _id: msg.authorId,
+//         _id: session.userId,
 //         isTraining: true,
 //     }).exec();
 //     if (!arena) {

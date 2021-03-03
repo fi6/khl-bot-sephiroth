@@ -36,7 +36,7 @@ class WelcomeShortcut extends AppCommand {
             session._send(cardParser(createStartCard()), undefined, {
                 msgType: 10,
                 temp: true,
-                replyAt: channel.chat,
+                channel: channel.chat,
             });
         }
     };

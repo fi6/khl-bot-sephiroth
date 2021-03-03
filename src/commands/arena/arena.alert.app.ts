@@ -40,7 +40,7 @@ class ArenaAlert extends AppCommand {
             return session.sendTemp('取消成功');
         }
         // --------find profile--------
-        // let profile = Profile.findById(msg.authorId).exec();
+        // let profile = Profile.findById(session.userId).exec();
         // if (!profile.length) {
         //     return sendMsg('alert', 'no_account', [msg])
         // }
@@ -51,7 +51,7 @@ class ArenaAlert extends AppCommand {
         // find arena for alert
 
         // --------alert--------
-        // Profile.findByIdAndUpdate(msg.authorId, { alertUsedAt: Date.now() }, (err, res) => {
+        // Profile.findByIdAndUpdate(session.userId, { alertUsedAt: Date.now() }, (err, res) => {
         //     if (err) {
         //         console.error(err);
         //         return sendMsg('alert', 'error')

@@ -19,21 +19,21 @@
 
 //         // error handling
 //         if (!checkRoles(msg.author.roles, 'coach')) {
-//             return this.msgSender.reply(
+//             return session.replyTemp(
 //                 '权限不足，只有教练组可以发起特训房。',
 //                 data
 //             );
 //         }
 //         if (!args.length) {
-//             return this.msgSender.send(this.help, data);
+//             return session.sendTemp(this.help, data);
 //         } else if (args.length !== 5) {
 //             // no args found, return menu
-//             return this.msgSender.reply('参数数量错误' + this.help, data);
+//             return session.replyTemp('参数数量错误' + this.help, data);
 //         }
 
 //         const limit = argsCheckerToLimit(args);
 //         if (typeof limit === 'undefined')
-//             return this.msgSender.reply(
+//             return session.replyTemp(
 //                 '参数格式错误。请检查房间号、密码，并确认加速、人数文字长度小于8',
 //                 data
 //             );
@@ -53,10 +53,10 @@
 //             '> 取消排队或退出房间后请发送`.房间 退出`。\n多次不主动退出会被暂时禁止参加特训。'
 //         );
 //         setTimeout(() => {
-//             bot.sendChannelMessage(9, msg.channelId, content);
+//             bot.API.message.create(9, msg.channelId, content);
 //         }, 3e3);
 
-//         return this.msgSender.reply(`特训房间创建成功！即将呼叫全体。`, data);
+//         return session.replyTemp(`特训房间创建成功！即将呼叫全体。`, data);
 //     };
 // }
 

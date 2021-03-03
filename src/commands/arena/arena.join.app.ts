@@ -1,5 +1,4 @@
 import { ArenaSession } from 'commands/arena/arena.types';
-import { TextMessage } from 'kaiheila-bot-root/dist/types';
 import { AppCommand, AppCommandFunc } from 'kbotify';
 import Arena from 'models/Arena';
 
@@ -8,10 +7,7 @@ class ArenaJoin extends AppCommand {
 
     help = '仅可通过按钮加入';
     func: AppCommandFunc<ArenaSession> = async (session: ArenaSession) => {
-        const [msg, args] = [
-            session.msg as TextMessage,
-            session.args as string[],
-        ];
+        const [msg, args] = [session.msg, session.args as string[]];
 
         // if (msg.mention.user.length != 1) {
         //     session.reply(this.help);

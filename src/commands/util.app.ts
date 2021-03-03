@@ -7,7 +7,7 @@ class UtilApp extends AppCommand {
     intro = '查看房间';
     help = '';
     func: AppCommandFunc<BaseSession> = async (session) => {
-        await session.sendCard(JSON.stringify(card()));
+        // await session.sendCard(JSON.stringify(card()));
         await session.sendCard(JSON.stringify([card2()]));
         return;
     };
@@ -194,7 +194,7 @@ function card2() {
                     {
                         type: 'button',
                         theme: 'success',
-                        value: '.欢迎',
+                        value: '.欢迎 开始 1',
                         click: 'return-val',
                         text: {
                             type: 'plain-text',

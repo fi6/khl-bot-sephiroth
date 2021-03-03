@@ -12,7 +12,7 @@
 
 //     const arenaMsg = data.content as string;
 
-//     bot.sendChannelMessage(9, msg.channelId, arenaMsg, msg.msgId);
+//     bot.API.message.create(9, msg.channelId, arenaMsg, msg.msgId);
 
 //     return data;
 // }
@@ -26,7 +26,7 @@
 //         data.arenas as ArenaDoc[],
 //     ];
 
-//     const mention = `(met)${msg.authorId}(met) `;
+//     const mention = `(met)${session.userId}(met) `;
 
 //     const msgCreator: trainingMsgCreator = {
 //         create: async (type: string): Promise<string> => {
@@ -44,7 +44,7 @@
 //                         '\n> 取消排队或退出房间后请发送`.房间 退出`。\n多次不主动退出会被暂时禁止参加特训。'
 //                     );
 //                     setTimeout(() => {
-//                         bot.sendChannelMessage(9, msg.channelId, content);
+//                         bot.API.message.create(9, msg.channelId, content);
 //                     }, 3e3);
 //                     return `特训房间创建成功！即将呼叫全体。\n`;
 
@@ -148,7 +148,7 @@
 //                     });
 //                     content += `你已被移出\`${msg.author.nickname}的特训房\` 的队伍。\n> 多次不主动退出的话会暂时禁止参加特训。`;
 //                     setTimeout(() => {
-//                         bot.sendChannelMessage(9, msg.channelId, content);
+//                         bot.API.message.create(9, msg.channelId, content);
 //                     }, 3 * 1e3);
 //                     return mention + '操作成功！';
 

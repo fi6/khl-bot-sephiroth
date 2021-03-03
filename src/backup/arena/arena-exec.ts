@@ -46,7 +46,7 @@
 //     }
 
 //     data.arena = await Arena.findByIdAndUpdate(
-//         msg.authorId,
+//         session.userId,
 //         {
 //             userNick: msg.author.nickname,
 //             arenaId: arenaId,
@@ -109,7 +109,7 @@
 //  */
 // async function deleteArena(data: ArenaSession): Promise<ArenaSession> {
 //     try {
-//         data.arena = await Arena.findByIdAndDelete(data.msg.authorId).exec();
+//         data.arena = await Arena.findByIdAndDelete(data.session.userId).exec();
 //         if (!data.arena) {
 //             data.result_status = ArenaResultStatus.no_arena;
 //             data.content = await arenaMsgBuilder(data);
@@ -146,7 +146,7 @@
 //         return data;
 //     }
 //     // --------find profile--------
-//     // let profile = Profile.findById(msg.authorId).exec();
+//     // let profile = Profile.findById(session.userId).exec();
 //     // if (!profile.length) {
 //     //     return sendMsg('alert', 'no_account', [msg])
 //     // }
@@ -155,14 +155,14 @@
 //     //     return sendMsg('alert', 'time_limit', [msg])
 //     // }
 //     // find arena for alert
-//     const arena = await Arena.findById(data.msg.authorId).exec();
+//     const arena = await Arena.findById(data.session.userId).exec();
 //     if (!arena) {
 //         data.result_status = ArenaResultStatus.no_arena;
 //         data.content = await arenaMsgBuilder(data);
 //         return data;
 //     }
 //     // --------alert--------
-//     // Profile.findByIdAndUpdate(msg.authorId, { alertUsedAt: Date.now() }, (err, res) => {
+//     // Profile.findByIdAndUpdate(session.userId, { alertUsedAt: Date.now() }, (err, res) => {
 //     //     if (err) {
 //     //         console.error(err);
 //     //         return sendMsg('alert', 'error')

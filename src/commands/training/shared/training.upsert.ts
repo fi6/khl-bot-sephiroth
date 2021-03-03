@@ -7,7 +7,7 @@ export async function trainingUpsert(
     limit: string
 ): Promise<ArenaDoc> {
     return Arena.findByIdAndUpdate(
-        data.msg.authorId,
+        data.session.userId,
         {
             userNick: data.msg.author.nickname,
             arenaId: data.args[0].toUpperCase(),

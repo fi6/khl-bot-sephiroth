@@ -8,7 +8,7 @@
 //         const msg = data.msg;
 //         if (!msg.mention.user.length) {
 //             data.arenas = await Arena.find({
-//                 'trainingQueue._id': msg.authorId,
+//                 'trainingQueue._id': session.userId,
 //             }).exec();
 //             // console.log(arenas);
 //         } else {
@@ -17,24 +17,24 @@
 //             ] as typeof data.arenas;
 //         }
 //         if (!data.arenas) {
-//             return this.msgSender.reply('没有找到可退出的房间。', data);
+//             return session.replyTemp('没有找到可退出的房间。', data);
 //         }
 //         try {
 //             data.arenas.forEach(async (a) => {
 //                 await Arena.updateOne(
 //                     { _id: a?._id },
-//                     { $pull: { trainingQueue: { _id: msg.authorId } } }
+//                     { $pull: { trainingQueue: { _id: session.userId } } }
 //                 );
 //             });
 //         } catch (error) {
 //             console.error(error);
-//             return this.msgSender.send('出现未知错误', data);
+//             return session.sendTemp('出现未知错误', data);
 //         }
 //         let content = '已离开：\n';
 //         for (const a of data.arenas) {
 //             content += `\`${a.userNick}的特训房\`\n`;
 //         }
-//         return this.msgSender.reply(content, data);
+//         return session.replyTemp(content, data);
 //     };
 // }
 

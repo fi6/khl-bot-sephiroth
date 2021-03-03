@@ -45,7 +45,7 @@ bot.on('message', (msg) => {
 async function execute(command, args, msg) {
     const channelList = ['4873200132116685', '3072169336937497', '9451421743134446'];
     if (!channelList.includes(msg.channelId)) {
-        bot.sendChannelMessage(1, msg.channelId, 'bot当前仅在闲聊频道使用，仅内测用户可用', msg.msgId);
+        bot.API.message.create(1, msg.channelId, 'bot当前仅在闲聊频道使用，仅内测用户可用', msg.msgId);
         return;
     }
     const cloudReg = /克劳德/;
@@ -65,18 +65,18 @@ async function execute(command, args, msg) {
             profileCommand(command, args, msg);
             break;
         case 'test':
-            bot.sendChannelMessage(9, msg.channelId, '```' + `${args[0]}\n房主：\n房间号：BPTC1\n密码：147\n留言：萌新马里奥想找剑人练习~\n创建时间：13:21\n` + '```')
+            bot.API.message.create(9, msg.channelId, '```' + `${args[0]}\n房主：\n房间号：BPTC1\n密码：147\n留言：萌新马里奥想找剑人练习~\n创建时间：13:21\n` + '```')
             break;
         default:
             if (cloudReg.test(command)) {
                 let line = callCloud.call();
                 if (line) {
-                    bot.sendChannelMessage(1, msg.channelId, line);
+                    bot.API.message.create(1, msg.channelId, line);
                     break;
                 }
             }
             if (regex.test(command)) {
-                bot.sendChannelMessage(1, msg.channelId, '不是有效的命令。查看帮助请发送[.帮助]');
+                bot.API.message.create(1, msg.channelId, '不是有效的命令。查看帮助请发送[.帮助]');
                 break;
             }
             return help(command, args, msg);

@@ -12,23 +12,23 @@
 //     func: AppCommandFunc<ArenaSession> = async (data: ArenaSession) => {
 //         const [msg, args] = [data.msg, data.args];
 //         if (!checkRoles(msg.author.roles, 'coach')) {
-//             return this.msgSender.reply(
+//             return session.replyTemp(
 //                 '权限不足，只有教练组可以发起和管理特训房',
 //                 data
 //             );
 //         }
 //         const arena = await Arena.findOne({
-//             _id: msg.authorId,
+//             _id: session.userId,
 //             isTraining: true,
 //         }).exec();
 //         if (!arena) {
-//             return this.msgSender.reply('没有找到可管理的特训房', data);
+//             return session.replyTemp('没有找到可管理的特训房', data);
 //         }
 //         data.arena = arena;
 //         if (!args[0]) {
-//             return this.msgSender.reply(this.help, data);
+//             return session.replyTemp(this.help, data);
 //         } else if (args[0] == 'all') {
-//             return this.msgSender.reply('尚未完工', data);
+//             return session.replyTemp('尚未完工', data);
 //             //     return 'clear all, not finished';
 //         }
 //         try {
@@ -51,7 +51,7 @@
 //             // await arena.save();
 //         } catch (error) {
 //             console.error(error, data);
-//             return this.msgSender.send(
+//             return session.sendTemp(
 //                 '出现未知错误啦！',
 //                 data,
 //                 ResultTypes.ERROR
@@ -63,8 +63,8 @@
 //         });
 //         content += `你已被移出\`${msg.author.nickname}的特训房\` 的队伍。\n> 多次不主动退出的话会暂时禁止参加特训。`;
 //         setTimeout(() => {
-//             bot.sendChannelMessage(9, msg.channelId, content);
+//             bot.API.message.create(9, msg.channelId, content);
 //         }, 2 * 1e3);
-//         return this.msgSender.reply('操作成功！', data);
+//         return session.replyTemp('操作成功！', data);
 //     };
 // }

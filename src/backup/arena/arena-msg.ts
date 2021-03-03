@@ -16,7 +16,7 @@
 
 //     const arenaMsg = data.content as string;
 
-//     bot.sendChannelMessage(9, msg.channelId, arenaMsg, msg.msgId);
+//     bot.API.message.create(9, msg.channelId, arenaMsg, msg.msgId);
 
 //     return data;
 // }
@@ -36,7 +36,7 @@
 //         data.arena as ArenaDoc,
 //         data.arenas as ArenaDoc[],
 //     ];
-//     const mention = `(met)${msg.authorId}(met) `;
+//     const mention = `(met)${session.userId}(met) `;
 
 //     const creator: arenaMsgCreator = {
 //         create: async (type: string): Promise<string> => {

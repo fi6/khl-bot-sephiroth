@@ -6,5 +6,5 @@ const card = arenaConfig.arenaCardId;
 
 export async function updateArenaCard() {
     const arenas = await arenaGetValid()
-
+    
 }

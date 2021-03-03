@@ -13,7 +13,7 @@
 
 //         // check if coach
 //         if (!checkRoles(msg.author.roles, 'coach')) {
-//             this.msgSender.reply(
+//             session.replyTemp(
 //                 '权限不足，只有教练组可以发起和管理特训房',
 //                 data
 //             );
@@ -21,13 +21,13 @@
 
 //         // find arena
 //         data.arena = await Arena.findOne({
-//             _id: msg.authorId,
+//             _id: session.userId,
 //             isTraining: true,
 //         }).exec();
 
 //         // no arena found
 //         if (!data.arena) {
-//             return this.msgSender.reply('没有找到可管理的特训房', data);
+//             return session.replyTemp('没有找到可管理的特训房', data);
 //         }
 
 //         // if (!args.length) {
@@ -55,7 +55,7 @@
 //             '如需移除请发送[.房间 移除 序号]```'
 //         );
 
-//         return this.msgSender.sendOnly(content, data);
+//         return session.sendTempOnly(content, data);
 //     };
 // }
 // export const trainingManage = new TrainingManage();

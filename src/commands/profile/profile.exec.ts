@@ -3,8 +3,6 @@
 // import { fighterParse } from '../../utils/utils';
 // import { createPipe, Pipe } from '../pipeline-helper';
 
-
-
 // const profilePipe: Pipe<ProfileData> = createPipe();
 
 // async function profileCommand(command: string, args, msg) {
@@ -77,7 +75,7 @@
 //     const arenaMsg = await profileMsgBuilder(command, type, vars);
 //     // console.log(arenaMsg);
 //     if (arenaMsg) {
-//         bot.sendChannelMessage(9, msg.channelId, arenaMsg, msg.msgId);
+//         bot.API.message.create(9, msg.channelId, arenaMsg, msg.msgId);
 //     }
 // }
 
@@ -94,7 +92,7 @@
 //             switch (type) {
 //                 case 'success':
 //                     return (
-//                         `(met)${msg.authorId}(met) 建房成功！\n关闭房间后记得发送\`.关房\`删除记录。\n---\n` +
+//                         `(met)${session.userId}(met) 建房成功！\n关闭房间后记得发送\`.关房\`删除记录。\n---\n` +
 //                         (await findArenaMsg())
 //                     );
 //                 case 'fail':

@@ -7,7 +7,7 @@
 //     help = '';
 //     func: AppCommandFunc<ProfileData> = (data) => {
 //         data;
-//         return this.msgSender.reply(this.help, data);
+//         return session.replyTemp(this.help, data);
 //     };
 // }
 

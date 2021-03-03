@@ -3,9 +3,7 @@ import { arenaCreate } from 'commands/arena/arena.create.app';
 // import { arenaList } from 'commands/arena/arena.list.app';
 // import { arenaMenu } from 'commands/arena/arena.menu';
 import auth from 'configs/auth';
-import { KMarkDownMessage, TextMessage } from 'kaiheila-bot-root/dist/types';
 import { BaseSession, KBotify } from 'kbotify';
-import { CurrentUserInfo } from 'kaiheila-bot-root/dist/types/api';
 
 // import profileCommand from '../commands/profile'
 import { callCloud } from '../utils/utils';
@@ -14,39 +12,33 @@ import { arenaManage } from '../commands/arena/arena.manage.app';
 import { arenaList } from '../commands/arena/arena.list.app';
 import { utilApp } from '../commands/util.app';
 import { welcomeEntry } from '../commands/welcome/welcome.entry';
+import { TextMessage } from 'kbotify/dist/core/message';
 
 const bot = new KBotify({
     mode: 'websocket',
-    port: auth.khlport,
-    key: auth.khlkey,
     token: auth.khltoken,
-    verifyToken: auth.khlverify,
+
 
     ignoreDecryptError: false,
 });
 
 bot.connect();
 
-bot.getCurrentUserInfo().then((info: CurrentUserInfo) => {
-    bot.botId = info.id;
-});
-
 bot.addCommands(arenaMenu, utilApp, welcomeEntry);
 bot.addAlias(arenaCreate, '建房');
 // bot.addAlias(arenaList, '找房');
 // bot.addAlias(arenaDelete, '关房');
 
-bot.on('message', (msg) => {
-    msg = msg as TextMessage;
+bot.message.on('text', (msg) => {
     if (msg.content == '房间') {
-        return arenaMenu.exec(new BaseSession(arenaMenu, [], msg));
+        return arenaMenu.exec(new BaseSession(arenaMenu, [], msg, bot));
     }
 });
 
 bot.execute = async (command: string, args: string[], msg: any) => {
     // const channelList = ['4873200132116685', '3072169336937497'];
     // if (!channelList.includes(msg.channelId)) {
-    //     bot.sendChannelMessage(
+    //     bot.API.message.create(
     //         1,
     //         msg.channelId,
     //         'bot当前仅在闲聊频道使用，仅内测用户可用',
@@ -60,7 +52,7 @@ bot.execute = async (command: string, args: string[], msg: any) => {
     const regex = /^[\u4e00-\u9fa5]/;
     const cmd = bot.commandMap.get(command);
     // console.debug(bot.commandMap);
-    if (cmd) return cmd.exec(new BaseSession(cmd, args, msg, bot));
+    if (cmd) return cmd.exec(new BaseSession(cmd, args, msg));
     switch (command) {
         case '开房':
         case '建房':
@@ -72,7 +64,7 @@ bot.execute = async (command: string, args: string[], msg: any) => {
         // case '房间':
         //     return arenaMenu.exec(...input);
         case '帮助':
-            bot.sendChannelMessage(9, msg.channelId, '帮助文字还没写，别急');
+            bot.API.message.create(9, msg.channelId, '帮助文字还没写，别急');
             break;
         // case '档案':
         //     profileCommand(command, args, msg)
@@ -80,20 +72,20 @@ bot.execute = async (command: string, args: string[], msg: any) => {
             if (cloudReg.test(command)) {
                 const line = callCloud.call();
                 if (line) {
-                    bot.sendChannelMessage(1, msg.channelId, line);
+                    bot.API.message.create(1, msg.channelId, line);
                     break;
                 }
             }
             return;
         // if (regex.test(command) && command != '天梯') {
-        //     bot.sendChannelMessage(
+        //     bot.API.message.create(
         //         1,
         //         msg.channelId,
         //         '不是有效的命令。查看帮助请发送[.帮助]'
         //     );
         //     break;
         // }
-        // return bot.sendChannelMessage(
+        // return bot.API.message.create(
         //     9,
         //     msg.channelId,
         //     '帮助文字还没写，别急'

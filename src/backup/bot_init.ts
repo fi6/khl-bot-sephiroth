@@ -23,9 +23,6 @@
 
 // const botId = '806285597';
 
-
-
-
 // async function execute(
 //     command: string,
 //     args: string[],
@@ -33,7 +30,7 @@
 // ) {
 //     // const channelList = ['4873200132116685', '3072169336937497'];
 //     // if (!channelList.includes(msg.channelId)) {
-//     //     bot.sendChannelMessage(
+//     //     bot.API.message.create(
 //     //         1,
 //     //         msg.channelId,
 //     //         'bot当前仅在闲聊频道使用，仅内测用户可用',
@@ -58,7 +55,7 @@
 //             //     profileCommand(command, args, msg)
 //             break;
 //         case 'test':
-//             bot.sendChannelMessage(
+//             bot.API.message.create(
 //                 9,
 //                 msg.channelId,
 //                 '```' +
@@ -70,12 +67,12 @@
 //             if (cloudReg.test(command)) {
 //                 const line = callCloud.call();
 //                 if (line) {
-//                     bot.sendChannelMessage(1, msg.channelId, line);
+//                     bot.API.message.create(1, msg.channelId, line);
 //                     break;
 //                 }
 //             }
 //             if (regex.test(command)) {
-//                 bot.sendChannelMessage(
+//                 bot.API.message.create(
 //                     1,
 //                     msg.channelId,
 //                     '不是有效的命令。查看帮助请发送[.帮助]'

@@ -11,18 +11,18 @@
 //         const [msg, args] = [data.msg as TextMessage, data.args as string[]];
 
 //         if (msg.mention.user.length != 1) {
-//             this.msgSender.reply(this.help, data);
+//             session.replyTemp(this.help, data);
 //         }
 //         data.arena = await Arena.findOne({
 //             _id: msg.mention.user[0],
 //             isTraining: true,
 //         }).exec();
 //         if (!data.arena)
-//             return this.msgSender.reply('没有找到对应房间。', data);
+//             return session.replyTemp('没有找到对应房间。', data);
 
 //         for (const user of data.arena.trainingQueue) {
-//             if (user._id == msg.authorId) {
-//                 return this.msgSender.reply(
+//             if (user._id == session.userId) {
+//                 return session.replyTemp(
 //                     '你已经在此房间队伍中。如需换到队尾请先输入`.房间 退出`，退出后重新排队。',
 //                     data
 //                 );
@@ -40,7 +40,7 @@
 //         //     last_tag = data.arena.trainingQueue[-1].tag + 1;
 //         // }
 //         data.arena.trainingQueue.push({
-//             _id: msg.authorId,
+//             _id: session.userId,
 //             userNick: msg.author.nickname,
 //             time: new Date(),
 //             tag: last_tag,
@@ -49,7 +49,7 @@
 //         data.arena.markModified('trainingQueue');
 //         await data.arena.save();
 //         const arena = data.arena;
-//         return this.msgSender.reply(
+//         return session.replyTemp(
 //             ''.concat(
 //                 '成功加入排队：',
 //                 `\`${arena.userNick}的特训房\`\n`,

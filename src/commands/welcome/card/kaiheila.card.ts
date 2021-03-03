@@ -1,4 +1,4 @@
-export function card() {
+export function kaiheilaCard() {
     return {
         type: 'card',
         theme: 'info',

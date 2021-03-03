@@ -22,9 +22,10 @@
     "address-parse": "^1.2.8",
     "dotenv": "^8.2.0",
     "kaiheila-bot-root": "file:../BotRoot",
-    "kbotify": "^0.1.27",
+    "kbotify": "^0.1.29",
     "lru-cache": "^6.0.0",
     "mongoose": "^5.11.9",
+    "node-schedule": "^2.0.0",
     "ts-mongoose": "0.0.24"
   },
   "devDependencies": {
