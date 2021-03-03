@@ -25,7 +25,7 @@ class ArenaAlert extends AppCommand {
                 '没有找到可广播的房间。请先发送`.建房`创建房间。'
             );
         if (!session.args.length) {
-            let cancel_handle = session.setReplyTrigger('', 60 * 1e3, (msg) => {
+            let cancel_handle = session.setTextTrigger('', 60 * 1e3, (msg) => {
                 this.func(new BaseSession(this, [msg.content], msg));
             });
             this.cache.set(session.userId, cancel_handle);

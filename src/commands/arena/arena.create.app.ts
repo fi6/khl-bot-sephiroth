@@ -31,7 +31,7 @@ class ArenaCreate extends AppCommand {
         if (args[0].startsWith('hp')) {
             // no input added
             if (args[0] == 'hp') {
-                session.setReplyTrigger(
+                session.setTextTrigger(
                     /^\w{5} \d{0,8} .+/,
                     120 * 1e3,
                     (msg) => {

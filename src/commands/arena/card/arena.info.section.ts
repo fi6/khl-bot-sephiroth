@@ -26,7 +26,7 @@ export function arenaInfoModules(arena: ArenaDoc): any[] {
                 fields: [
                     {
                         type: 'kmarkdown',
-                        content: `**房间号/密码**\n${arena.arenaId} ${arena.password}`,
+                        content: `**房间号**\n${arena.arenaId}`,
                     },
                     {
                         type: 'kmarkdown',

@@ -1,3 +1,4 @@
+import { ArenaDoc } from '../../../models/Arena';
 import { mentionUser } from '../../../utils/khl';
 import { ArenaSession } from '../arena.types';
 import { arenaInfoModules } from './arena.info.section';
@@ -7,6 +8,9 @@ const divider = {
 };
 
 export function arenaListCard(session: ArenaSession): string {
+    if (!session.arenas)
+        throw new Error('no arena given when using arenalistcard');
+
     const arenas = session.arenas;
     if (!arenas?.length) {
         console.error('arenas error!', session);
