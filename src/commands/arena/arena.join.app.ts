@@ -25,7 +25,7 @@ class ArenaJoin extends AppCommand {
             for (const user of session.arena.member) {
                 if (user._id == session.userId) {
                     return session.replyTemp(
-                        '你已经在此房间队伍中。如需更换房间请输入`.房间 退出`（暂未实装，请等待更新）。'
+                        '你已经在此房间中。如需更换房间请输入`.房间 退出`。'
                     );
                 }
             }

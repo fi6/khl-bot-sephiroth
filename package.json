@@ -21,7 +21,7 @@
     "@types/mongoose": "^5.10.3",
     "address-parse": "^1.2.8",
     "dotenv": "^8.2.0",
-    "kaiheila-bot-root": "0.0.9",
+    "kaiheila-bot-root": "file:../BotRoot",
     "kbotify": "^0.1.27",
     "lru-cache": "^6.0.0",
     "mongoose": "^5.11.9",
