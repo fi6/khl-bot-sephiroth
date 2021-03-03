@@ -9,28 +9,54 @@ import { arenaGetValid } from './arena.get-valid';
 
 let cardId = arenaConfig.arenaCardId;
 
-export async function updateArenaCard() {
-    const arenas = await arenaGetValid();
-    const card = arenaListCard(arenas);
-
-    await bot.API.message.delete(cardId);
+export async function updateArenaList(arenas?: ArenaDoc[]): Promise<any> {
+    arenas = arenas ?? (await arenaGetValid());
+    const card = _arenaListCard(arenas);
+    try {
+        await bot.API.message.delete(cardId);
+    } catch (error) {
+        console.debug('error deleting arena card:', error);
+    }
     const sent = bot.API.message.create(10, channel.arenaBot, card);
     cardId = (await sent).msgId;
+    console.debug('card sent at:', cardId);
+    return sent;
 }
 
-function arenaListCard(arenas: ArenaDoc[]): string {
+function _arenaListCard(arenas: ArenaDoc[]): string {
     const divider = {
         type: 'divider',
     };
-    if (!arenas?.length) {
-        throw new Error('arenas error!');
-    }
-    const [first, ...res] = arenas;
-    let arenaList: any[] = [...arenaInfoModules(first)];
-    if (res.length) {
-        res.forEach((arena) => {
-            arenaList = [...arenaList, divider, ...arenaInfoModules(arena)];
-        });
+    let card2;
+    if (arenas.length) {
+        const [first, ...res] = arenas;
+        let arenaList: any[] = [...arenaInfoModules(first)];
+        if (res.length) {
+            res.forEach((arena) => {
+                arenaList = [...arenaList, divider, ...arenaInfoModules(arena)];
+            });
+        }
+        card2 = {
+            type: 'card',
+            theme: 'secondary',
+            size: 'lg',
+            modules: arenaList,
+        };
+    } else {
+        card2 = {
+            type: 'card',
+            theme: 'secondary',
+            size: 'lg',
+            modules: [
+                {
+                    type: 'section',
+                    text: {
+                        type: 'kmarkdown',
+                        content: '当前没有房间，你可以点击上方按钮进行创建。',
+                    },
+                },
+            ],
+        };
     }
     // console.debug(JSON.stringify(arenaList));
     const card1 = {
@@ -69,18 +95,12 @@ function arenaListCard(arenas: ArenaDoc[]): string {
                     {
                         type: 'plain-text',
                         content:
-                            `更新于：${formatTime(new Date())}\n` +
-                            '超过一小时的房间将不显示在房间列表中。',
+                            '超过一小时的房间将不显示在房间列表中。' +
+                            ` (更新于${formatTime(new Date())})`,
                     },
                 ],
             },
         ],
-    };
-    const card2 = {
-        type: 'card',
-        theme: 'secondary',
-        size: 'lg',
-        modules: arenaList,
     };
 
     return JSON.stringify([card1, card2]);

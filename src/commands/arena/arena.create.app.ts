@@ -8,6 +8,7 @@ import {
     createSuccessCard,
 } from './card/arena.create.card';
 import { arenaGetValid } from './shared/arena.get-valid';
+import { updateArenaList as arenaUpdateCard } from './shared/arena.update-list';
 // import { arenaListMsg } from './shared/arena.list.msg';
 
 class ArenaCreate extends AppCommand {
@@ -55,7 +56,7 @@ class ArenaCreate extends AppCommand {
         }
 
         session.arena = await this.create(session, args);
-
+        arenaUpdateCard()
         // session.arenas = await arenaGetValid();
         return session.sendCard(
             JSON.stringify(createSuccessCard(session.arena!))

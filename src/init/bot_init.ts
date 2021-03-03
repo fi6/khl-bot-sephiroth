@@ -18,7 +18,6 @@ const bot = new KBotify({
     mode: 'websocket',
     token: auth.khltoken,
 
-
     ignoreDecryptError: false,
 });
 
@@ -28,6 +27,10 @@ bot.addCommands(arenaMenu, utilApp, welcomeEntry);
 bot.addAlias(arenaCreate, '建房');
 // bot.addAlias(arenaList, '找房');
 // bot.addAlias(arenaDelete, '关房');
+
+bot.on('unknownEvent', (e) => {
+    console.debug(e);
+});
 
 bot.message.on('text', (msg) => {
     if (msg.content == '房间') {

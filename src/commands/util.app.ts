@@ -1,5 +1,6 @@
 import { AppCommand, AppCommandFunc, BaseSession } from 'kbotify';
 import Arena from 'models/Arena';
+import { updateArenaList } from './arena/shared/arena.update-list';
 
 class UtilApp extends AppCommand {
     code = 'list';
@@ -8,7 +9,8 @@ class UtilApp extends AppCommand {
     help = '';
     func: AppCommandFunc<BaseSession> = async (session) => {
         // await session.sendCard(JSON.stringify(card()));
-        await session.sendCard(JSON.stringify([card2()]));
+        // await session.sendCard(JSON.stringify([card2()]));
+        updateArenaList()
         return;
     };
 }
