@@ -22,7 +22,6 @@
     "address-parse": "^1.2.8",
     "date-holidays": "^2.0.2",
     "dotenv": "^8.2.0",
-    "kaiheila-bot-root": "^0.2.2",
     "kbotify": "^0.1.30",
     "lru-cache": "^6.0.0",
     "luxon": "^1.26.0",
