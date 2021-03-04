@@ -28,7 +28,7 @@ class ArenaLeave extends AppCommand {
         }
         let content = '已离开：\n';
         for (const a of session.arenas) {
-            content += `\`${a.userNick}的房间\`\n`;
+            content += `\`${a.nickname}的房间\`\n`;
         }
         updateArenaList();
         return session.replyTemp(content);

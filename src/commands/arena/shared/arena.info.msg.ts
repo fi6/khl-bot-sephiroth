@@ -4,7 +4,7 @@
 // export const arenaInfoMsg = (arena: ArenaDoc, kmd = true): string => {
 //     let content;
 //     content = ''.concat(
-//         `房主：${arena.userNick}\n`,
+//         `房主：${arena.nickname}\n`,
 //         `房间：[${arena.code} ${arena.password}] (${arena.arenaInfo})\n`,
 //         `留言：${arena.remark} (创建于${formatTime(arena.createdAt)})`
 //     );

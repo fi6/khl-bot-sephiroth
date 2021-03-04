@@ -156,7 +156,7 @@ export function createSuccessCard(arena: ArenaDoc) {
                 type: 'header',
                 text: {
                     type: 'plain-text',
-                    content: `${arena.userNick} 的房间`,
+                    content: `${arena.nickname} 的房间`,
                 },
             },
             {

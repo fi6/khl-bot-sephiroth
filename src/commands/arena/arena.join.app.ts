@@ -37,7 +37,7 @@ class ArenaJoin extends AppCommand {
         session.arenas.forEach((arena) => {
             if (arenaCheckMember(arena, session.userId)) {
                 arenaLeave.leave(arena, session.userId);
-                leaveMessage = `已退出${arena.userNick}的房间。`;
+                leaveMessage = `已退出${arena.nickname}的房间。`;
             }
         });
         console.log('queue:', session.arena.member);
@@ -56,7 +56,7 @@ class ArenaJoin extends AppCommand {
         return session.mentionTemp(
             ''.concat(
                 leaveMessage,
-                `\n欢迎加入${arena.userNick}的房间！`,
+                `\n欢迎加入${arena.nickname}的房间！`,
                 `\n房间号：${arena.code}，房间密码：${session.arena.password}`
             )
         );

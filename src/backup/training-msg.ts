@@ -62,7 +62,7 @@
 //                 case TrainingResultStatus.success:
 //                     content = ''.concat(
 //                         '成功加入排队：',
-//                         `\`${arena.userNick}的特训房\`\n`,
+//                         `\`${arena.nickname}的特训房\`\n`,
 //                         '房间号/密码：',
 //                         `[${arena.code} ${arena.password}] `,
 //                         '当前排队人数：',
@@ -90,7 +90,7 @@
 //                 case TrainingResultStatus.success:
 //                     content = '已离开：\n';
 //                     for (const a of arenas) {
-//                         content += `\`${a.userNick}的特训房\`\n`;
+//                         content += `\`${a.nickname}的特训房\`\n`;
 //                     }
 //                     return mention + content;
 
@@ -114,7 +114,7 @@
 //                     // console.log(arena)
 //                     for (const user of arena.trainingQueue) {
 //                         // console.log(user);
-//                         queue += `${user.tag}. ${user.userNick}(${formatTime(
+//                         queue += `${user.tag}. ${user.nickname}(${formatTime(
 //                             user.time
 //                         )})\n`;
 //                     }

@@ -32,7 +32,7 @@
 //         }
 //         let content = '已离开：\n';
 //         for (const a of data.arenas) {
-//             content += `\`${a.userNick}的特训房\`\n`;
+//             content += `\`${a.nickname}的特训房\`\n`;
 //         }
 //         return session.replyTemp(content, data);
 //     };

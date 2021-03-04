@@ -7,7 +7,7 @@ export function arenaInfoModules(arena: ArenaDoc, khlId?: string): any[] {
     let memberString = '房间中还没有人。快来加入吧！';
     if (arena.member?.length) {
         let nickList = arena.member.map((member) => {
-            return member.userNick;
+            return member.nickname;
         });
         memberString = nickList.join(', ') + ' 在房间中';
     }
@@ -45,7 +45,7 @@ export function arenaInfoModules(arena: ArenaDoc, khlId?: string): any[] {
             type: 'header',
             text: {
                 type: 'plain-text',
-                content: `${arena.userNick} 的房间`,
+                content: `${arena.nickname} 的房间`,
             },
         },
         {

@@ -6,7 +6,7 @@ export function arenaManageCard(session: ArenaSession) {
     let memberString = '房间中还没有人。快去广播吧！';
     if (arena.member?.length) {
         let nickList = arena.member.map((member) => {
-            return member.userNick;
+            return member.nickname;
         });
         memberString = nickList.join(', ') + ' 在房间中';
     }
@@ -62,7 +62,7 @@ export function arenaManageCard(session: ArenaSession) {
                     type: 'header',
                     text: {
                         type: 'plain-text',
-                        content: `${arena.userNick} 的房间`,
+                        content: `${arena.nickname} 的房间`,
                     },
                 },
                 {

@@ -43,7 +43,7 @@
 //         let queue = '';
 //         for (const user of data.arena.trainingQueue) {
 //             // console.log(user);
-//             queue += `${user.tag}. ${user.userNick}(${formatTime(
+//             queue += `${user.tag}. ${user.nickname}(${formatTime(
 //                 user.time
 //             )})\n`;
 //         }

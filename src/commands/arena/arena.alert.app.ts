@@ -64,7 +64,7 @@ class ArenaAlert extends AppCommand {
         //     return sendMsg('alert', 'success', [msg, arena, args]);
         // })
         await session.send(
-            `(met)all(met) ${arena.userNick} 的房间正在寻找小伙伴加入！\n留言：${session.args[0]}`
+            `(met)all(met) ${arena.nickname} 的房间正在寻找小伙伴加入！\n留言：${session.args[0]}`
         );
         // sleep for 300 ms
         await new Promise((resolve) => setTimeout(resolve, 50));

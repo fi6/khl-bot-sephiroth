@@ -52,7 +52,7 @@
 //         return session.replyTemp(
 //             ''.concat(
 //                 '成功加入排队：',
-//                 `\`${arena.userNick}的特训房\`\n`,
+//                 `\`${arena.nickname}的特训房\`\n`,
 //                 '房间号/密码：',
 //                 `[${arena.code} ${arena.password}] `,
 //                 '当前排队人数：',
