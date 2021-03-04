@@ -1,7 +1,7 @@
 import { ArenaSession } from 'commands/arena/arena.types';
 import { AppCommand, AppCommandFunc } from 'kbotify';
 import Arena from 'models/Arena';
-import { arenaLeaveApp } from './arena.leave.app';
+import { arenaLeave } from './arena.leave.app';
 import { arenaCheckMember } from './shared/arena.check-member';
 import { arenaGetValid } from './shared/arena.get-valid';
 
@@ -32,7 +32,7 @@ class ArenaJoin extends AppCommand {
         session.arenas = await arenaGetValid();
         session.arenas.forEach((arena) => {
             if (arenaCheckMember(arena, session.userId)) {
-                arenaLeaveApp.leave(arena, session.userId);
+                arenaLeave.leave(arena, session.userId);
                 session.mentionTemp(`已退出${arena.userNick}的房间`)
             }
         });
