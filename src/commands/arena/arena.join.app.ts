@@ -52,12 +52,12 @@ class ArenaJoin extends AppCommand {
         session.arena.markModified('member');
         await session.arena.save();
         const arena = session.arena;
-        updateArenaList()
+        updateArenaList();
         return session.mentionTemp(
             ''.concat(
                 leaveMessage,
                 `\n欢迎加入${arena.userNick}的房间！`,
-                `\n房间号：${arena.arenaId}，房间密码：${session.arena.password}`
+                `\n房间号：${arena.code}，房间密码：${session.arena.password}`
             )
         );
     };

@@ -3,7 +3,7 @@ import { createSchema, ExtractDoc, Type, typedModel } from 'ts-mongoose';
 const TrainingArenaSchema = createSchema({
     _id: Type.string({ required: true }),
     userNick: Type.string({ required: true }),
-    arenaId: Type.string({ required: true }),
+    code: Type.string({ required: true }),
     password: Type.string({ required: true }),
     arenaInfo: Type.string({ required: true }),
     remark: Type.string(),

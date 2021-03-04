@@ -81,7 +81,7 @@ class ArenaCreate extends AppCommand {
             console.error('args length < 3!');
             return;
         }
-        const [arenaId, password, arenaInfo] = [
+        const [arenaCode, password, arenaInfo] = [
             args[0].toUpperCase(),
             args[1],
             args[2],
@@ -97,7 +97,7 @@ class ArenaCreate extends AppCommand {
             session.user.id,
             {
                 userNick: session.user.username,
-                arenaId: arenaId,
+                code: arenaCode,
                 password: password,
                 arenaInfo: arenaInfo,
                 remark: remark,
@@ -113,7 +113,7 @@ class ArenaCreate extends AppCommand {
             arena = await Arena.findById(session.user.id).exec();
         }
         setTimeout(async () => {
-            const arena = await Arena.findOne({ arenaId: arenaId }).exec();
+            const arena = await Arena.findOne({ code: arenaCode }).exec();
             if (!arena) return;
             if (!arenaIsEmpty(arena)) return;
             Arena.findByIdAndDelete(session.user.id).exec();

@@ -35,10 +35,10 @@ export function arenaInfoModules(arena: ArenaDoc, khlId?: string): any[] {
     let arenaContent;
     if (khlId && arenaCheckMember(arena, khlId)) {
         button = buttonLeave;
-        arenaContent = `**房间号/密码**\n${arena.arenaId} ${arena.password}`;
+        arenaContent = `**房间号/密码**\n${arena.code} ${arena.password}`;
     } else {
         button = buttonJoin;
-        arenaContent = `**房间号**\n${arena.arenaId}`;
+        arenaContent = `**房间号**\n${arena.code}`;
     }
     return [
         {

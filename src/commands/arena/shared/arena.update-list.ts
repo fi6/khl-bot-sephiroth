@@ -8,7 +8,7 @@ import { arenaInfoModules } from '../card/arena.info.section';
 import { arenaGetValid } from './arena.get-valid';
 
 let cardId = arenaConfig.arenaCardId;
-let arenaIds: string[] = [];
+let arenaHostIds: string[] = [];
 
 export async function updateArenaList(
     arenas?: ArenaDoc[],
@@ -21,15 +21,15 @@ export async function updateArenaList(
     } catch (error) {
         console.debug('error deleting arena card:', error);
     }
-    const newArenaIds: string[] = arenas.map((arena) => {
+    const newArenaHostIds: string[] = arenas.map((arena) => {
         return arena.id;
     });
-    if (arenaIds === newArenaIds)
-        return console.debug('no arena change found, not updating.', arenaIds);
+    if (arenaHostIds === newArenaHostIds)
+        return console.debug('no arena change found, not updating.', arenaHostIds);
     const sent = bot.API.message.create(10, channel.arenaBot, card);
     cardId = (await sent).msgId;
     console.debug('card sent at:', cardId);
-    arenaIds = newArenaIds;
+    arenaHostIds = newArenaHostIds;
     if (onCreate)
         bot.API.message.create(
             9,

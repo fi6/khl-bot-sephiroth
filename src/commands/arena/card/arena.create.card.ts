@@ -167,7 +167,7 @@ export function createSuccessCard(arena: ArenaDoc) {
                     fields: [
                         {
                             type: 'kmarkdown',
-                            content: `**房间号/密码**\n${arena.arenaId} ${arena.password}`,
+                            content: `**房间号/密码**\n${arena.code} ${arena.password}`,
                         },
                         {
                             type: 'kmarkdown',

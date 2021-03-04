@@ -64,7 +64,7 @@
 //                         '成功加入排队：',
 //                         `\`${arena.userNick}的特训房\`\n`,
 //                         '房间号/密码：',
-//                         `[${arena.arenaId} ${arena.password}] `,
+//                         `[${arena.code} ${arena.password}] `,
 //                         '当前排队人数：',
 //                         `${arena.trainingQueue.length}/${arena.trainingLimit}`
 //                     );

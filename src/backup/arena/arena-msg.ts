@@ -98,7 +98,7 @@
 //             let content = mention;
 //             switch (type) {
 //                 case ArenaResultStatus.success:
-//                     content += `房间\`${arena.arenaId}\`已删除。`;
+//                     content += `房间\`${arena.code}\`已删除。`;
 //                     return content;
 //                 case ArenaResultStatus.no_arena:
 //                 default:
@@ -113,7 +113,7 @@
 //                     // eslint-disable-next-line no-case-declarations
 //                     const msgBlock = ''.concat(
 //                         '```markdown\n',
-//                         `房间：[${arena.arenaId} ${arena.password}] (${arena.arenaInfo})\n`,
+//                         `房间：[${arena.code} ${arena.password}] (${arena.arenaInfo})\n`,
 //                         `留言：${arena.remark} (创建于${formatTime(
 //                             arena.createdAt
 //                         )})`,

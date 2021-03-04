@@ -10,7 +10,7 @@ export async function trainingUpsert(
         session.userId,
         {
             userNick: session.user.username,
-            arenaId: session.args[0].toUpperCase(),
+            code: session.args[0].toUpperCase(),
             password: session.args[1],
             arenaInfo: session.args[2],
             isTraining: true,
