@@ -4,6 +4,6 @@ export function formatTime(s: Date): string {
         minute: '2-digit',
         timeZone: 'Asia/Shanghai',
     };
-    const dtFormat = new Intl.DateTimeFormat('en-GB', options);
+    const dtFormat = new Intl.DateTimeFormat('en-GB', options as any);
     return dtFormat.format(s);
 }
