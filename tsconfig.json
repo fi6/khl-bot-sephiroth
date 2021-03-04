@@ -11,7 +11,7 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "rootDir": "./src",
-        // "target": "es2018",
+        "target": "es2018",
         "module": "commonjs",
         "moduleResolution": "node",
         "lib": ["es2018"],
