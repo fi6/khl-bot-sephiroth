@@ -16,7 +16,7 @@ class ArenaList extends AppCommand {
             return session.replyTemp(
                 '当前没有房间。如需创建房间，可发送`.建房`'
             );
-        return session.replyCard(arenaListCard(session));
+        return session.sendCardTemp(arenaListCard(session));
     };
 }
 

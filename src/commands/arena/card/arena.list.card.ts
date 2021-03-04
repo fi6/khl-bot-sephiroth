@@ -17,10 +17,14 @@ export function arenaListCard(session: ArenaSession): string {
         throw new Error('arenas error!');
     }
     const [first, ...res] = arenas;
-    let arenaList: any[] = [...arenaInfoModules(first)];
+    let arenaList: any[] = [...arenaInfoModules(first, session.userId)];
     if (res.length) {
         res.forEach((arena) => {
-            arenaList = [...arenaList, divider, ...arenaInfoModules(arena)];
+            arenaList = [
+                ...arenaList,
+                divider,
+                ...arenaInfoModules(arena, session.userId),
+            ];
         });
     }
     // console.debug(JSON.stringify(arenaList));

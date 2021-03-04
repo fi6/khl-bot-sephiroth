@@ -10,7 +10,10 @@ import { arenaGetValid } from './arena.get-valid';
 let cardId = arenaConfig.arenaCardId;
 let arenaIds: string[] = [];
 
-export async function updateArenaList(arenas?: ArenaDoc[]): Promise<any> {
+export async function updateArenaList(
+    arenas?: ArenaDoc[],
+    onCreate: boolean = false
+): Promise<any> {
     arenas = arenas ?? (await arenaGetValid());
     const card = _arenaListCard(arenas);
     try {
@@ -21,12 +24,18 @@ export async function updateArenaList(arenas?: ArenaDoc[]): Promise<any> {
     const newArenaIds: string[] = arenas.map((arena) => {
         return arena.id;
     });
-    if (arenaIds == newArenaIds)
+    if (arenaIds === newArenaIds)
         return console.debug('no arena change found, not updating.', arenaIds);
     const sent = bot.API.message.create(10, channel.arenaBot, card);
     cardId = (await sent).msgId;
     console.debug('card sent at:', cardId);
     arenaIds = newArenaIds;
+    if (onCreate)
+        bot.API.message.create(
+            9,
+            channel.chat,
+            `有新的房间！请前往 (chn)${channel.arenaBot}(chn) 查看。`
+        );
     return sent;
 }
 

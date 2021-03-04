@@ -31,7 +31,7 @@ class WelcomeShortcut extends AppCommand {
         }
         if (session.args[0] == '建房') {
             session.mentionTemp(
-                `已在 (chn)${channel.chat}(chn) 频道发送创建帮助！\n请根据帮助上的指示完成创建。（点击紫色字可以快速跳转频道）`
+                `已在 (chn)${channel.chat}(chn) 频道发送创建帮助。\n请根据帮助上的指示完成创建。（点击紫色字可以快速跳转频道）`
             );
             session._send(cardParser(createStartCard()), undefined, {
                 msgType: 10,
@@ -42,6 +42,7 @@ class WelcomeShortcut extends AppCommand {
     };
     arenaList = async (session: ArenaSession) => {
         const arenas = await arenaGetValid();
+        session.arenas = arenas;
         if (!arenas || !arenas.length) {
             return session.sendCardTemp(arenaEmptyCard(session));
         }

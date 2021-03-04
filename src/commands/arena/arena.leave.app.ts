@@ -31,11 +31,12 @@ class ArenaLeave extends AppCommand {
         }
         return session.replyTemp(content);
     };
-    leave = (arena: ArenaDoc, khlId: string) => {
-        Arena.updateOne(
+    leave = async (arena: ArenaDoc, khlId: string) => {
+        const result = await Arena.updateOne(
             { _id: arena._id },
             { $pull: { member: { _id: khlId } } }
         );
+        console.debug(result);
     };
 }
 

@@ -10,7 +10,7 @@ import {
 } from './card/arena.create.card';
 import { arenaGetValid } from './shared/arena.get-valid';
 import { arenaIsEmpty } from './shared/arena.is-empty';
-import { updateArenaList as arenaUpdateCard } from './shared/arena.update-list';
+import { updateArenaList } from './shared/arena.update-list';
 // import { arenaListMsg } from './shared/arena.list.msg';
 
 class ArenaCreate extends AppCommand {
@@ -38,7 +38,7 @@ class ArenaCreate extends AppCommand {
                     /^\w{5} \d{0,8} .+/,
                     120 * 1e3,
                     (msg) => {
-                        let parsedArgs = msg.content.split(' ');
+                        let parsedArgs = msg.content.split(/ +/);
                         this.func(new BaseSession(this, parsedArgs, msg));
                     }
                 );
@@ -58,9 +58,9 @@ class ArenaCreate extends AppCommand {
         }
 
         session.arena = await this.create(session, args);
-        arenaUpdateCard();
+        updateArenaList(undefined, true);
         // session.arenas = await arenaGetValid();
-        return session.sendCard(
+        return session.sendCardTemp(
             JSON.stringify(createSuccessCard(session.arena!))
         );
     };
@@ -102,11 +102,11 @@ class ArenaCreate extends AppCommand {
             arena = await Arena.findById(session.user.id).exec();
         }
         setTimeout(async () => {
-            const arena = await Arena.findById(session.user.id).exec();
+            const arena = await Arena.findOne({ arenaId: arenaId }).exec();
             if (!arena) return;
             if (!arenaIsEmpty(arena)) return;
             Arena.findByIdAndDelete(session.user.id).exec();
-            session.mention('房间自动关闭了，下次记得广播。');
+            session.mention('房间自动关闭了……下次可以试试广播？');
         }, arenaConfig.allowedEmptyTime);
         return arena;
     }

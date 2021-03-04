@@ -24,16 +24,19 @@ class ArenaJoin extends AppCommand {
             for (const user of session.arena.member) {
                 if (user._id == session.userId) {
                     return session.replyTemp(
-                        '你已经在此房间中。如需更换房间请输入`.房间 退出`。'
+                        '你已经在此房间中，房间密码为' +
+                            session.arena.password +
+                            '\n如需更换房间请输入`.房间 退出`。'
                     );
                 }
             }
         }
+        let leaveMessage = '';
         session.arenas = await arenaGetValid();
         session.arenas.forEach((arena) => {
             if (arenaCheckMember(arena, session.userId)) {
                 arenaLeave.leave(arena, session.userId);
-                session.mentionTemp(`已退出${arena.userNick}的房间`)
+                leaveMessage = `已退出${arena.userNick}的房间。`;
             }
         });
         console.log('queue:', session.arena.member);
@@ -50,8 +53,9 @@ class ArenaJoin extends AppCommand {
         const arena = session.arena;
         return session.mentionTemp(
             ''.concat(
-                `房间密码：${session.arena.password}\n成功加入`,
-                `\`${arena.userNick}的房间\``
+                leaveMessage,
+                `\n欢迎加入${arena.userNick}的房间！`,
+                `\n房间号：${arena.arenaId}，房间密码：${session.arena.password}`
             )
         );
     };

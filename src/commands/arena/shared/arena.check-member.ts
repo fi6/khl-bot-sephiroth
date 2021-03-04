@@ -5,8 +5,12 @@ export function arenaCheckMember(arena: ArenaDoc, khlId: string): boolean {
     if (!arena.member?.length) {
         return false;
     }
-    arena.member.forEach((user) => {
-        if (user._id == khlId) return true;
+    const validation = arena.member.map((user) => {
+        // console.debug(user._id, khlId);
+        if (user._id === khlId) {
+            return true;
+        }
     });
+    if (validation.includes(true)) return true;
     return false;
 }
