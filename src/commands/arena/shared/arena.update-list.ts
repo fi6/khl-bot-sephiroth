@@ -91,18 +91,7 @@ function _arenaListCard(arenas: ArenaDoc[]): string {
                 type: 'section',
                 text: {
                     type: 'kmarkdown',
-                    content: `房间列表如下，**点击加入获得房间密码**。\n你也可以点击右侧按钮创建房间。`,
-                },
-                mode: 'right',
-                accessory: {
-                    type: 'button',
-                    theme: 'primary',
-                    click: 'return-val',
-                    value: '.房间 创建',
-                    text: {
-                        type: 'plain-text',
-                        content: '创建房间',
-                    },
+                    content: `房间列表如下，**点击加入获得房间密码**。`,
                 },
             },
             {
