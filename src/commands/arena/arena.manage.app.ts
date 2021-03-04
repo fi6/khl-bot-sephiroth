@@ -3,6 +3,7 @@ import { FuncResult, ResultTypes } from 'kbotify';
 import Arena from 'models/Arena';
 import { ArenaSession } from './arena.types';
 import { arenaManageCard } from './card/arena.manage.card';
+import { updateArenaList } from './shared/arena.update-list';
 
 class ArenaManage extends AppCommand {
     code = 'manage';
@@ -19,17 +20,18 @@ class ArenaManage extends AppCommand {
             );
         }
         if (session.args[0] == '关闭') {
-            return this.delete(session);
+            return this.close(session);
         }
         return session.sendCardTemp(JSON.stringify(arenaManageCard(session)));
     };
 
-    private delete = async (session: ArenaSession) => {
+    private close = async (session: ArenaSession) => {
         try {
             if (!session.arena) {
                 return session.reply(`未找到可删除的房间。`);
             }
             await Arena.findByIdAndDelete(session.user.id).exec();
+            updateArenaList()
             return session.reply(`房间\`${session.arena.arenaId}\`已关闭。`);
         } catch (e) {
             console.error('Error when deleting arena', e, session);

@@ -4,6 +4,7 @@ import { arenaLeave } from './arena.leave.app';
 import { ArenaSession } from './arena.types';
 import { arenaCheckMember } from './shared/arena.check-member';
 import { arenaGetValid } from './shared/arena.get-valid';
+import { updateArenaList } from './shared/arena.update-list';
 
 class ArenaJoin extends AppCommand {
     trigger = '加入';
@@ -51,6 +52,7 @@ class ArenaJoin extends AppCommand {
         session.arena.markModified('member');
         await session.arena.save();
         const arena = session.arena;
+        updateArenaList()
         return session.mentionTemp(
             ''.concat(
                 leaveMessage,
