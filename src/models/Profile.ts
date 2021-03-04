@@ -8,7 +8,7 @@ const ProfileSchema = createSchema({
     smashMain: Type.array().of(Type.number()),
     network: Type.array().of(Type.string()),
     notif: Type.number(),
-    region: Type.array().of(Type.number),
+    region: Type.array().of(Type.number()),
     alertUsedAt: Type.date({ default: new Date(0) }),
 });
 
