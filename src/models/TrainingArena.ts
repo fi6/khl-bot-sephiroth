@@ -2,7 +2,7 @@ import { createSchema, ExtractDoc, Type, typedModel } from 'ts-mongoose';
 
 const TrainingArenaSchema = createSchema({
     _id: Type.string({ required: true }),
-    userNick: Type.string({ required: true }),
+    nickname: Type.string({ required: true }),
     code: Type.string({ required: true }),
     password: Type.string({ required: true }),
     arenaInfo: Type.string({ required: true }),
@@ -11,7 +11,7 @@ const TrainingArenaSchema = createSchema({
     trainingLimit: Type.number({ required: true, default: 6 }),
     trainingQueue: Type.array({ required: true, default: [] }).of({
         _id: Type.string({ required: true }),
-        userNick: Type.string({ required: true }),
+        nickname: Type.string({ required: true }),
         time: Type.date({ required: true, default: new Date() }),
         tag: Type.number({ required: true }),
     }),

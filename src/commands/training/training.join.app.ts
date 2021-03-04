@@ -41,7 +41,7 @@
 //         // }
 //         data.arena.trainingQueue.push({
 //             _id: session.userId,
-//             userNick: msg.author.nickname,
+//             nickname: msg.author.nickname,
 //             time: new Date(),
 //             tag: last_tag,
 //         });

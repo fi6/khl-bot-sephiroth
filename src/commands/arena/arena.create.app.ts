@@ -96,7 +96,7 @@ class ArenaCreate extends AppCommand {
         let arena = await Arena.findByIdAndUpdate(
             session.user.id,
             {
-                userNick: session.user.username,
+                nickname: session.user.username,
                 code: arenaCode,
                 password: password,
                 arenaInfo: arenaInfo,

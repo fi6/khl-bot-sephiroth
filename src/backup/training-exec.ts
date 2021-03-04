@@ -47,7 +47,7 @@
 // //     data.arena = await Arena.findByIdAndUpdate(
 // //         session.userId,
 // //         {
-// //             userNick: msg.author.nickname,
+// //             nickname: msg.author.nickname,
 // //             arenaId: args[0].toUpperCase(),
 // //             password: args[1],
 // //             arenaInfo: args[2],
@@ -100,7 +100,7 @@
 //     // }
 //     data.arena.trainingQueue.push({
 //         _id: session.userId,
-//         userNick: msg.author.nickname,
+//         nickname: msg.author.nickname,
 //         time: new Date(),
 //         tag: last_tag,
 //     });

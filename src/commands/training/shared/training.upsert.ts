@@ -9,7 +9,7 @@ export async function trainingUpsert(
     return Arena.findByIdAndUpdate(
         session.userId,
         {
-            userNick: session.user.username,
+            nickname: session.user.username,
             code: session.args[0].toUpperCase(),
             password: session.args[1],
             arenaInfo: session.args[2],

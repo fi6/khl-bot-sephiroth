@@ -46,7 +46,7 @@ class ArenaJoin extends AppCommand {
         }
         session.arena.member.push({
             _id: session.user.id,
-            userNick: session.user.username,
+            nickname: session.user.username,
         });
         session.arena.isNew = false;
         session.arena.markModified('member');

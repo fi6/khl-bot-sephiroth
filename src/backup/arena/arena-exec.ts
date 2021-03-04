@@ -48,7 +48,7 @@
 //     data.arena = await Arena.findByIdAndUpdate(
 //         session.userId,
 //         {
-//             userNick: msg.author.nickname,
+//             nickname: msg.author.nickname,
 //             arenaId: arenaId,
 //             password: password,
 //             arenaInfo: arenaInfo,
