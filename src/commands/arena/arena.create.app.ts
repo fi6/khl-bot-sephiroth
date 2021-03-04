@@ -1,5 +1,6 @@
 import { AppCommand, AppCommandFunc, BaseSession } from 'kbotify';
 import Arena, { ArenaDoc } from 'models/Arena';
+import { channel } from '../../configs';
 import arenaConfig from '../../configs/arena';
 import { cardParser } from '../../utils/card-parser';
 import { ArenaSession } from './arena.types';
@@ -27,6 +28,16 @@ class ArenaCreate extends AppCommand {
         const args = session.args;
 
         if (!args.length) {
+            if (session.channel.id == channel.arenaBot) {
+                session.mentionTemp(
+                    `已在 (chn)${channel.chat}(chn) 频道发送创建帮助。\n请根据帮助上的指示完成创建。（点击紫色字可以快速跳转频道）`
+                );
+                return session.sendCardTemp(
+                    cardParser(createStartCard()),
+                    undefined,
+                    { channel: channel.chat }
+                );
+            }
             // no args found, return menu
             return session.replyCardTemp(cardParser(createStartCard()));
         }
