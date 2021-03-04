@@ -137,6 +137,14 @@ export function createSuccessCard(arena: ArenaDoc) {
                         '\n你可以点击`广播`以将房间广播给所有人。如需更新房间信息，重新创建即可。',
                 },
             },
+            {
+                type: 'section',
+                text: {
+                    type: 'kmarkdown',
+                    content:
+                        '房间有效期为60分钟。如需关闭房间，请发送`.关房`。如果无人加入，房间将于10分钟后自动关闭。',
+                },
+            },
         ],
     };
     let card2 = {

@@ -1,31 +1,25 @@
 import { AppCommand, AppCommandFunc } from 'kbotify';
-import Arena from '../../models/Arena';
+import Arena, { ArenaDoc } from '../../models/Arena';
 import { ArenaSession } from './arena.types';
+import { arenaGetValid } from './shared/arena.get-valid';
 
-class TrainingLeave extends AppCommand {
+class ArenaLeave extends AppCommand {
     trigger = '退出';
     func: AppCommandFunc<ArenaSession> = async (session: ArenaSession) => {
-        if (!session.args.length) return;
-        const msg = session.msg;
-        if (!msg.mention.user.length) {
+        if (!session.args.length)
             session.arenas = await Arena.find({
-                'trainingQueue._id': session.userId,
+                'member._id': session.userId,
             }).exec();
-            // console.log(arenas);
-        } else {
-            session.arenas = [
-                await Arena.findById(msg.mention.user[0]).exec(),
-            ] as typeof session.arenas;
-        }
-        if (!session.arenas) {
+        else
+            session.arenas = await Arena.find({
+                _id: session.args[0],
+            }).exec();
+        if (!session.arenas.length) {
             return session.replyTemp('没有找到可退出的房间。');
         }
         try {
             session.arenas.forEach(async (a) => {
-                await Arena.updateOne(
-                    { _id: a?._id },
-                    { $pull: { trainingQueue: { _id: session.userId } } }
-                );
+                this.leave(a, session.userId);
             });
         } catch (error) {
             console.error(error);
@@ -33,10 +27,16 @@ class TrainingLeave extends AppCommand {
         }
         let content = '已离开：\n';
         for (const a of session.arenas) {
-            content += `\`${a.userNick}的特训房\`\n`;
+            content += `\`${a.userNick}的房间\`\n`;
         }
         return session.replyTemp(content);
     };
+    leave = (arena: ArenaDoc, khlId: string) => {
+        Arena.updateOne(
+            { _id: arena._id },
+            { $pull: { member: { _id: khlId } } }
+        );
+    };
 }
 
-export const trainingLeave = new TrainingLeave();
+export const arenaLeave = new ArenaLeave();

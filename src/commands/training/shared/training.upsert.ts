@@ -3,20 +3,20 @@ import { TextMessage } from 'kaiheila-bot-root/dist/types';
 import Arena, { ArenaDoc } from 'models/Arena';
 
 export async function trainingUpsert(
-    data: ArenaSession,
+    session: ArenaSession,
     limit: string
 ): Promise<ArenaDoc> {
     return Arena.findByIdAndUpdate(
-        data.session.userId,
+        session.userId,
         {
-            userNick: data.msg.author.nickname,
-            arenaId: data.args[0].toUpperCase(),
-            password: data.args[1],
-            arenaInfo: data.args[2],
+            userNick: session.user.username,
+            arenaId: session.args[0].toUpperCase(),
+            password: session.args[1],
+            arenaInfo: session.args[2],
             isTraining: true,
             trainingLimit: parseInt(limit),
             trainingQueue: [],
-            remark: data.args[4],
+            remark: session.args[4],
             createdAt: new Date(),
         },
         {

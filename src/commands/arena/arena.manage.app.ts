@@ -15,7 +15,7 @@ class ArenaManage extends AppCommand {
         session.arena = await Arena.findById(session.user.id).exec();
         if (!session.arena) {
             return session.replyTemp(
-                `未找到可管理的房间。如需创建房间，可发送\`.建房\``
+                `未找到你的有效房间。如需创建房间，可发送\`.建房\``
             );
         }
         if (session.args[0] == '关闭') {

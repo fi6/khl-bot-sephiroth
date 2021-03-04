@@ -4,6 +4,7 @@ import { checkRoles } from 'utils/check-roles';
 import { ArenaSession } from './arena.types';
 import { arenaAlertCard, arenaAlertHelper } from './card/arena.alert.card';
 import LRUCache from 'lru-cache';
+import { isNotifyTime } from '../../utils/notif-time';
 
 class ArenaAlert extends AppCommand {
     code = 'alert';
@@ -23,6 +24,10 @@ class ArenaAlert extends AppCommand {
         if (!arena)
             return session.replyTemp(
                 '没有找到可广播的房间。请先发送`.建房`创建房间。'
+            );
+        if (!isNotifyTime(new Date()))
+            return session.mentionTemp(
+                '当前不是可广播的时间。工作日晚18-24点，非工作日早8点-晚24点可以广播。'
             );
         if (!session.args.length) {
             let cancel_handle = session.setTextTrigger('', 60 * 1e3, (msg) => {

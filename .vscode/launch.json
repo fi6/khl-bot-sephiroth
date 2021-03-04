@@ -16,56 +16,47 @@
                 "-r",
                 "tsconfig-paths/register"
             ],
-            "args": [
-                "src/index.ts"
-            ],
+            "args": ["src/index.ts"],
             "cwd": "${workspaceRoot}",
             "internalConsoleOptions": "openOnSessionStart",
-            "skipFiles": [
-                "<node_internals>/**"
+            "skipFiles": ["<node_internals>/**"],
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+            ]
+        },
+        {
+            "name": "Current TS File",
+            "type": "pwa-node",
+            "request": "launch",
+            "args": ["${file}"],
+            "runtimeArgs": [
+                "--nolazy",
+                "-r",
+                "ts-node/register",
+                "-r",
+                "tsconfig-paths/register"
             ],
             "resolveSourceMapLocations": [
                 "${workspaceFolder}/**",
                 "!**/node_modules/**"
             ],
-        },
-        {
-            "name": "Current TS File",
-            "type": "node",
-            "request": "launch",
-            "args": [
-                "${relativeFile}"
-            ],
-            "runtimeArgs": [
-                "--nolazy",
-                "-r",
-                "ts-node/register",
-                "tsconfig-paths/register",
-            ],
-            "sourceMaps": true,
-            "cwd": "${workspaceRoot}",
-            "protocol": "inspector",
+            "cwd": "${workspaceRoot}"
         },
         {
             "name": "Attach",
             "port": 9229,
             "request": "attach",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
+            "skipFiles": ["<node_internals>/**"],
             "type": "pwa-node"
         },
         {
             "name": "Launch Program",
             "preLaunchTask": "tsc: build - tsconfig.json",
-            "outFiles": [
-                "${workspaceFolder}/lib/**/*.js"
-            ],
+            "outFiles": ["${workspaceFolder}/lib/**/*.js"],
             "program": "${workspaceFolder}/index.ts",
             "request": "launch",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
+            "skipFiles": ["<node_internals>/**"],
             "type": "pwa-node",
             "runtimeExecutable": "~/.nvm/versions/node/v14.15.3/bin/node"
         },
@@ -73,9 +64,7 @@
             "type": "pwa-node",
             "request": "launch",
             "name": "Launch Program - Windows",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
+            "skipFiles": ["<node_internals>/**"],
             "program": "${workspaceFolder}\\index.js"
         }
     ]

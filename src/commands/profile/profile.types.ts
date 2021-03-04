@@ -1,7 +1,7 @@
-import { BaseData } from 'kbotify';
+import { BaseData, BaseSession } from 'kbotify';
 import { ProfileDoc } from '../../models/Profile';
 
-export interface ProfileData extends BaseData {
+export interface ProfileSession extends BaseSession {
     profile?: ProfileDoc;
 }
 

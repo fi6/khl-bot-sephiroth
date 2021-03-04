@@ -1,5 +1,6 @@
 import { AppCommand, AppCommandFunc, BaseSession } from 'kbotify';
-import Arena from 'models/Arena';
+import Arena, { ArenaDoc } from 'models/Arena';
+import arenaConfig from '../../configs/arena';
 import { cardParser } from '../../utils/card-parser';
 import { ArenaSession } from './arena.types';
 import {
@@ -8,6 +9,7 @@ import {
     createSuccessCard,
 } from './card/arena.create.card';
 import { arenaGetValid } from './shared/arena.get-valid';
+import { arenaIsEmpty } from './shared/arena.is-empty';
 import { updateArenaList as arenaUpdateCard } from './shared/arena.update-list';
 // import { arenaListMsg } from './shared/arena.list.msg';
 
@@ -56,7 +58,7 @@ class ArenaCreate extends AppCommand {
         }
 
         session.arena = await this.create(session, args);
-        arenaUpdateCard()
+        arenaUpdateCard();
         // session.arenas = await arenaGetValid();
         return session.sendCard(
             JSON.stringify(createSuccessCard(session.arena!))
@@ -99,6 +101,13 @@ class ArenaCreate extends AppCommand {
         if (!arena?.id) {
             arena = await Arena.findById(session.user.id).exec();
         }
+        setTimeout(async () => {
+            const arena = await Arena.findById(session.user.id).exec();
+            if (!arena) return;
+            if (!arenaIsEmpty(arena)) return;
+            Arena.findByIdAndDelete(session.user.id).exec();
+            session.mention('房间自动关闭了，下次记得广播。');
+        }, arenaConfig.allowedEmptyTime);
         return arena;
     }
 }
