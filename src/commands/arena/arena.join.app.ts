@@ -1,7 +1,7 @@
-import { ArenaSession } from 'commands/arena/arena.types';
 import { AppCommand, AppCommandFunc } from 'kbotify';
 import Arena from 'models/Arena';
 import { arenaLeave } from './arena.leave.app';
+import { ArenaSession } from './arena.types';
 import { arenaCheckMember } from './shared/arena.check-member';
 import { arenaGetValid } from './shared/arena.get-valid';
 

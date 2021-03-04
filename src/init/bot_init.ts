@@ -1,4 +1,4 @@
-import { arenaCreate } from 'commands/arena/arena.create.app';
+import { arenaCreate } from '../commands/arena/arena.create.app';
 // import { arenaDelete } from 'commands/arena/arena.delete.app';
 // import { arenaList } from 'commands/arena/arena.list.app';
 // import { arenaMenu } from 'commands/arena/arena.menu';
