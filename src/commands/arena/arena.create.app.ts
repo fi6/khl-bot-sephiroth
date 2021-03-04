@@ -117,7 +117,7 @@ class ArenaCreate extends AppCommand {
             if (!arena) return;
             if (!arenaIsEmpty(arena)) return;
             Arena.findByIdAndDelete(session.user.id).exec();
-            session.mention('房间自动关闭了……下次可以试试广播？');
+            session.mentionTemp('房间自动关闭了……下次可以试试广播？');
         }, arenaConfig.allowedEmptyTime);
         return arena;
     }

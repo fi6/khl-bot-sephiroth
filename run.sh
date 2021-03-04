@@ -17,10 +17,10 @@ mkdir -p logs/$DATE
 nohup node --nolazy -r ts-node/register -r tsconfig-paths/register src/index.ts &> logs/$DATE/$NOW.log & echo $! > run.pid
 echo "run at pid $(cat run.pid)"
 
-unset -v latest
+# unset -v latest
 
-for file in logs/*/*; do
-  [[ $file -nt $latest ]] && latest=$file
-done
-tail -vf -n 30 $file
+# for file in logs/*/*; do
+#   [[ $file -nt $latest ]] && latest=$file
+# done
+# tail -vf -n 30 $file
 
