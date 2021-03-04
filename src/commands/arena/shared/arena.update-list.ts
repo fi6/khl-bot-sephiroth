@@ -8,7 +8,7 @@ import { arenaInfoModules } from '../card/arena.info.section';
 import { arenaGetValid } from './arena.get-valid';
 
 let cardId = arenaConfig.arenaCardId;
-let arenaHostIds: string[] = [];
+let arenaIds: string[] = [];
 
 export async function updateArenaList(
     arenas?: ArenaDoc[],
@@ -21,15 +21,15 @@ export async function updateArenaList(
     } catch (error) {
         console.debug('error deleting arena card:', error);
     }
-    const newArenaHostIds: string[] = arenas.map((arena) => {
+    const newArenaIds: string[] = arenas.map((arena) => {
         return arena.id;
     });
-    if (arenaHostIds === newArenaHostIds)
-        return console.debug('no arena change found, not updating.', arenaHostIds);
+    if (isEqual(arenaIds, newArenaIds))
+        return console.debug('no arena change found, not updating.', arenaIds);
     const sent = bot.API.message.create(10, channel.arenaBot, card);
     cardId = (await sent).msgId;
     console.debug('card sent at:', cardId);
-    arenaHostIds = newArenaHostIds;
+    arenaIds = newArenaIds;
     if (onCreate)
         bot.API.message.create(
             9,
@@ -37,6 +37,16 @@ export async function updateArenaList(
             `有新的房间！请前往 (chn)${channel.arenaBot}(chn) 查看。`
         );
     return sent;
+}
+
+function isEqual(ids: string[], newIds: string[]) {
+    const newIdsSorted = newIds.sort();
+    return (
+        ids.length === newIds.length &&
+        ids.sort().every((value, index) => {
+            return value === newIdsSorted[index];
+        })
+    );
 }
 
 function _arenaListCard(arenas: ArenaDoc[]): string {
