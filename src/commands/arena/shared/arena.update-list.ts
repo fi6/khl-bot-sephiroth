@@ -106,7 +106,7 @@ function _arenaListCard(arenas: ArenaDoc[]): string {
                 type: 'section',
                 text: {
                     type: 'kmarkdown',
-                    content: `房间列表如下，**点击加入获得房间密码**。`,
+                    content: `**点击加入**获得房间密码。`,
                 },
             },
             {

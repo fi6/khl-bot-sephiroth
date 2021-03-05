@@ -42,7 +42,7 @@ export function arenaInfoModules(
         arenaContent = `**房间号/密码**\n${arena.code} ${arena.password}`;
     } else {
         button = buttonJoin;
-        arenaContent = `**房间号/密码**\n${arena.code} \\*\\*\\*`;
+        arenaContent = `**房间号/密码**\n${arena.code} \*\*\*`;
     }
     return [
         {
