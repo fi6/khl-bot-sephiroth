@@ -16,6 +16,10 @@ class ArenaJoin extends AppCommand {
         // if (msg.mention.user.length != 1) {
         //     session.reply(this.help);
         // }
+        if (!session.user.roles?.includes(15186))
+            return session.mention(
+                '你好像还是临时用户……请点击左上角切换至欢迎频道，点击“开始使用”。'
+            );
         session.arena = await Arena.findOne({
             _id: session.args[0],
         }).exec();
