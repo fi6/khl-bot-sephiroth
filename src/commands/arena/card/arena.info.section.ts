@@ -3,7 +3,11 @@ import { formatTime } from '../../../utils/format-time';
 import { mentionUser } from '../../../utils/khl';
 import { arenaCheckMember } from '../shared/arena.check-member';
 
-export function arenaInfoModules(arena: ArenaDoc, khlId?: string): any[] {
+export function arenaInfoModules(
+    arena: ArenaDoc,
+    khlId?: string,
+    showPassword: boolean = false
+): any[] {
     let memberString = '房间中还没有人。快来加入吧！';
     if (arena.member?.length) {
         let nickList = arena.member.map((member) => {
@@ -33,7 +37,7 @@ export function arenaInfoModules(arena: ArenaDoc, khlId?: string): any[] {
     };
     let button;
     let arenaContent;
-    if (khlId && arenaCheckMember(arena, khlId)) {
+    if ((khlId && arenaCheckMember(arena, khlId)) || showPassword) {
         button = buttonLeave;
         arenaContent = `**房间号/密码**\n${arena.code} ${arena.password}`;
     } else {
