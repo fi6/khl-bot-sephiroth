@@ -8,6 +8,7 @@ import { ArenaSession } from '../arena/arena.types';
 import { createStartCard } from '../arena/card/arena.create.card';
 import { arenaListCard } from '../arena/card/arena.list.card';
 import { arenaGetValid } from '../arena/shared/arena.get-valid';
+import { updateArenaList } from '../arena/shared/arena.update-list';
 
 class WelcomeShortcut extends AppCommand {
     code = 'list';
@@ -22,7 +23,11 @@ class WelcomeShortcut extends AppCommand {
             // await session.mentionTemp(
             //     `你也可以在 (chn)${channel.chat}(chn) 发送 \`.找房\` 快速查看房间。`
             // );
-            this.arenaList(session);
+            await updateArenaList(undefined, undefined, true);
+            session.mentionTemp(
+                '房间列表已更新。你也可以在闲聊频道发送`.找房`查看房间列表，或退出房间等。'
+            );
+            // this.arenaList(session);
         }
         if (session.args[0] == '斗天梯') {
             return session.mentionTemp(

@@ -8,8 +8,9 @@ class UtilApp extends AppCommand {
     intro = '查看房间';
     help = '';
     func: AppCommandFunc<BaseSession> = async (session) => {
-        await session.sendCard(JSON.stringify(card()));
-        await session.sendCard(JSON.stringify([card2()]));
+        await session.sendCard(JSON.stringify(shorcut()));
+        // await session.sendCard(JSON.stringify(card()));
+        // await session.sendCard(JSON.stringify([card2()]));
         // updateArenaList()
         return;
     };
@@ -59,7 +60,7 @@ function shorcut() {
                             click: 'return-val',
                             text: {
                                 type: 'plain-text',
-                                content: '查看房间列表',
+                                content: '更新房间列表',
                             },
                         },
                         {

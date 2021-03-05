@@ -12,20 +12,25 @@ let arenaIds: string[] = [];
 
 export async function updateArenaList(
     arenas?: ArenaDoc[],
-    onCreate: boolean = false
+    onCreate: boolean = false,
+    forceUpdate: boolean = false
 ): Promise<any> {
     arenas = arenas ?? (await arenaGetValid());
-    const card = _arenaListCard(arenas);
+
+    const newArenaIds: string[] = arenas.map((arena) => {
+        return arena.id;
+    });
+
+    if (isEqual(arenaIds, newArenaIds) && !forceUpdate)
+        return console.debug('no arena change found, not updating.', arenaIds);
+
     try {
         if (cardId !== '') bot.API.message.delete(cardId);
     } catch (error) {
         console.debug('error deleting arena card:', error);
     }
-    const newArenaIds: string[] = arenas.map((arena) => {
-        return arena.id;
-    });
-    if (isEqual(arenaIds, newArenaIds))
-        return console.debug('no arena change found, not updating.', arenaIds);
+
+    const card = _arenaListCard(arenas);
     const sent = bot.API.message.create(10, channel.arenaBot, card);
     cardId = (await sent).msgId;
     console.debug('card sent at:', cardId);
