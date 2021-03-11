@@ -1,4 +1,4 @@
-import { AppCommand, AppCommandFunc } from 'kbotify';
+import { AppCommand, AppFunc } from 'kbotify';
 import Arena from 'models/Arena';
 import { arenaCreate } from './arena.create.app';
 import { ArenaSession } from './arena.types';
@@ -10,7 +10,7 @@ class ArenaList extends AppCommand {
     trigger = '查看';
     intro = '查看房间';
     help = '';
-    func: AppCommandFunc<ArenaSession> = async (session: ArenaSession) => {
+    func: AppFunc<ArenaSession> = async (session: ArenaSession) => {
         session.arenas = await arenaGetValid();
         if (!session.arenas || !session.arenas?.length)
             return session.replyTemp(

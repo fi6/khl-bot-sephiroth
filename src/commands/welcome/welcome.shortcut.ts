@@ -1,4 +1,4 @@
-import { AppCommand, AppCommandFunc, BaseSession } from 'kbotify';
+import { AppCommand, AppFunc, BaseSession } from 'kbotify';
 import Arena from 'models/Arena';
 import channel from '../../configs/channel';
 import { cardParser } from '../../utils/card-parser';
@@ -15,7 +15,7 @@ class WelcomeShortcut extends AppCommand {
     trigger = '快捷';
     intro = '';
     help = '';
-    func: AppCommandFunc<ArenaSession> = async (session) => {
+    func: AppFunc<ArenaSession> = async (session) => {
         if (!session.args.length) {
             return;
         }

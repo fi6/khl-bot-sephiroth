@@ -1,4 +1,4 @@
-import { AppCommand, AppCommandFunc, BaseSession } from 'kbotify';
+import { AppCommand, AppFunc, BaseSession } from 'kbotify';
 import { channel } from '../../configs';
 import { cardParser } from '../../utils/card-parser';
 import { verifyCard } from './card/phone-verify.card';
@@ -7,7 +7,7 @@ import { termCard } from './card/terms.card';
 
 class WelcomeStartApp extends AppCommand {
     trigger: string = '开始';
-    func: AppCommandFunc<BaseSession> = async (session) => {
+    func: AppFunc<BaseSession> = async (session) => {
         if (!session.args.length) return;
         switch (session.args[0]) {
             case '1':

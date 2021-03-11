@@ -1,4 +1,4 @@
-import { AppCommand, AppCommandFunc } from 'kbotify';
+import { AppCommand, AppFunc } from 'kbotify';
 import Arena from 'models/Arena';
 import { arenaLeave } from './arena.leave.app';
 import { ArenaSession } from './arena.types';
@@ -10,7 +10,7 @@ class ArenaJoin extends AppCommand {
     trigger = '加入';
 
     help = '仅可通过按钮加入';
-    func: AppCommandFunc<ArenaSession> = async (session: ArenaSession) => {
+    func: AppFunc<ArenaSession> = async (session: ArenaSession) => {
         const [msg, args] = [session.msg, session.args as string[]];
 
         // if (msg.mention.user.length != 1) {

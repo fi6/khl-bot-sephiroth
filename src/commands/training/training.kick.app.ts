@@ -1,6 +1,6 @@
 // import { ArenaSession } from 'commands/arena/arena.types';
 // import bot from 'init/bot_init';
-// import { AppCommand, AppCommandFunc } from 'kbotify';
+// import { AppCommand, AppFunc } from 'kbotify';
 // import { ResultTypes } from 'kbotify';
 // import Arena from 'models/Arena';
 // import { checkRoles } from 'utils/check-roles';
@@ -9,7 +9,7 @@
 //     trigger = '移除';
 //     help =
 //         '如需移除队伍中的玩家，请输入\n`.房间 移除 玩家编号`\n如需移除多个，可用逗号隔开。当前队伍和玩家编号可输入`.房间 管理`查看。';
-//     func: AppCommandFunc<ArenaSession> = async (data: ArenaSession) => {
+//     func: AppFunc<ArenaSession> = async (data: ArenaSession) => {
 //         const [msg, args] = [data.msg, data.args];
 //         if (!checkRoles(msg.author.roles, 'coach')) {
 //             return session.replyTemp(

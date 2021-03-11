@@ -2,7 +2,7 @@
 // import { ArenaSession } from 'commands/arena/arena.types';
 // import { arenaInfoMsg } from 'commands/arena/shared/arena.info.msg';
 // import { TextMessage } from 'kaiheila-bot-root/dist/types';
-// import { AppCommand, AppCommandFunc } from 'kbotify';
+// import { AppCommand, AppFunc } from 'kbotify';
 
 // import { checkRoles } from './shared/training.checkroles';
 // import { trainingUpsert } from './shared/training.upsert';
@@ -13,7 +13,7 @@
 //     trigger = '特训';
 //     help =
 //         '特训功能为教练组专属。创建房间命令格式：\n`.房间 特训 房间号 密码 加速 人数限制 留言`\n创建时会自动发送全体提醒，创建后可发送`.房间 管理`查看队伍和移除玩家。\n如：`.房间 特训 76VR2 147 裸连 5人 今天用库巴`';
-//     func: AppCommandFunc<ArenaSession> = async (data: ArenaSession) => {
+//     func: AppFunc<ArenaSession> = async (data: ArenaSession) => {
 //         // console.log('receive create training', data)
 //         const [msg, args] = [data.msg as TextMessage, data.args as string[]];
 

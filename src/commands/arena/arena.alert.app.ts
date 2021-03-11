@@ -1,4 +1,4 @@
-import { AppCommand, AppCommandFunc, BaseSession } from 'kbotify';
+import { AppCommand, AppFunc, BaseSession } from 'kbotify';
 import Arena from 'models/Arena';
 import { checkRoles } from 'utils/check-roles';
 import { ArenaSession } from './arena.types';
@@ -12,7 +12,7 @@ class ArenaAlert extends AppCommand {
     help = '';
     intro = '';
     cache = new LRUCache<string, () => void>({ maxAge: 90 * 1e3 });
-    func: AppCommandFunc<ArenaSession> = async (session) => {
+    func: AppFunc<ArenaSession> = async (session) => {
         let timeLimit;
         // if (checkRoles(session.msg.author.roles, 'up')) {
         //     timeLimit = 10 * 6e4;

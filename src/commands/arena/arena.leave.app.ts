@@ -1,4 +1,4 @@
-import { AppCommand, AppCommandFunc } from 'kbotify';
+import { AppCommand, AppFunc } from 'kbotify';
 import Arena, { ArenaDoc } from '../../models/Arena';
 import { ArenaSession } from './arena.types';
 import { arenaGetValid } from './shared/arena.get-valid';
@@ -6,7 +6,7 @@ import { updateArenaList } from './shared/arena.update-list';
 
 class ArenaLeave extends AppCommand {
     trigger = '退出';
-    func: AppCommandFunc<ArenaSession> = async (session: ArenaSession) => {
+    func: AppFunc<ArenaSession> = async (session: ArenaSession) => {
         if (!session.args.length)
             session.arenas = await Arena.find({
                 'member._id': session.userId,

@@ -1,4 +1,4 @@
-import { AppCommand, AppCommandFunc, BaseSession } from 'kbotify';
+import { AppCommand, AppFunc, BaseSession } from 'kbotify';
 import Arena, { ArenaDoc } from 'models/Arena';
 import { channel } from '../../configs';
 import arenaConfig from '../../configs/arena';
@@ -22,7 +22,7 @@ class ArenaCreate extends AppCommand {
     intro =
         '将房间添加至房间列表，将会覆盖之前创建的房间。\n`.房间 创建 房间号 密码 加速/人数 留言`';
 
-    func: AppCommandFunc<ArenaSession> = async (session: ArenaSession) => {
+    func: AppFunc<ArenaSession> = async (session: ArenaSession) => {
         const arenaReg = /^\w{5}$/;
         const passReg = /^\d{0,8}$/;
         const args = session.args;

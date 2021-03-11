@@ -1,4 +1,4 @@
-import { AppCommand, AppCommandFunc, BaseSession } from 'kbotify';
+import { AppCommand, AppFunc, BaseSession } from 'kbotify';
 import Arena from 'models/Arena';
 import { updateArenaList } from './arena/shared/arena.update-list';
 
@@ -7,7 +7,7 @@ class UtilApp extends AppCommand {
     trigger = 't';
     intro = '查看房间';
     help = '';
-    func: AppCommandFunc<BaseSession> = async (session) => {
+    func: AppFunc<BaseSession> = async (session) => {
         await session.sendCard(JSON.stringify(shorcut()));
         // await session.sendCard(JSON.stringify(card()));
         // await session.sendCard(JSON.stringify([card2()]));

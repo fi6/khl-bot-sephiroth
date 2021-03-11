@@ -1,4 +1,4 @@
-import { AppCommand, AppCommandFunc } from 'kbotify';
+import { AppCommand, AppFunc } from 'kbotify';
 import { ProfileDoc } from '../../models/Profile';
 import { ProfileSession } from './profile.types';
 import { profileGetorCreate } from './shared/profile.get';
@@ -7,7 +7,7 @@ class ProfileNotification extends AppCommand {
     code = 'notification';
     trigger = '通知';
     help = '';
-    func: AppCommandFunc<ProfileSession> = async (session: ProfileSession) => {
+    func: AppFunc<ProfileSession> = async (session: ProfileSession) => {
         if (!session.args.length) return;
         const profile = await profileGetorCreate(session);
         switch (session.args[0]) {
