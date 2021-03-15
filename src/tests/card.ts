@@ -1,4 +1,4 @@
-import { cardParser } from 'utils/card-parser';
+import { parseCard } from 'utils/card-parser';
 
 let card1 = `
     {
@@ -72,4 +72,4 @@ let card2 = `
     }
   `;
 
-console.log(cardParser(card1, card2));
+console.log(parseCard(card1, card2));

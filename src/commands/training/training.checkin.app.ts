@@ -1,0 +1,27 @@
+import { AppCommand, AppFunc, BaseSession, GuildSession } from 'kbotify';
+import TrainingArena from '../../models/TrainingArena';
+import { trainingCallManager } from './shared/training.call.manager';
+
+class TrainingCheckIn extends AppCommand {
+    trigger = '签到';
+    func: AppFunc<BaseSession> = async (s) => {
+        const session = s as GuildSession;
+        const arena = await TrainingArena.findById(session.args[0]).exec();
+        if (!arena) return session.replyTemp('没有找到对应的房间');
+        // find user
+        const user = arena.queue.find((user) => {
+            return user._id === session.user.id;
+        });
+        if (!user) return session.replyTemp('你不在该房间的队伍中');
+
+        // check if user in voice channel
+
+        trainingCallManager.response(session.user.id);
+        user.state == 2;
+        arena.markModified('queue');
+        arena.save();
+        return session.replyTemp('签到成功！');
+    };
+}
+
+export const trainingCheckin = new TrainingCheckIn();

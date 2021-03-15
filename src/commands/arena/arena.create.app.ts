@@ -1,8 +1,8 @@
-import { AppCommand, AppFunc, BaseSession } from 'kbotify';
+import { AppCommand, AppFunc, BaseSession, createSession } from 'kbotify';
 import Arena, { ArenaDoc } from 'models/Arena';
 import { channel } from '../../configs';
 import arenaConfig from '../../configs/arena';
-import { cardParser } from '../../utils/card-parser';
+import { parseCard } from '../../utils/card-parser';
 import { ArenaSession } from './arena.types';
 import {
     createHelpCard,
@@ -33,13 +33,13 @@ class ArenaCreate extends AppCommand {
                     `已在 (chn)${channel.chat}(chn) 频道发送创建帮助。\n请根据帮助上的指示完成创建。（点击紫色字可以快速跳转频道）`
                 );
                 return session.sendCardTemp(
-                    cardParser(createStartCard()),
+                    parseCard(createStartCard()),
                     undefined,
                     { channel: channel.chat }
                 );
             }
             // no args found, return menu
-            return session.replyCardTemp(cardParser(createStartCard()));
+            return session.replyCardTemp(parseCard(createStartCard()));
         }
 
         if (args[0].startsWith('hp')) {
@@ -49,11 +49,11 @@ class ArenaCreate extends AppCommand {
                     /^\w{5} \d{0,8} .+/,
                     120 * 1e3,
                     (msg) => {
-                        let parsedArgs = msg.content.split(/ +/);
-                        this.func(new BaseSession(this, parsedArgs, msg));
+                        const parsedArgs = msg.content.split(/ +/);
+                        this.func(createSession(this, parsedArgs, msg));
                     }
                 );
-                return session.sendCardTemp(cardParser(createHelpCard()));
+                return session.sendCardTemp(parseCard(createHelpCard()));
             }
             // already input code password, remark optional
         }

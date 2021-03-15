@@ -1,63 +1,95 @@
-// import bot from 'init/bot_init';
-// import { ArenaSession } from 'commands/arena/arena.types';
-// import { arenaInfoMsg } from 'commands/arena/shared/arena.info.msg';
-// import { TextMessage } from 'kaiheila-bot-root/dist/types';
-// import { AppCommand, AppFunc } from 'kbotify';
+import { AppCommand, AppFunc, BaseSession, GuildSession } from 'kbotify';
 
-// import { checkRoles } from './shared/training.checkroles';
-// import { trainingUpsert } from './shared/training.upsert';
-// import { argsCheckerToLimit } from './shared/training.check-create-args';
+import { checkRoles } from './shared/training.checkroles';
 
-// class TrainingCreate extends AppCommand<ArenaSession> {
-//     code = 'create';
-//     trigger = '特训';
-//     help =
-//         '特训功能为教练组专属。创建房间命令格式：\n`.房间 特训 房间号 密码 加速 人数限制 留言`\n创建时会自动发送全体提醒，创建后可发送`.房间 管理`查看队伍和移除玩家。\n如：`.房间 特训 76VR2 147 裸连 5人 今天用库巴`';
-//     func: AppFunc<ArenaSession> = async (data: ArenaSession) => {
-//         // console.log('receive create training', data)
-//         const [msg, args] = [data.msg as TextMessage, data.args as string[]];
+import { parseCard } from '../../utils/card-parser';
+import { channel } from '../../configs';
 
-//         // error handling
-//         if (!checkRoles(msg.author.roles, 'coach')) {
-//             return session.replyTemp(
-//                 '权限不足，只有教练组可以发起特训房。',
-//                 data
-//             );
-//         }
-//         if (!args.length) {
-//             return session.sendTemp(this.help, data);
-//         } else if (args.length !== 5) {
-//             // no args found, return menu
-//             return session.replyTemp('参数数量错误' + this.help, data);
-//         }
+import TrainingArena, { TrainingArenaDoc } from '../../models/TrainingArena';
 
-//         const limit = argsCheckerToLimit(args);
-//         if (typeof limit === 'undefined')
-//             return session.replyTemp(
-//                 '参数格式错误。请检查房间号、密码，并确认加速、人数文字长度小于8',
-//                 data
-//             );
+class TrainingCreate extends AppCommand {
+    code = 'create';
+    trigger = '创建';
+    help =
+        '创建教练房命令格式：\n`.教练房 创建 开始时间 连接方式 人数限制 留言`\n开始时间请用小时：分钟表示。\n如：`.房间 特训 18:00 裸连 5人 今天新手专场`';
+    func: AppFunc<BaseSession> = async (s: BaseSession) => {
+        const session = s as GuildSession;
+        console.log('receive create training', session);
+        //.教练房 创建 76VR2 147 裸连 5 随意
+        // error handling
+        if (!checkRoles([], 'coach')) {
+            return session.replyTemp('权限不足，只有教练组可以发起特训房。');
+        }
+        if (!session.args.length) {
+            return session.sendTemp(this.help);
+        } else if (session.args.length !== 4) {
+            // no args found, return menu
+            return session.replyTemp('参数数量错误' + this.help);
+        }
 
-//         // start creating
-//         data.arena = await trainingUpsert(data, limit);
+        const arena = this.createTrainingArena(session);
 
-//         if (!data.arena)
-//             throw new Error(
-//                 'Upsert should return an arena when creating training arena.'
-//             );
+        // const limit = argsCheckerToLimit(session.args);
+        // if (typeof limit === 'undefined')
+        //     return session.replyTemp(
+        //         '参数格式错误。请检查房间号、密码，并确认加速、人数文字长度小于8'
+        //     );
 
-//         const content = ''.concat(
-//             `@所有人（未来会改） ${msg.author.nickname} 刚刚创建了特训房！\n请输入\`.房间 排队 @${msg.author.nickname}\`进行排队。\n`,
-//             '---\n',
-//             arenaInfoMsg(data.arena),
-//             '> 取消排队或退出房间后请发送`.房间 退出`。\n多次不主动退出会被暂时禁止参加特训。'
-//         );
-//         setTimeout(() => {
-//             bot.API.message.create(9, msg.channelId, content);
-//         }, 3e3);
+        // start creating
+        // const arena = await trainingUpsert(session, limit);
+        // console.debug(arena);
+        if (!arena)
+            throw new Error(
+                'Upsert should return an arena when creating training arena.'
+            );
 
-//         return session.replyTemp(`特训房间创建成功！即将呼叫全体。`, data);
-//     };
-// }
+        return session._send(parseCard(trainingCreateCard(arena)), undefined, {
+            channel: channel.arenaBot,
+            msgType: 10,
+        });
+    };
+    createTrainingArena(session: BaseSession): TrainingArenaDoc {
+        let time, connection, limit, remark;
+        try {
+            time = parseTime(session.args[0]);
+            connection = session.args[1];
+            limit = session.args[2].match(/\d+/)![0];
+            remark = session.args[3];
+        } catch (error) {
+            session.replyTemp('参数有误');
+            throw error;
+        }
+        return TrainingArena.findByIdAndUpdate(
+            session.userId,
+            {
+                nickname: session.user.username,
+                limit: parseInt(limit),
+                queue: [],
+                connection: connection,
+                info: remark,
+                startAt: time,
+                createdAt: new Date(),
+                register: true,
+            },
+            {
+                upsert: true,
+                new: true,
+                setDefaultsOnInsert: true,
+            }
+        );
+    }
+}
 
-// export const trainingCreate = new TrainingCreate();
+export const trainingCreate = new TrainingCreate();
+
+function parseTime(str: string) {
+    const time = str.split(/[:：]/);
+    const date = new Date();
+    date.setHours(parseInt(time[0]));
+    date.setMinutes(parseInt(time[1]));
+    return date;
+}
+
+function trainingCreateCard(arena: TrainingArenaDoc): string {
+    return '';
+}

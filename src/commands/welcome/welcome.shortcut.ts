@@ -1,7 +1,7 @@
 import { AppCommand, AppFunc, BaseSession } from 'kbotify';
 import Arena from 'models/Arena';
 import channel from '../../configs/channel';
-import { cardParser } from '../../utils/card-parser';
+import { parseCard } from '../../utils/card-parser';
 import { mentionUser } from '../../utils/khl';
 import { arenaList } from '../arena/arena.list.app';
 import { ArenaSession } from '../arena/arena.types';
@@ -38,7 +38,7 @@ class WelcomeShortcut extends AppCommand {
             session.mentionTemp(
                 `已在 (chn)${channel.chat}(chn) 频道发送创建帮助。\n请根据帮助上的指示完成创建。（点击紫色字可以快速跳转频道）`
             );
-            session._send(cardParser(createStartCard()), undefined, {
+            session._send(parseCard(createStartCard()), undefined, {
                 msgType: 10,
                 temp: true,
                 channel: channel.chat,

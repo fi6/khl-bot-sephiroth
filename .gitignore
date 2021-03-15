@@ -109,3 +109,4 @@ src/configs/mongo-init.js
 lib
 src/configs/auth.ts
 src/configs/auth*
+src/backup

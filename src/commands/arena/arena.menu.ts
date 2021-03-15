@@ -1,4 +1,4 @@
-import { MenuCommand } from 'kbotify';
+import { BaseSession, MenuCommand } from 'kbotify';
 import { arenaAlert } from './arena.alert.app';
 import { arenaCreate } from './arena.create.app';
 import { arenaManage } from './arena.manage.app';
@@ -22,6 +22,10 @@ class ArenaMenu extends MenuCommand {
     help = content;
     useCardMenu = true;
     menu = cardMenu();
+    async exec(session: BaseSession) {
+        console.log(session);
+        return await this.func(session);
+    }
 }
 
 export const arenaMenu = new ArenaMenu(

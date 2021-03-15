@@ -1,4 +1,4 @@
-import { AppCommand, AppFunc, BaseSession } from 'kbotify';
+import { AppCommand, AppFunc, BaseSession, createSession } from 'kbotify';
 import Arena from 'models/Arena';
 import { checkRoles } from 'utils/check-roles';
 import { ArenaSession } from './arena.types';
@@ -31,7 +31,7 @@ class ArenaAlert extends AppCommand {
             );
         if (!session.args.length) {
             let cancel_handle = session.setTextTrigger('', 60 * 1e3, (msg) => {
-                this.func(new BaseSession(this, [msg.content], msg));
+                this.func(createSession(this, [msg.content], msg));
             });
             this.cache.set(session.userId, cancel_handle);
             return session.sendCardTemp(arenaAlertHelper());

@@ -3,7 +3,7 @@ import { arenaCreate } from '../commands/arena/arena.create.app';
 // import { arenaList } from 'commands/arena/arena.list.app';
 // import { arenaMenu } from 'commands/arena/arena.menu';
 import auth from 'configs/auth';
-import { BaseSession, KBotify } from 'kbotify';
+import { BaseSession, createSession, KBotify } from 'kbotify';
 
 // import profileCommand from '../commands/profile'
 import { callCloud } from '../utils/utils';
@@ -13,6 +13,7 @@ import { arenaList } from '../commands/arena/arena.list.app';
 import { utilApp } from '../commands/util.app';
 import { welcomeEntry } from '../commands/welcome/welcome.entry';
 import { TextMessage } from 'kbotify/dist/core/message';
+import { trainingMenu } from '../commands/training/training.menu';
 
 const bot = new KBotify({
     mode: 'websocket',
@@ -23,7 +24,7 @@ const bot = new KBotify({
 
 bot.connect();
 
-bot.addCommands(arenaMenu, utilApp, welcomeEntry);
+bot.addCommands(arenaMenu, utilApp, welcomeEntry, trainingMenu);
 bot.addAlias(arenaCreate, '建房');
 // bot.addAlias(arenaList, '找房');
 // bot.addAlias(arenaDelete, '关房');
@@ -34,7 +35,7 @@ bot.on('unknownEvent', (e) => {
 
 bot.message.on('text', (msg) => {
     if (msg.content == '房间') {
-        return arenaMenu.exec(new BaseSession(arenaMenu, [], msg, bot));
+        return arenaMenu.exec(createSession(arenaMenu, [], msg, bot));
     }
 });
 
@@ -55,7 +56,7 @@ bot.execute = async (command: string, args: string[], msg: any) => {
     const regex = /^[\u4e00-\u9fa5]/;
     const cmd = bot.commandMap.get(command);
     // console.debug(bot.commandMap);
-    if (cmd) return cmd.exec(new BaseSession(cmd, args, msg));
+    if (cmd) return cmd.exec(createSession(cmd, args, msg));
     switch (command) {
         case '开房':
         case '建房':

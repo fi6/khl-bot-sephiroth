@@ -1,66 +1,75 @@
-// import { ArenaSession } from 'commands/arena/arena.types';
-// import { TextMessage } from 'kaiheila-bot-root/dist/types';
-// import { AppCommand, AppFunc } from 'kbotify';
-// import Arena from 'models/Arena';
+import { AppCommand, AppFunc, BaseSession, GuildSession } from 'kbotify';
+import TrainingArena from 'models/TrainingArena';
 
-// class TrainingJoin extends AppCommand<ArenaSession> {
-//     trigger = '排队';
+class TrainingJoin extends AppCommand {
+    trigger = '排队';
 
-//     help = '特训房排队请输入`.房间 排队 @房主`';
-//     func: AppFunc<ArenaSession> = async (data: ArenaSession) => {
-//         const [msg, args] = [data.msg as TextMessage, data.args as string[]];
+    help = '特训房排队请输入`.房间 排队 @房主`';
+    func: AppFunc<BaseSession> = async (s: BaseSession) => {
+        if (!(s instanceof GuildSession)) return;
+        const session = s as GuildSession;
+        if (!session.args.length) return;
 
-//         if (msg.mention.user.length != 1) {
-//             session.replyTemp(this.help, data);
-//         }
-//         data.arena = await Arena.findOne({
-//             _id: msg.mention.user[0],
-//             isTraining: true,
-//         }).exec();
-//         if (!data.arena)
-//             return session.replyTemp('没有找到对应房间。', data);
+        const arena = await TrainingArena.findById(session.args[0]).exec();
+        if (!arena) return session.replyTemp('没有找到对应的房间');
 
-//         for (const user of data.arena.trainingQueue) {
-//             if (user._id == session.userId) {
-//                 return session.replyTemp(
-//                     '你已经在此房间队伍中。如需换到队尾请先输入`.房间 退出`，退出后重新排队。',
-//                     data
-//                 );
-//             }
-//         }
-//         console.log('queue:', data.arena.trainingQueue);
-//         const last_tag = data.arena.trainingQueue.length
-//             ? data.arena.trainingQueue[data.arena.trainingQueue.length - 1]
-//                   .tag + 1
-//             : 1;
-//         // let last_tag;
-//         // if (!data.arena.trainingQueue[-1].tag) {
-//         //     last_tag = 1;
-//         // } else {
-//         //     last_tag = data.arena.trainingQueue[-1].tag + 1;
-//         // }
-//         data.arena.trainingQueue.push({
-//             _id: session.userId,
-//             nickname: msg.author.nickname,
-//             time: new Date(),
-//             tag: last_tag,
-//         });
-//         data.arena.isNew = false;
-//         data.arena.markModified('trainingQueue');
-//         await data.arena.save();
-//         const arena = data.arena;
-//         return session.replyTemp(
-//             ''.concat(
-//                 '成功加入排队：',
-//                 `\`${arena.nickname}的特训房\`\n`,
-//                 '房间号/密码：',
-//                 `[${arena.code} ${arena.password}] `,
-//                 '当前排队人数：',
-//                 `${arena.trainingQueue.length}/${arena.trainingLimit}`
-//             ),
-//             data
-//         );
-//     };
-// }
+        if (arena.queue.length == arena.limit) {
+            return session.mentionTemp('排队人数已满……请等待下次的教练房');
+        }
+        if (!arena.register) {
+            return session.mentionTemp('停止排队啦……请等待下次的教练房');
+        }
 
-// export const trainingJoin = new TrainingJoin();
+        for (const user of arena.queue) {
+            if (user._id == session.userId) {
+                if (user.state == -1) {
+                    // return session.replyTemp(
+                    //     '你已经参加过教练房啦……不能重复参加哦'
+                    // );
+                } else
+                    return session.replyTemp(
+                        '你已经在此房间队伍中。如需换到队尾，请退出后重新排队。'
+                    );
+            }
+        }
+
+        console.log('queue:', arena.queue);
+        const next_number = arena.queue.length
+            ? arena.queue[arena.queue.length - 1].number + 1
+            : 1;
+
+        if (session.args.length == 1) {
+            session.mentionTemp(
+                '请在60秒内输入你的大乱斗游戏内昵称（便于识别即可）'
+            );
+            session.setTextTrigger('', 6e4, (msg) => {
+                session.args.push(msg.content);
+                this.exec(session);
+            });
+        }
+
+        arena.queue.push({
+            _id: session.userId,
+            nickname: session.user.nickname,
+            gameName: session.args[1],
+            number: next_number,
+            time: new Date(),
+        });
+
+        arena.isNew = false;
+        arena.markModified('queue');
+        await arena.save();
+        return session.replyTemp(
+            ''.concat(
+                '成功加入排队：',
+                `\`${arena.nickname}的教练房\`\n`,
+                '房间号/密码：',
+                `[${arena.code} ${arena.password}] `,
+                '当前排队人数：',
+                `${arena.queue.length}/${arena.limit}`
+            )
+        );
+    };
+}
+
+export const trainingJoin = new TrainingJoin();
