@@ -69,14 +69,7 @@ export const trainingManageCard = (arena: TrainingArenaDoc) => {
     ];
 };
 
-function kickModule(user: {
-    _id: string;
-    nickname: string;
-    time: Date;
-    number: number;
-    gameName: string;
-    state: number;
-}) {
+function kickModule(user: TrainingArenaDoc['queue'][number]) {
     // let inArena = ' ';
     // if (index < 3) {
     //     inArena = ' 在房间中';
