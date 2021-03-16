@@ -6,12 +6,14 @@ import { parseCard } from '../../utils/card-parser';
 import { channel } from '../../configs';
 
 import TrainingArena, { TrainingArenaDoc } from '../../models/TrainingArena';
+import { formatTime } from '../../utils/format-time';
+import { trainingInfoCard } from './card/training.info.card';
 
 class TrainingCreate extends AppCommand {
     code = 'create';
     trigger = '创建';
     help =
-        '创建教练房命令格式：\n`.教练房 创建 开始时间 连接方式 人数限制 留言`\n开始时间请用小时：分钟表示。\n如：`.房间 特训 18:00 裸连 5人 今天新手专场`';
+        '创建教练房命令格式：\n`.教练房 创建 开始时间 连接方式 人数限制 留言`\n开始时间请用`小时：分钟`表示，如需其他日期请提前联系冰飞修改。\n如：`.房间 特训 18:00 裸连 5人 今天新手专场`';
     func: AppFunc<BaseSession> = async (s: BaseSession) => {
         const session = s as GuildSession;
         console.log('receive create training', session);
@@ -43,11 +45,12 @@ class TrainingCreate extends AppCommand {
                 'Upsert should return an arena when creating training arena.'
             );
 
-        return session._send(parseCard(trainingCreateCard(arena)), undefined, {
+        return session._send(trainingInfoCard(arena), undefined, {
             channel: channel.arenaBot,
             msgType: 10,
         });
     };
+
     createTrainingArena(session: BaseSession): TrainingArenaDoc {
         let time, connection, limit, remark;
         try {
@@ -63,6 +66,7 @@ class TrainingCreate extends AppCommand {
             session.userId,
             {
                 nickname: session.user.username,
+                avatar: session.user.avatar,
                 limit: parseInt(limit),
                 queue: [],
                 connection: connection,
@@ -88,8 +92,4 @@ function parseTime(str: string) {
     date.setHours(parseInt(time[0]));
     date.setMinutes(parseInt(time[1]));
     return date;
-}
-
-function trainingCreateCard(arena: TrainingArenaDoc): string {
-    return '';
 }

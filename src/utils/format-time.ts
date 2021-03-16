@@ -1,9 +1,16 @@
+import { DateTime } from 'luxon';
+
 export function formatTime(s: Date): string {
-    const options = {
-        hour: '2-digit',
-        minute: '2-digit',
-        timeZone: 'Asia/Shanghai',
-    };
-    const dtFormat = new Intl.DateTimeFormat('en-GB', options as any);
-    return dtFormat.format(s);
+    const datetime = DateTime.fromJSDate(s).setZone('Asia/Shanghai');
+    const timeString = `${datetime.hour}:${datetime.minute}`;
+    const today = DateTime.now().setZone('Asia/Shanghai');
+    let dateString = '';
+    if (today.day - datetime.day == 1) {
+        dateString = '昨天';
+    } else if (today.day - datetime.day == -1) {
+        dateString = '明天';
+    } else if (today.day - datetime.day < -1 || today.day - datetime.day > 1) {
+        dateString = `${datetime.monthLong}/${datetime.day} `;
+    }
+    return dateString + timeString;
 }

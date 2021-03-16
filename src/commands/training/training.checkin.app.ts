@@ -20,7 +20,10 @@ class TrainingCheckIn extends AppCommand {
         user.state == 2;
         arena.markModified('queue');
         arena.save();
-        return session.replyTemp('签到成功！');
+        return session.replyTemp(
+            '签到成功！以下是房间信息：\n' +
+                `${arena.code} ${arena.password} ${arena.connection}`
+        );
     };
 }
 

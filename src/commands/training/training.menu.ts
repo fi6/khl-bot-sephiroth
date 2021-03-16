@@ -1,4 +1,3 @@
-import { ArenaSession } from 'commands/arena/arena.types';
 import { MenuCommand } from 'kbotify';
 import { trainingCheckin } from './training.checkin.app';
 import { trainingCreate } from './training.create.app';
