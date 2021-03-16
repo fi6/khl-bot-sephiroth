@@ -38,20 +38,33 @@ class TrainingJoin extends AppCommand {
             ? arena.queue[arena.queue.length - 1].number + 1
             : 1;
 
+        let gameName: string;
         if (session.args.length == 1) {
+            session.user.grantRole(session.guild.id, 149474);
             session.mentionTemp(
                 '请在60秒内输入你的大乱斗游戏内昵称（便于识别即可）'
             );
-            session.setTextTrigger('', 6e4, (msg) => {
-                session.args.push(msg.content);
-                this.exec(session);
-            });
+            const inputMsg = await session.awaitMessage(/.+/);
+
+            // session.setTextTrigger('', 6e4, (msg) => {
+            //     session.args.push(msg.content);
+            //     this.exec(session);
+            // });
+            if (!inputMsg?.content) {
+                session.user.revokeRole(session.guild.id, 149474);
+                return session.mentionTemp('输入失败，请重试');
+            }
+            gameName = inputMsg.content;
+            session._botInstance.API.message.delete(inputMsg.msgId);
+            session.user.revokeRole(session.guild.id, 149474);
+        } else {
+            return;
         }
 
         arena.queue.push({
             _id: session.userId,
             nickname: session.user.nickname,
-            gameName: session.args[1],
+            gameName: gameName,
             number: next_number,
             time: new Date(),
         });
