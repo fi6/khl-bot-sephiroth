@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 
 export function formatTime(s: Date): string {
     const datetime = DateTime.fromJSDate(s).setZone('Asia/Shanghai');
-    const timeString = `${datetime.hour}:${datetime.minute}`;
+    const timeString = datetime.toFormat('HH:mm');
     const today = DateTime.now().setZone('Asia/Shanghai');
     let dateString = '';
     if (today.day - datetime.day == 1) {

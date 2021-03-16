@@ -6,6 +6,7 @@ import { trainingManageCard } from './card/training.manage.card';
 import { trainingCallCard } from './card/training.call.card';
 import { trainingArenaSort } from './shared/training.arena-sort';
 import { trainingCallManager } from './shared/training.call.manager';
+import { updateTrainingArenaInfo } from './shared/training.update-info';
 
 class TrainingManage extends AppCommand {
     trigger = '管理';
@@ -55,6 +56,7 @@ class TrainingManage extends AppCommand {
                         args[1],
                         '你被教练移出教练房啦……下次记得结束后主动点击退出哦'
                     );
+                    updateTrainingArenaInfo(arena);
                     return session.sendTemp('removed xxx');
                 } else {
                     return session.sendTemp('remove failed');
@@ -66,15 +68,16 @@ class TrainingManage extends AppCommand {
         } else if (session.args[0] == 'register' && session.args.length == 2) {
             if (session.args[1] == 'on') {
                 arena.register = true;
-                arena.save();
+                updateTrainingArenaInfo(arena);
                 return session.mentionTemp('已开启注册');
             } else if (session.args[1] == 'off') {
                 arena.register = false;
-                arena.save();
+                updateTrainingArenaInfo(arena);
                 return session.mentionTemp('已关闭注册');
             }
         } else if (session.args[0] == 'call') {
-            return this.callNext(arena);
+            this.callNext(arena);
+            return;
         } else if (session.args[0] == 'info') {
             const inputMsg = await session.awaitMessage(
                 /^\w{5} +\d{0,8} +.+/,
@@ -127,6 +130,7 @@ class TrainingManage extends AppCommand {
             10
         );
         trainingCallManager.call(nextUser._id);
+        updateTrainingArenaInfo(arena);
     };
 
     inputInfo(arena: TrainingArenaDoc, content: string) {

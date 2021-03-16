@@ -5,6 +5,7 @@ const TrainingArenaSchema = createSchema({
     avatar: Type.string({ required: true }),
     nickname: Type.string({ required: true }),
     code: Type.string(),
+    card: Type.string(),
     password: Type.string(),
     connection: Type.string({ required: true }),
     info: Type.string({ required: true }),

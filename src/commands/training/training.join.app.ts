@@ -1,5 +1,6 @@
 import { AppCommand, AppFunc, BaseSession, GuildSession } from 'kbotify';
 import TrainingArena from 'models/TrainingArena';
+import { updateTrainingArenaInfo } from './shared/training.update-info';
 
 class TrainingJoin extends AppCommand {
     trigger = '排队';
@@ -39,6 +40,7 @@ class TrainingJoin extends AppCommand {
             : 1;
 
         let gameName: string;
+        let nickname: string;
         if (session.args.length == 1) {
             session.user.grantRole(session.guild.id, 149474);
             session.mentionTemp(
@@ -54,6 +56,7 @@ class TrainingJoin extends AppCommand {
                 session.user.revokeRole(session.guild.id, 149474);
                 return session.mentionTemp('输入失败，请重试');
             }
+            nickname = inputMsg.author.nickname;
             gameName = inputMsg.content;
             session._botInstance.API.message.delete(inputMsg.msgId);
             session.user.revokeRole(session.guild.id, 149474);
@@ -63,15 +66,15 @@ class TrainingJoin extends AppCommand {
 
         arena.queue.push({
             _id: session.userId,
-            nickname: session.user.nickname,
+            nickname: nickname,
             gameName: gameName,
             number: next_number,
             time: new Date(),
         });
-
         arena.isNew = false;
         arena.markModified('queue');
         await arena.save();
+        updateTrainingArenaInfo(arena);
         return session.replyTemp(
             ''.concat(
                 '成功加入排队：',

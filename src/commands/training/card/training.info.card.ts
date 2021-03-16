@@ -4,15 +4,16 @@ import { formatTime } from '../../../utils/format-time';
 
 export function trainingInfoCard(arena: TrainingArenaDoc): string {
     const currentCalled: string[] = [];
-    arena.queue.forEach((user) => {
-        if (user.state == 1) {
-            currentCalled.push(user.nickname);
-        }
-    });
-    let calledString = currentCalled.join(', ');
-    if (!currentCalled.length) {
-        calledString = '暂无';
+    let calledString = '暂无';
+    if (arena.queue?.length) {
+        arena.queue.forEach((user) => {
+            if (user.state == 1) {
+                currentCalled.push(user.nickname);
+            }
+        });
+        calledString = currentCalled.join(', ');
     }
+
     const card = [
         {
             type: 'card',
@@ -29,8 +30,8 @@ export function trainingInfoCard(arena: TrainingArenaDoc): string {
                 {
                     type: 'section',
                     text: {
-                        type: 'plain-text',
-                        content: `(met)${arena._id}(met) 的教练房\n${arena.info}`,
+                        type: 'kmarkdown',
+                        content: `**(met)${arena._id}(met)的教练房\n${arena.info}**`,
                     },
                     mode: 'left',
                     accessory: {
@@ -39,6 +40,9 @@ export function trainingInfoCard(arena: TrainingArenaDoc): string {
                         size: 'sm',
                         circle: true,
                     },
+                },
+                {
+                    type: 'divider',
                 },
                 {
                     type: 'section',

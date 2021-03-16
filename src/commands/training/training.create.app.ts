@@ -16,10 +16,10 @@ class TrainingCreate extends AppCommand {
         '创建教练房命令格式：\n`.教练房 创建 开始时间 连接方式 人数限制 留言`\n开始时间请用`小时：分钟`表示，如需其他日期请提前联系冰飞修改。\n如：`.房间 特训 18:00 裸连 5人 今天新手专场`';
     func: AppFunc<BaseSession> = async (s: BaseSession) => {
         const session = s as GuildSession;
-        console.log('receive create training', session);
+        // console.log('receive create training', session);
         //.教练房 创建 76VR2 147 裸连 5 随意
         // error handling
-        if (!checkRoles([], 'coach')) {
+        if (!checkRoles((await session.user.full()).roles, 'coach')) {
             return session.replyTemp('权限不足，只有教练组可以发起特训房。');
         }
         if (!session.args.length) {
@@ -29,7 +29,7 @@ class TrainingCreate extends AppCommand {
             return session.replyTemp('参数数量错误' + this.help);
         }
 
-        const arena = this.createTrainingArena(session);
+        const arena = await this.createTrainingArena(session);
 
         // const limit = argsCheckerToLimit(session.args);
         // if (typeof limit === 'undefined')
@@ -45,13 +45,18 @@ class TrainingCreate extends AppCommand {
                 'Upsert should return an arena when creating training arena.'
             );
 
-        return session._send(trainingInfoCard(arena), undefined, {
+        const result = await session._send(trainingInfoCard(arena), undefined, {
             channel: channel.arenaBot,
             msgType: 10,
         });
+        if (result.msgSent) {
+            arena.card = result.msgSent.msgId;
+            arena.save();
+        }
+        return result;
     };
 
-    createTrainingArena(session: BaseSession): TrainingArenaDoc {
+    createTrainingArena(session: BaseSession): Promise<TrainingArenaDoc> {
         let time, connection, limit, remark;
         try {
             time = parseTime(session.args[0]);
