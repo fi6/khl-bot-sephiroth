@@ -10,7 +10,11 @@ export function updateTrainingArenaInfo(arena: TrainingArenaDoc): void {
     if (!arena.card) {
         throw new Error('no arena card sent');
     }
-    arena.save();
     bot.API.message.delete(arena.card);
-    bot.API.message.create(10, channel.arenaBot, trainingInfoCard(arena));
+    bot.API.message
+        .create(10, channel.arenaBot, trainingInfoCard(arena))
+        .then((result) => {
+            arena.card = result.msgId;
+        });
+    arena.save();
 }

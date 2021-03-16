@@ -11,7 +11,7 @@ export function trainingInfoCard(arena: TrainingArenaDoc): string {
                 currentCalled.push(user.nickname);
             }
         });
-        calledString = currentCalled.join(', ');
+        if (currentCalled.length) calledString = currentCalled.join(', ');
     }
 
     const card = [
@@ -31,7 +31,7 @@ export function trainingInfoCard(arena: TrainingArenaDoc): string {
                     type: 'section',
                     text: {
                         type: 'kmarkdown',
-                        content: `**(met)${arena._id}(met)的教练房\n${arena.info}**`,
+                        content: `**(met)${arena._id}(met)的教练房**\n${arena.info}`,
                     },
                     mode: 'left',
                     accessory: {
