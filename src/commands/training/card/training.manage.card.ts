@@ -1,7 +1,10 @@
 import TrainingArena, { TrainingArenaDoc } from '../../../models/TrainingArena';
 import { formatTime } from '../../../utils/format-time';
 
-export const trainingManageCard = (arena: TrainingArenaDoc) => {
+export const trainingManageCard = (
+    arena: TrainingArenaDoc,
+    content: string = ''
+) => {
     arena.queue.sort((a, b) => {
         return a.time.valueOf() - b.time.valueOf();
     });
@@ -9,6 +12,8 @@ export const trainingManageCard = (arena: TrainingArenaDoc) => {
     arena.queue.forEach((user) => {
         if (user.state != -1) modules.push(kickModule(user));
     });
+
+    // button: open / close register
     let button;
     if (arena.register == true) {
         button = {
@@ -48,6 +53,15 @@ export const trainingManageCard = (arena: TrainingArenaDoc) => {
                     },
                 },
                 {
+                    type: 'section',
+                    text: {
+                        type: 'kmarkdown',
+                        content:
+                            `房间信息：${arena.code} ${arena.password} ${arena.connection}\n` +
+                            content,
+                    },
+                },
+                {
                     type: 'action-group',
                     elements: [
                         {
@@ -84,7 +98,7 @@ function kickModule(user: TrainingArenaDoc['queue'][number]) {
         type: 'section',
         text: {
             type: 'plain-text',
-            content: `${user.number} ${user.nickname} 游戏名：${user.gameName}${state}`,
+            content: `${user.number} ${user.nickname} \t游戏名：${user.gameName}${state}`,
         },
         mode: 'right',
         accessory: {

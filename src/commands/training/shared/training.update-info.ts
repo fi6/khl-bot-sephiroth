@@ -15,6 +15,6 @@ export function updateTrainingArenaInfo(arena: TrainingArenaDoc): void {
         .create(10, channel.arenaBot, trainingInfoCard(arena))
         .then((result) => {
             arena.card = result.msgId;
+            arena.save();
         });
-    arena.save();
 }

@@ -3,6 +3,7 @@ import TrainingArena from '../../models/TrainingArena';
 import { trainingCallManager } from './shared/training.call.manager';
 
 class TrainingCheckIn extends AppCommand {
+    response: 'guild' = 'guild';
     trigger = '签到';
     func: AppFunc<BaseSession> = async (s) => {
         const session = s as GuildSession;

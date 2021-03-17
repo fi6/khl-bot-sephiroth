@@ -15,6 +15,7 @@ class TrainingCallManager extends EventEmitter {
     }
     response(userId: string) {
         cache.set(userId, true);
+        console.debug('user check-in ', userId);
     }
 }
 

@@ -31,7 +31,7 @@ export function trainingInfoCard(arena: TrainingArenaDoc): string {
                     type: 'section',
                     text: {
                         type: 'kmarkdown',
-                        content: `**(met)${arena._id}(met)的教练房**\n${arena.info}`,
+                        content: `**${arena.nickname}的教练房**\n${arena.info}`,
                     },
                     mode: 'left',
                     accessory: {

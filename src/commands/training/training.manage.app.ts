@@ -47,8 +47,7 @@ class TrainingManage extends AppCommand {
             return session.mentionTemp('没有找到可管理的教练房');
         }
 
-        if (!session.args.length)
-            session.replyCardTemp(parseCard(trainingManageCard(arena)));
+        if (!session.args.length) this.sendManageCard(session, arena);
         else if (session.args[0] == 'kick' && session.args.length == 2) {
             try {
                 if (this.kick(args[1], arena)) {
@@ -57,7 +56,7 @@ class TrainingManage extends AppCommand {
                         '你被教练移出教练房啦……下次记得结束后主动点击退出哦'
                     );
                     updateTrainingArenaInfo(arena);
-                    return session.sendTemp('removed xxx');
+                    return this.sendManageCard(session, arena, `已移出`);
                 } else {
                     return session.sendTemp('remove failed');
                 }
@@ -69,14 +68,15 @@ class TrainingManage extends AppCommand {
             if (session.args[1] == 'on') {
                 arena.register = true;
                 updateTrainingArenaInfo(arena);
-                return session.mentionTemp('已开启注册');
+                return this.sendManageCard(session, arena, '已开启注册');
             } else if (session.args[1] == 'off') {
                 arena.register = false;
                 updateTrainingArenaInfo(arena);
-                return session.mentionTemp('已关闭注册');
+                return this.sendManageCard(session, arena, '已关闭注册');
             }
         } else if (session.args[0] == 'call') {
             this.callNext(arena);
+            this.sendManageCard(session, arena, '已呼叫');
             return;
         } else if (session.args[0] == 'info') {
             const inputMsg = await session.awaitMessage(
@@ -110,6 +110,14 @@ class TrainingManage extends AppCommand {
         return true;
     }
 
+    sendManageCard(
+        session: GuildSession,
+        arena: TrainingArenaDoc,
+        content?: string
+    ) {
+        session.replyCardTemp(parseCard(trainingManageCard(arena, content)));
+    }
+
     callNext = (arena: TrainingArenaDoc) => {
         let nextUser;
         trainingArenaSort(arena);
@@ -123,7 +131,6 @@ class TrainingManage extends AppCommand {
         // call user
         nextUser.state = 1;
         arena.markModified('queue');
-        arena.save();
         this._remind(
             nextUser._id,
             parseCard(trainingCallCard(arena, nextUser._id)),

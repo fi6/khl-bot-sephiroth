@@ -29,6 +29,17 @@ export function trainingCallCard(arena: TrainingArenaDoc, userId: string) {
                         type: 'kmarkdown',
                         content: `(met)${user._id}(met) 请于5分钟内进入${arena.nickname}的语音频道，然后点击签到按钮。签到成功后将显示房间信息。`,
                     },
+                    mode: 'right',
+                    accessory: {
+                        type: 'button',
+                        theme: 'primary',
+                        click: 'return-val',
+                        value: `.教练房 签到 ${arena._id}`,
+                        text: {
+                            type: 'plain-text',
+                            content: '签到',
+                        },
+                    },
                 },
                 {
                     type: 'section',
