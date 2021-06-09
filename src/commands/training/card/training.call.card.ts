@@ -41,13 +41,13 @@ export function trainingCallCard(arena: TrainingArenaDoc, userId: string) {
                         },
                     },
                 },
-                {
-                    type: 'section',
-                    text: {
-                        type: 'kmarkdown',
-                        content: `房间号：${arena.code}, 密码：${arena.password}, 连接方式：${arena.connection}`,
-                    },
-                },
+                // {
+                //     type: 'section',
+                //     text: {
+                //         type: 'kmarkdown',
+                //         content: `房间号：${arena.code}, 密码：${arena.password}, 连接方式：${arena.connection}`,
+                //     },
+                // },
                 {
                     type: 'section',
                     text: {

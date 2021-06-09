@@ -29,7 +29,7 @@ class TrainingCreate extends AppCommand {
             return session.replyTemp('参数数量错误' + this.help);
         }
 
-        const arena = await this.createTrainingArena(session);
+        const arena = await this.create(session);
 
         // const limit = argsCheckerToLimit(session.args);
         // if (typeof limit === 'undefined')
@@ -56,7 +56,7 @@ class TrainingCreate extends AppCommand {
         return result;
     };
 
-    createTrainingArena(session: BaseSession): Promise<TrainingArenaDoc> {
+    create(session: BaseSession): Promise<TrainingArenaDoc> {
         let time, connection, limit, remark;
         try {
             time = parseTime(session.args[0]);
@@ -73,6 +73,8 @@ class TrainingCreate extends AppCommand {
                 nickname: session.user.username,
                 avatar: session.user.avatar,
                 limit: parseInt(limit),
+                code: undefined,
+                password: undefined,
                 queue: [],
                 connection: connection,
                 info: remark,
@@ -85,7 +87,7 @@ class TrainingCreate extends AppCommand {
                 new: true,
                 setDefaultsOnInsert: true,
             }
-        );
+        ).exec();
     }
 }
 

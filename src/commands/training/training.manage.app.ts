@@ -7,6 +7,8 @@ import { trainingCallCard } from './card/training.call.card';
 import { trainingArenaSort } from './shared/training.arena-sort';
 import { trainingCallManager } from './shared/training.call.manager';
 import { updateTrainingArenaInfo } from './shared/training.update-info';
+import { Error } from 'mongoose';
+import { userInfo } from 'os';
 
 class TrainingManage extends AppCommand {
     trigger = '管理';
@@ -50,6 +52,19 @@ class TrainingManage extends AppCommand {
         if (!session.args.length) this.sendManageCard(session, arena);
         else if (session.args[0] == 'kick' && session.args.length == 2) {
             try {
+                if (args[1] == 'next') {
+                    const user = this.kickNext(arena);
+                    this._remind(
+                        user._id,
+                        '你被移出教练房啦……下次记得结束后主动点击退出哦'
+                    );
+                    updateTrainingArenaInfo(arena);
+                    return this.sendManageCard(
+                        session,
+                        arena,
+                        `已移出` + user.nickname
+                    );
+                }
                 if (this.kick(args[1], arena)) {
                     this._remind(
                         args[1],
@@ -65,6 +80,8 @@ class TrainingManage extends AppCommand {
                 session.send('出现未知错误……在反馈频道发送问题试试看吧');
             }
         } else if (session.args[0] == 'register' && session.args.length == 2) {
+            // register related: on/off
+
             if (session.args[1] == 'on') {
                 arena.register = true;
                 updateTrainingArenaInfo(arena);
@@ -75,27 +92,47 @@ class TrainingManage extends AppCommand {
                 return this.sendManageCard(session, arena, '已关闭注册');
             }
         } else if (session.args[0] == 'call') {
-            this.callNext(arena);
-            this.sendManageCard(session, arena, '已呼叫');
+            // call related: call next / call number
+
+            let user: TrainingArenaDoc['queue'][number];
+            if (!(args.length >= 1)) user = this.callNext(arena);
+            else user = this.callId(arena, args[1]);
+            this.sendManageCard(session, arena, '已呼叫' + user.nickname);
             return;
         } else if (session.args[0] == 'info') {
-            const inputMsg = await session.awaitMessage(
-                /^\w{5} +\d{0,8} +.+/,
-                60
-            );
-            session.replyTemp(
+            // input arena info
+
+            session.mentionTemp(
                 '请在60秒内输入房间号、房间密码，用空格分开\n如：65FC2 147'
             );
+
+            const inputMsg = await session.awaitMessage(/^\w{5} +\d{0,8}/, 6e4);
+
             if (!inputMsg) {
                 return session.replyTemp('未收到输入，请重试');
             }
             this.inputInfo(arena, inputMsg?.content);
             this._botInstance?.API.message.delete(inputMsg.msgId);
             return session.replyTemp(
-                `房间信息已更新为：${arena.code} ${arena.password} ${arena.connection}`
+                `房间信息已更新为：${arena.code} ${arena.password}\n连接方式：${arena.connection}`
             );
         }
     };
+
+    kickNext(arena: TrainingArenaDoc) {
+        let nextUser;
+        trainingArenaSort(arena);
+        for (const user of arena.queue) {
+            if (user.state && user.state >= 0) {
+                nextUser = user;
+                break;
+            }
+        }
+        if (!nextUser) throw new Error('no next user');
+
+        this.kick(nextUser?._id, arena);
+        return nextUser;
+    }
 
     kick(userId: string, arena: TrainingArenaDoc) {
         const user = arena.queue.find((usr) => {
@@ -115,8 +152,26 @@ class TrainingManage extends AppCommand {
         arena: TrainingArenaDoc,
         content?: string
     ) {
-        session.replyCardTemp(parseCard(trainingManageCard(arena, content)));
+        session.sendCardTemp(parseCard(trainingManageCard(arena, content)));
     }
+
+    inputInfo(arena: TrainingArenaDoc, content: string) {
+        const info = content.split(/ +/);
+        arena.code = info[0];
+        arena.password = info[1];
+        arena.save();
+    }
+
+    callId = (arena: TrainingArenaDoc, id: string) => {
+        const user = arena.queue.find((usr) => {
+            return usr._id == id;
+        });
+        if (!user) {
+            throw new Error('no user in that id found');
+        }
+        this._callUser(arena, user);
+        return user;
+    };
 
     callNext = (arena: TrainingArenaDoc) => {
         let nextUser;
@@ -127,25 +182,23 @@ class TrainingManage extends AppCommand {
                 break;
             }
         }
-        if (!nextUser) return;
+        if (!nextUser) throw new Error('no next user');
         // call user
-        nextUser.state = 1;
-        arena.markModified('queue');
-        this._remind(
-            nextUser._id,
-            parseCard(trainingCallCard(arena, nextUser._id)),
-            10
-        );
-        trainingCallManager.call(nextUser._id);
-        updateTrainingArenaInfo(arena);
+        this._callUser(arena, nextUser);
+        return nextUser;
     };
 
-    inputInfo(arena: TrainingArenaDoc, content: string) {
-        const info = content.split(/ +/);
-        arena.code = info[0];
-        arena.password = info[1];
-        arena.save();
-    }
+    _callUser = (arena: TrainingArenaDoc, user: any) => {
+        user.state = 1;
+        arena.markModified('queue');
+        this._remind(
+            user._id,
+            parseCard(trainingCallCard(arena, user._id)),
+            10
+        );
+        trainingCallManager.call(user._id);
+        updateTrainingArenaInfo(arena);
+    };
 
     _remind(userId: string, content: string, type = 9) {
         this._botInstance?.API.message.create(

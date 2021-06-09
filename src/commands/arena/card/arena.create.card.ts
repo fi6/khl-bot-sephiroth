@@ -41,22 +41,15 @@ export function createStartCard() {
                 type: 'section',
                 text: {
                     type: 'kmarkdown',
+                    content: '如果你熟悉机器人的使用方法，可以使用命令创建。',
+                },
+            },
+            {
+                type: 'section',
+                text: {
+                    type: 'kmarkdown',
                     content:
-                        '如果你熟悉机器人的使用方法，可以使用命令创建。\n创建房间的完整指令格式：\n`.建房 房间号 密码 加速/人数 (留言)`',
-                },
-            },
-            {
-                type: 'section',
-                text: {
-                    type: 'kmarkdown',
-                    content: '创建房间后，你可以广播给频道内所有人。',
-                },
-            },
-            {
-                type: 'section',
-                text: {
-                    type: 'kmarkdown',
-                    content: '',
+                        '创建房间的指令格式：\n`.建房 房间号 密码 加速/人数 (留言)`',
                 },
             },
         ],

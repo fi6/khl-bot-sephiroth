@@ -8,7 +8,7 @@ export function trainingInfoCard(arena: TrainingArenaDoc): string {
     if (arena.queue?.length) {
         arena.queue.forEach((user) => {
             if (user.state == 1) {
-                currentCalled.push(user.nickname);
+                currentCalled.push(`${user.number} ${user.nickname}`);
             }
         });
         if (currentCalled.length) calledString = currentCalled.join(', ');

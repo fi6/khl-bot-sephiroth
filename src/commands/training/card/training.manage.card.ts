@@ -1,5 +1,4 @@
-import TrainingArena, { TrainingArenaDoc } from '../../../models/TrainingArena';
-import { formatTime } from '../../../utils/format-time';
+import { TrainingArenaDoc } from '../../../models/TrainingArena';
 
 export const trainingManageCard = (
     arena: TrainingArenaDoc,
@@ -10,7 +9,7 @@ export const trainingManageCard = (
     });
     const modules: unknown[] = [];
     arena.queue.forEach((user) => {
-        if (user.state != -1) modules.push(kickModule(user));
+        if (user.state != -1) modules.push(memberModule(user));
     });
 
     // button: open / close register
@@ -57,7 +56,7 @@ export const trainingManageCard = (
                     text: {
                         type: 'kmarkdown',
                         content:
-                            `房间信息：${arena.code} ${arena.password} ${arena.connection}\n` +
+                            `房间信息：${arena.code} ${arena.password}\n连接方式：${arena.connection}\n` +
                             content,
                     },
                 },
@@ -67,14 +66,24 @@ export const trainingManageCard = (
                         {
                             type: 'button',
                             theme: 'primary',
-                            value: '.教练房 管理 call',
+                            value: '.教练房 管理 info',
                             click: 'return-val',
                             text: {
                                 type: 'plain-text',
-                                content: '呼叫下一位',
+                                content: '更新房间信息',
                             },
                         },
                         button,
+                        {
+                            type: 'button',
+                            theme: 'danger',
+                            value: '.教练房 管理 kick next',
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: '移除第一位',
+                            },
+                        },
                     ],
                 },
                 ...modules,
@@ -83,7 +92,7 @@ export const trainingManageCard = (
     ];
 };
 
-function kickModule(user: TrainingArenaDoc['queue'][number]) {
+function memberModule(user: TrainingArenaDoc['queue'][number]) {
     // let inArena = ' ';
     // if (index < 3) {
     //     inArena = ' 在房间中';
@@ -104,11 +113,11 @@ function kickModule(user: TrainingArenaDoc['queue'][number]) {
         accessory: {
             type: 'button',
             theme: 'primary',
-            value: `.教练房 管理 kick ${user._id}`,
+            value: `.教练房 管理 call ${user._id}`,
             click: 'return-val',
             text: {
                 type: 'plain-text',
-                content: '踢出',
+                content: '呼叫',
             },
         },
     };

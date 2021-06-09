@@ -9,7 +9,7 @@ class TrainingJoin extends AppCommand {
     func: AppFunc<BaseSession> = async (s: BaseSession) => {
         if (!(s instanceof GuildSession)) return;
         const session = s as GuildSession;
-        if (!session.args.length) return;
+        if (session.args.length !== 1) return;
 
         const arena = await TrainingArena.findById(session.args[0]).exec();
         if (!arena) return session.replyTemp('没有找到对应的房间');
@@ -17,6 +17,7 @@ class TrainingJoin extends AppCommand {
         if (arena.queue.length == arena.limit) {
             return session.mentionTemp('排队人数已满……请等待下次的教练房');
         }
+
         if (!arena.register) {
             return session.mentionTemp('停止排队啦……请等待下次的教练房');
         }
@@ -39,30 +40,18 @@ class TrainingJoin extends AppCommand {
             ? arena.queue[arena.queue.length - 1].number + 1
             : 1;
 
-        let gameName: string;
-        let nickname: string;
-        if (session.args.length == 1) {
-            session.user.grantRole(session.guild.id, 149474);
-            session.mentionTemp(
-                '请在60秒内输入你的大乱斗游戏内昵称（便于识别即可）'
-            );
-            const inputMsg = await session.awaitMessage(/.+/);
-
-            // session.setTextTrigger('', 6e4, (msg) => {
-            //     session.args.push(msg.content);
-            //     this.exec(session);
-            // });
-            if (!inputMsg?.content) {
-                session.user.revokeRole(session.guild.id, 149474);
-                return session.mentionTemp('输入失败，请重试');
-            }
-            nickname = inputMsg.author.nickname;
-            gameName = inputMsg.content;
-            session._botInstance.API.message.delete(inputMsg.msgId);
-            session.user.revokeRole(session.guild.id, 149474);
-        } else {
-            return;
+        session.user.grantRole(session.guild.id, 149474);
+        session.mentionTemp(
+            '请在60秒内输入你的大乱斗游戏内昵称（便于识别即可）'
+        );
+        const inputMsg = await session.awaitMessage(/.+/);
+        session.user.revokeRole(session.guild.id, 149474);
+        if (!inputMsg?.content) {
+            return session.mentionTemp('输入失败，请重试');
         }
+        const nickname = inputMsg.author.nickname;
+        const gameName = inputMsg.content;
+        session._botInstance.API.message.delete(inputMsg.msgId);
 
         arena.queue.push({
             _id: session.userId,
@@ -79,10 +68,9 @@ class TrainingJoin extends AppCommand {
             ''.concat(
                 '成功加入排队：',
                 `\`${arena.nickname}的教练房\`\n`,
-                '房间号/密码：',
-                `[${arena.code} ${arena.password}] `,
                 '当前排队人数：',
-                `${arena.queue.length}/${arena.limit}`
+                `${arena.queue.length}/${arena.limit}`,
+                '\n房间号、语音频道等信息将在排队到你后显示，请耐心等待。'
             )
         );
     };

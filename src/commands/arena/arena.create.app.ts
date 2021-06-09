@@ -109,9 +109,9 @@ class ArenaCreate extends AppCommand {
                 new: true,
             }
         ).exec();
-        if (!arena?.id) {
-            arena = await Arena.findById(session.user.id).exec();
-        }
+        // if (!arena?.id) {
+        //     arena = await Arena.findById(session.user.id).exec();
+        // }
         setTimeout(async () => {
             const arena = await Arena.findOne({ code: arenaCode }).exec();
             if (!arena) return;

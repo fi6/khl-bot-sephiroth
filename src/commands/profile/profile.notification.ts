@@ -2,6 +2,7 @@ import { AppCommand, AppFunc } from 'kbotify';
 import { ProfileDoc } from '../../models/Profile';
 import { ProfileSession } from './profile.types';
 import { profileGetorCreate } from './shared/profile.get';
+import { profileGetBySession } from './shared/profile.get-by-session';
 
 class ProfileNotification extends AppCommand {
     code = 'notification';
@@ -9,7 +10,7 @@ class ProfileNotification extends AppCommand {
     help = '';
     func: AppFunc<ProfileSession> = async (session: ProfileSession) => {
         if (!session.args.length) return;
-        const profile = await profileGetorCreate(session);
+        const profile = await profileGetBySession(session);
         switch (session.args[0]) {
             case 'on':
                 profile.notif = 1;

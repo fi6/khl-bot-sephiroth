@@ -3,9 +3,14 @@ import { createSchema, ExtractDoc, Type, typedModel } from 'ts-mongoose';
 
 const ProfileSchema = createSchema({
     _id: Type.string({ required: true, default: mongoose.Types.ObjectId() }),
-    khl_id: Type.string({ required: true, alias: 'khlId', index: true }),
+    kid: Type.string({
+        required: true,
+        index: true,
+        unique: true,
+    }),
     nickname: Type.string(), // khl nickname in author
     smashMain: Type.array().of(Type.number()),
+    fc: Type.string(),
     network: Type.array().of(Type.string()),
     notif: Type.number(),
     region: Type.array().of(Type.number()),
