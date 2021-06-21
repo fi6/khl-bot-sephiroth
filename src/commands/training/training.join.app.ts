@@ -40,12 +40,12 @@ class TrainingJoin extends AppCommand {
             ? arena.queue[arena.queue.length - 1].number + 1
             : 1;
 
-        session.user.grantRole(session.guild.id, 149474);
+        session.user.grantRole(149474, session.guild.id);
         session.mentionTemp(
             '请在60秒内输入你的大乱斗游戏内昵称（便于识别即可）'
         );
         const inputMsg = await session.awaitMessage(/.+/);
-        session.user.revokeRole(session.guild.id, 149474);
+        session.user.revokeRole(149474, session.guild.id);
         if (!inputMsg?.content) {
             return session.mentionTemp('输入失败，请重试');
         }

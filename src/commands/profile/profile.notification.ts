@@ -19,12 +19,12 @@ class ProfileNotification extends AppCommand {
                     '已为你开启通知，通知时间为工作日晚6点-12点，非工作日早8点-晚12点。'
                 );
             case 'onAll':
-                session.user.grantRole('1843044184972950', 20683);
+                session.user.grantRole(20683, '1843044184972950');
                 profile.notif = 2;
                 profile.save();
                 return session.mentionTemp('已为你开启全天通知');
             case 'off':
-                session.user.revokeRole('1843044184972950', 20683);
+                session.user.revokeRole(20683, '1843044184972950');
                 profile.notif = 0;
                 profile.save();
                 return session.mentionTemp('已为你关闭通知');

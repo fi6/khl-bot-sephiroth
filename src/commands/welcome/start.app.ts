@@ -16,10 +16,10 @@ class WelcomeStartApp extends AppCommand {
             case '2':
                 return session.sendCardTemp(parseCard(termCard()));
 
-            case '3':
+            case '3': {
                 const result = await session.user.grantRole(
-                    '1843044184972950',
-                    15186
+                    15186,
+                    '1843044184972950'
                 );
                 if (result.roles.includes(15186))
                     return session.sendCardTemp(parseCard(startCard()));
@@ -27,6 +27,7 @@ class WelcomeStartApp extends AppCommand {
                     return session.mentionTemp(
                         `授予角色失败了……如果你已经完成了手机认证，请在 (chn)${channel.feedback}(chn) 反馈问题。`
                     );
+            }
             default:
                 break;
         }

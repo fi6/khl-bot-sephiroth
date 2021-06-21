@@ -12,7 +12,7 @@ class WelcomeEntry extends MenuCommand {
     help = '';
     exec = async (session: BaseSession) => {
         if (!session.args.length) {
-            session.user.grantRole('1843044184972950', 15186);
+            session.user.grantRole(15186, '1843044184972950');
             session.mentionTemp(
                 `欢迎加入斗天堂！已为你开启服务器功能。\n手机版请点击左上角查看频道。先试着在 (chn)${channel.chat}(chn) 和大家打个招呼吧！`
             );
