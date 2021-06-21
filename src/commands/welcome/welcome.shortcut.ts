@@ -31,7 +31,7 @@ class WelcomeShortcut extends AppCommand {
         }
         if (session.args[0] == '斗天梯') {
             return session.mentionTemp(
-                `使用斗天梯请在 (chn)${channel.chat}(chn) 发送 \`斗天梯\` 三个字。\n点击紫色字可以快速跳转频道。`
+                `使用斗天梯请在 (chn)8769493745666772(chn)点击按钮启动。\n点击紫色字可以快速跳转频道。\n如果字体不是紫色，请返回欢迎频道点击开始使用以启用功能。`
             );
         }
         if (session.args[0] == '建房') {
