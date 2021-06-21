@@ -15,7 +15,8 @@ export function kaiheilaCard() {
                 type: 'section',
                 text: {
                     type: 'kmarkdown',
-                    content: '请在完成认证、开放服务器功能后再阅读以下内容。',
+                    content:
+                        '请先点击开始使用，在开放服务器功能后再阅读以下内容。',
                 },
             },
             {
