@@ -112,6 +112,8 @@ class ArenaCreate extends AppCommand {
                 info: info,
                 title: remark ?? `${session.user.nickname} 的房间`,
                 member: [],
+                createdAt: new Date(),
+                updatedAt: new Date(),
                 expireAt: expire,
             },
             {
@@ -124,8 +126,12 @@ class ArenaCreate extends AppCommand {
             const arena = await Arena.findOne({ code: arenaCode }).exec();
             if (!arena) return;
             if (!arenaIsEmpty(arena)) return;
-            Arena.findByIdAndDelete(session.user.id).exec();
-            session.mentionTemp('房间自动关闭了……下次可以试试广播？');
+            Arena.findByIdAndUpdate(session.user.id, {
+                expireAt: new Date(),
+            }).exec();
+            session.mentionTemp(
+                '房间中似乎没有人，自动关闭了……下次可以试试广播？'
+            );
         }, arenaConfig.allowedEmptyTime);
         return arena as ArenaDoc;
     }

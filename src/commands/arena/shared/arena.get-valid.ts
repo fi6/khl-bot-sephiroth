@@ -10,11 +10,11 @@ export async function arenaGetValid(): Promise<ArenaDoc[]> {
     );
     try {
         const rawArenas = (await Arena.find({
-            createdAt: {
-                $gte: arenaExpireTime,
+            expireAt: {
+                $gte: Date().valueOf(),
             },
         })
-            .sort([['createdAt', -1]])
+            .sort([['expireAt', -1]])
             .exec()) as [];
         return rawArenas;
     } catch (e) {

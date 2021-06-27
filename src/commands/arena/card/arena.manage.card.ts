@@ -1,8 +1,9 @@
+import { BaseSession } from 'kbotify';
+import { ArenaDoc } from '../../../models/Arena';
 import { formatTime } from '../../../utils/format-time';
 import { ArenaSession } from '../arena.types';
 
-export function arenaManageCard(session: ArenaSession) {
-    let arena = session.arena!;
+export function arenaManageCard(session: BaseSession, arena: ArenaDoc) {
     let memberString = '房间中还没有人。快去广播吧！';
     if (arena.member?.length) {
         let nickList = arena.member.map((member) => {

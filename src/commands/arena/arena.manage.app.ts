@@ -1,6 +1,8 @@
 import { AppCommand, BaseSession, GuildSession } from 'kbotify';
 import { FuncResult, ResultTypes } from 'kbotify';
 import Arena, { ArenaDoc } from 'models/Arena';
+import { roles } from '../../configs';
+import arenaConfig from '../../configs/arena';
 import { ArenaSession } from './arena.types';
 import { arenaManageCard } from './card/arena.manage.card';
 import { updateArenaTitle } from './shared/arena.update-list';
@@ -13,21 +15,25 @@ class ArenaManage extends AppCommand {
     func = async (s: BaseSession) => {
         const arena = await Arena.findById(s.user.id).exec();
         if (!arena) {
-            return s.replyTemp(
-                `未找到你的有效房间……如需创建房间，可发送\`.建房\``
-            );
+            return s.replyTemp(`未找到你的有效房间……请先创建房间。`);
         }
         const session = GuildSession.fromSession(s);
         if (session.args[0] == '关闭') {
             return this.close(session, arena);
-        }
-        else if (session.args[0] == '更新') {
+        } else if (session.args[0] == '更新') {
             return this.update(session, arena);
         }
-        return s.sendCardTemp(JSON.stringify(arenaManageCard(session)));
+        s.updateMessage(
+            arenaConfig.mainCardId,
+            JSON.stringify(arenaManageCard(session, arena))
+        );
+        return;
     };
 
-    private update = async (session: GuildSession, arena: ArenaDoc) => {};
+    private update = async (session: GuildSession, arena: ArenaDoc) => {
+        await session.user.grantRole(roles.tempInput)
+        // await session.updateMessageTemp(arenaConfig.mainCardId, arenaUpdateCard())
+    };
 
     private close = async (
         session: GuildSession,

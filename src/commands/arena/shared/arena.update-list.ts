@@ -9,8 +9,8 @@ import { arenaTitleCard } from '../card/arena.title.card';
 
 import { arenaGetValid } from './arena.get-valid';
 
-export async function updateArenaTitle(): Promise<any> {
-    const arenas = await arenaGetValid();
+export async function updateArenaTitle(arenas?: ArenaDoc[]): Promise<any> {
+    arenas = arenas ?? (await arenaGetValid());
     const players = arenas.map((arena) => {
         return arena.member.length ? arena.member[0] : arena;
     });

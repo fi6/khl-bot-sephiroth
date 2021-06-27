@@ -6,13 +6,15 @@ export function arenaTitleCard(
     activeArena = 0,
     activePlayers: ArenaDoc['member'] = []
 ): Card {
-    const nicknames: string = activePlayers.length
+    let nicknames: string = activePlayers.length
         ? activePlayers
+              .slice(0, 5)
               .map((player) => {
                   return player.nickname;
               })
               .join(', ')
         : '暂无';
+    if (activePlayers.length > 5) nicknames = nicknames + '等';
     const card = new Card({
         type: 'card',
         theme: 'info',
@@ -29,7 +31,7 @@ export function arenaTitleCard(
                 type: 'section',
                 text: {
                     type: 'kmarkdown',
-                    content: `活跃房间：${activeArena}个 (更新于：${formatTime(
+                    content: `活跃房间：${activeArena} (更新于：${formatTime(
                         new Date()
                     )})\n活跃玩家：${nicknames}`,
                 },

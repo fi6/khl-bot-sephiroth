@@ -1,6 +1,7 @@
 import { AppCommand, AppFunc } from 'kbotify';
 import Arena from 'models/Arena';
 import { arenaLeave } from './arena.leave.app';
+import { arenaList } from './arena.list.app';
 import { ArenaSession } from './arena.types';
 import { arenaCheckMember } from './shared/arena.check-member';
 import { arenaGetValid } from './shared/arena.get-valid';
@@ -20,48 +21,47 @@ class ArenaJoin extends AppCommand {
         //     return session.mentionTemp(
         //         '你好像还是临时用户……请点击左上角切换至欢迎频道，点击“开始使用”。'
         //     );
-        session.arena = await Arena.findOne({
+        const arena = await Arena.findOne({
             _id: session.args[0],
         }).exec();
-        if (!session.arena) return session.sendTemp('没有找到对应房间。');
+        if (!arena) return session.sendTemp('没有找到对应房间。');
 
-        if (session.arena.member?.length) {
-            for (const user of session.arena.member) {
+        if (arena.member?.length) {
+            for (const user of arena.member) {
                 if (user._id == session.userId) {
                     return session.replyTemp(
                         '你已经在此房间中，房间密码为' +
-                            session.arena.password +
+                            arena.password +
                             '\n如需更换房间请输入`.房间 退出`。'
                     );
                 }
             }
         }
         let leaveMessage = '';
-        session.arenas = await arenaGetValid();
-        session.arenas.forEach((arena) => {
+        const arenas = await arenaGetValid();
+        arenas.forEach((arena) => {
             if (arenaCheckMember(arena, session.userId)) {
                 arenaLeave.leave(arena, session.userId);
                 leaveMessage = `已退出${arena.nickname}的房间。`;
             }
         });
-        console.log('queue:', session.arena.member);
-        if (!session.arena.member) {
-            session.arena.member = [];
+        console.log('queue:', arena.member);
+        if (!arena.member) {
+            arena.member = [];
         }
-        session.arena.member.push({
+        arena.member.push({
             _id: session.user.id,
             nickname: session.user.username,
         });
-        session.arena.isNew = false;
-        session.arena.markModified('member');
-        await session.arena.save();
-        const arena = session.arena;
-        updateArenaTitle();
+        arena.isNew = false;
+        arena.markModified('member');
+        await arena.save();
+        arenaList.func(session);
         return session.mentionTemp(
             ''.concat(
                 leaveMessage,
                 `\n欢迎加入${arena.nickname}的房间！`,
-                `\n房间号：${arena.code}，房间密码：${session.arena.password}`
+                `\n房间号：${arena.code}，房间密码：${arena.password}`
             )
         );
     };
