@@ -1,12 +1,12 @@
 import { ArenaDoc } from '../../../models/Arena';
-import { arenaInfoModules } from './arena.info.section';
+import { infoModules } from './arena.info.section';
 
 export function arenaAlertCard(arena: ArenaDoc): string {
     const card2 = {
         type: 'card',
         theme: 'info',
         size: 'lg',
-        modules: arenaInfoModules(arena),
+        modules: infoModules(arena),
     };
     return JSON.stringify([card2]);
 }

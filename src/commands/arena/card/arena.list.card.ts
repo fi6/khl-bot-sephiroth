@@ -1,33 +1,35 @@
 import { BaseSession } from 'kbotify';
 import { Card } from 'kbotify/dist/core/card';
 import { ArenaDoc } from '../../../models/Arena';
-import { mentionUser } from '../../../utils/khl';
-import { ArenaSession } from '../arena.types';
-import { arenaInfoModules } from './arena.info.section';
+import { formatTime } from '../../../utils/format-time';
+import { infoModules } from './arena.info.section';
 
 const divider = {
     type: 'divider',
 };
 
-export function arenaListCard(session: BaseSession, arenas: ArenaDoc[]): Card {
+export function arenaListCard(
+    session: BaseSession,
+    arenas: ArenaDoc[]
+): Card[] {
     if (!arenas?.length) {
         throw new Error('arenas error!');
     }
     const [first, ...res] = arenas;
-    let arenaList: any[] = [...arenaInfoModules(first, session.userId)];
+    let arenaList: any[] = [...infoModules(first, session.userId)];
     if (res.length) {
         res.forEach((arena) => {
             arenaList = [
                 ...arenaList,
                 divider,
-                ...arenaInfoModules(arena, session.userId),
+                ...infoModules(arena, session.userId),
             ];
         });
     }
 
-    const card2 = new Card({
+    const card1 = new Card({
         type: 'card',
-        theme: 'secondary',
+        theme: 'info',
         size: 'lg',
         modules: [
             {
@@ -41,34 +43,27 @@ export function arenaListCard(session: BaseSession, arenas: ArenaDoc[]): Card {
                 type: 'section',
                 text: {
                     type: 'kmarkdown',
-                    content: `${mentionUser(
-                        session.userId
-                    )}房间列表如下，点击加入获得房间密码。\n你也可以点击右侧按钮创建房间。`,
-                },
-                mode: 'right',
-                accessory: {
-                    type: 'button',
-                    theme: 'primary',
-                    click: 'return-val',
-                    value: '.房间 创建',
-                    text: {
-                        type: 'plain-text',
-                        content: '创建房间',
-                    },
+                    content: `点击加入获得房间密码。如需更换房间，直接加入新房间即可。`,
                 },
             },
-            ...arenaList,
             {
                 type: 'context',
                 elements: [
                     {
                         type: 'plain-text',
-                        content: '超过一小时的房间将不显示在房间列表中。',
+                        content: `更新于：${formatTime(
+                            new Date()
+                        )}, 创建超过一小时的空房间将不显示。`,
                     },
                 ],
             },
         ],
     });
-
-    return card2;
+    const card2 = new Card({
+        type: 'card',
+        theme: 'info',
+        size: 'lg',
+        modules: arenaList,
+    });
+    return [card1, card2];
 }

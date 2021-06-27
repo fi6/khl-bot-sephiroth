@@ -1,47 +1,21 @@
+import { Card } from 'kbotify/dist/core/card';
 import { channels } from '../../../configs';
 import arenaConfig from '../../../configs/arena';
 import bot from '../../../init/bot_init';
 import { ArenaDoc } from '../../../models/Arena';
 import { formatTime } from '../../../utils/format-time';
-import { arenaInfoModules } from '../card/arena.info.section';
+import { infoModules } from '../card/arena.info.section';
+import { arenaTitleCard } from '../card/arena.title.card';
 
 import { arenaGetValid } from './arena.get-valid';
 
-let cardId = arenaConfig.arenaCardId;
-let arenaIds: string[] = [];
-
-export async function updateArenaList(
-    arenas?: ArenaDoc[],
-    onCreate: boolean = false,
-    forceUpdate: boolean = false
-): Promise<any> {
-    arenas = arenas ?? (await arenaGetValid());
-
-    const newArenaIds: string[] = arenas.map((arena) => {
-        return arena.id;
+export async function updateArenaTitle(): Promise<any> {
+    const arenas = await arenaGetValid();
+    const players = arenas.map((arena) => {
+        return arena.member.length ? arena.member[0] : arena;
     });
-
-    if (isEqual(arenaIds, newArenaIds) && !forceUpdate)
-        return console.debug('no arena change found, not updating.', arenaIds);
-
-    try {
-        if (cardId !== '') bot.API.message.delete(cardId);
-    } catch (error) {
-        console.debug('error deleting arena card:', error);
-    }
-
-    const card = _arenaListCard(arenas);
-    const sent = bot.API.message.create(10, channels.arenaBot, card);
-    cardId = (await sent).msgId;
-    console.debug('card sent at:', cardId);
-    arenaIds = newArenaIds;
-    if (onCreate)
-        bot.API.message.create(
-            9,
-            channels.chat,
-            `有新的房间！请前往 (chn)${channels.arenaBot}(chn) 查看。`
-        );
-    return sent;
+    const card = arenaTitleCard(arenas.length, players);
+    bot.API.message.update(arenaConfig.titleCardId, JSON.stringify([card]));
 }
 
 function isEqual(ids: string[], newIds: string[]) {
@@ -54,74 +28,74 @@ function isEqual(ids: string[], newIds: string[]) {
     );
 }
 
-function _arenaListCard(arenas: ArenaDoc[]): string {
-    const divider = {
-        type: 'divider',
-    };
-    let card2;
-    if (arenas.length) {
-        const [first, ...res] = arenas;
-        let arenaList: any[] = [...arenaInfoModules(first)];
-        if (res.length) {
-            res.forEach((arena) => {
-                arenaList = [...arenaList, divider, ...arenaInfoModules(arena)];
-            });
-        }
-        card2 = {
-            type: 'card',
-            theme: 'secondary',
-            size: 'lg',
-            modules: arenaList,
-        };
-    } else {
-        card2 = {
-            type: 'card',
-            theme: 'secondary',
-            size: 'lg',
-            modules: [
-                {
-                    type: 'section',
-                    text: {
-                        type: 'kmarkdown',
-                        content: '当前没有房间，你可以点击上方按钮进行创建。',
-                    },
-                },
-            ],
-        };
-    }
-    // console.debug(JSON.stringify(arenaList));
-    const card1 = {
-        type: 'card',
-        theme: 'info',
-        size: 'lg',
-        modules: [
-            {
-                type: 'header',
-                text: {
-                    type: 'plain-text',
-                    content: '房间列表',
-                },
-            },
-            {
-                type: 'section',
-                text: {
-                    type: 'kmarkdown',
-                    content: `**点击加入**获得房间密码。`,
-                },
-            },
-            {
-                type: 'context',
-                elements: [
-                    {
-                        type: 'plain-text',
-                        content:
-                            '超过一小时的房间将不显示在房间列表中。' +
-                            ` (更新于${formatTime(new Date())})`,
-                    },
-                ],
-            },
-        ],
-    };
+// function _arenaListCard(arenas: ArenaDoc[]): string {
+//     const divider = {
+//         type: 'divider',
+//     };
+//     let card2;
+//     if (arenas.length) {
+//         const [first, ...res] = arenas;
+//         let arenaList: any[] = [...infoModules(first)];
+//         if (res.length) {
+//             res.forEach((arena) => {
+//                 arenaList = [...arenaList, divider, ...infoModules(arena)];
+//             });
+//         }
+//         card2 = {
+//             type: 'card',
+//             theme: 'secondary',
+//             size: 'lg',
+//             modules: arenaList,
+//         };
+//     } else {
+//         card2 = {
+//             type: 'card',
+//             theme: 'secondary',
+//             size: 'lg',
+//             modules: [
+//                 {
+//                     type: 'section',
+//                     text: {
+//                         type: 'kmarkdown',
+//                         content: '当前没有房间，你可以点击上方按钮进行创建。',
+//                     },
+//                 },
+//             ],
+//         };
+//     }
+//     // console.debug(JSON.stringify(arenaList));
+//     const card1 = {
+//         type: 'card',
+//         theme: 'info',
+//         size: 'lg',
+//         modules: [
+//             {
+//                 type: 'header',
+//                 text: {
+//                     type: 'plain-text',
+//                     content: '房间列表',
+//                 },
+//             },
+//             {
+//                 type: 'section',
+//                 text: {
+//                     type: 'kmarkdown',
+//                     content: `**点击加入**获得房间密码。`,
+//                 },
+//             },
+//             {
+//                 type: 'context',
+//                 elements: [
+//                     {
+//                         type: 'plain-text',
+//                         content:
+//                             '超过一小时的房间将不显示在房间列表中。' +
+//                             ` (更新于${formatTime(new Date())})`,
+//                     },
+//                 ],
+//             },
+//         ],
+//     };
 
-    return JSON.stringify([card1, card2]);
-}
+//     return JSON.stringify([card1, card2]);
+// }

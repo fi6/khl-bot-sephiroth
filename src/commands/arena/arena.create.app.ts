@@ -12,15 +12,10 @@ import { channels } from '../../configs';
 import arenaConfig from '../../configs/arena';
 import roles from '../../configs/roles';
 import { parseCard } from '../../utils/card-parser';
-import { ArenaSession } from './arena.types';
-import {
-    createHelpCard,
-    createStartCard,
-    createSuccessCard,
-} from './card/arena.create.card';
+import { createHelpCard, createSuccessCard } from './card/arena.create.card';
 import { arenaGetValid } from './shared/arena.get-valid';
 import { arenaIsEmpty } from './shared/arena.is-empty';
-import { updateArenaList } from './shared/arena.update-list';
+import { updateArenaTitle } from './shared/arena.update-list';
 // import { arenaListMsg } from './shared/arena.list.msg';
 
 class ArenaCreate extends AppCommand {
@@ -45,10 +40,14 @@ class ArenaCreate extends AppCommand {
             const e = error as Error;
             return session.mentionTemp(e.message);
         }
-        const arena = await this.create(session, args);
+        const arena = await this.create(
+            GuildSession.fromSession(session),
+            args
+        );
         // updateArenaList(undefined, true);
         // session.arenas = await arenaGetValid();
-        return session.sendCardTemp(
+        return session.updateMessageTemp(
+            arenaConfig.mainCardId,
             JSON.stringify(createSuccessCard(arena, helpFlag))
         );
     };
@@ -69,17 +68,24 @@ class ArenaCreate extends AppCommand {
             throw new Error(
                 `创建失败，请检查房间号、密码格式，并确认加速/人数文字长度小于8。\n${args}`
             );
-        const [arenaCode, password, arenaInfo] = [
+        const [arenaCode, password, info] = [
             args[0].toUpperCase(),
             args[1],
             args[2],
         ];
-        return [arenaCode, password, arenaInfo];
+        return [arenaCode, password, info];
     }
 
-    private async helpCreate(session: GuildSession) {
+    async helpCreate(session: GuildSession) {
         await session.user.grantRole(roles.tempInput);
-        await session.sendCardTemp(createHelpCard());
+        if (session.channel.id == channels.arenaBot) {
+            await session.updateMessageTemp(
+                arenaConfig.mainCardId,
+                JSON.stringify([createHelpCard()])
+            );
+        } else {
+            await session.sendCardTemp(createHelpCard());
+        }
         const input = await session.awaitMessage(/.+/, 120 * 1e3);
         session.user.revokeRole(roles.tempInput);
         if (!input) throw new Error('没有收到输入……请重新开始。');
@@ -87,25 +93,26 @@ class ArenaCreate extends AppCommand {
         return Array(...input.content.split(/ +/));
     }
 
-    private async create(session: BaseSession, args: string[]) {
-        const [arenaCode, password, arenaInfo] = [args[0], args[1], args[2]];
+    private async create(session: GuildSession, args: string[]) {
+        const [arenaCode, password, info] = [args[0], args[1], args[2]];
         let remark = '';
         if (args.length === 4 && args[3]) {
             remark = args[3];
         } else {
             remark = '';
         }
-
+        const expire = new Date();
+        expire.setHours(expire.getHours() + 1);
         const arena = await Arena.findByIdAndUpdate(
             session.user.id,
             {
                 nickname: session.user.username,
                 code: arenaCode,
                 password: password,
-                arenaInfo: arenaInfo,
-                remark: remark,
+                info: info,
+                title: remark ?? `${session.user.nickname} 的房间`,
                 member: [],
-                createdAt: new Date(),
+                expireAt: expire,
             },
             {
                 upsert: true,

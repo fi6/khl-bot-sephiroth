@@ -3,14 +3,14 @@ import { formatTime } from '../../../utils/format-time';
 import { mentionUser } from '../../../utils/khl';
 import { arenaCheckMember } from '../shared/arena.check-member';
 
-export function arenaInfoModules(
+export function infoModules(
     arena: ArenaDoc,
     khlId?: string,
-    showPassword: boolean = false
+    showPassword = false
 ): any[] {
     let memberString = '房间中还没有人。快来加入吧！';
     if (arena.member?.length) {
-        let nickList = arena.member.map((member) => {
+        const nickList = arena.member.map((member) => {
             return member.nickname;
         });
         memberString = nickList.join(', ') + ' 在房间中';
@@ -49,7 +49,7 @@ export function arenaInfoModules(
             type: 'header',
             text: {
                 type: 'plain-text',
-                content: `${arena.nickname} 的房间`,
+                content: arena.title ?? `${arena.nickname} 的房间`,
             },
         },
         {
@@ -64,7 +64,7 @@ export function arenaInfoModules(
                     },
                     {
                         type: 'kmarkdown',
-                        content: `**房间信息**\n${arena.arenaInfo ?? ''}`,
+                        content: `**房间信息**\n${arena.info ?? ''}`,
                     },
                     {
                         type: 'kmarkdown',
@@ -75,7 +75,6 @@ export function arenaInfoModules(
             mode: 'right',
             accessory: button,
         },
-
         {
             type: 'context',
             elements: [

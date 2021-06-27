@@ -77,9 +77,7 @@ export function arenaManageCard(session: ArenaSession) {
                             },
                             {
                                 type: 'kmarkdown',
-                                content: `**房间信息**\n${
-                                    arena.arenaInfo ?? ''
-                                }`,
+                                content: `**房间信息**\n${arena.info ?? ''}`,
                             },
                             {
                                 type: 'kmarkdown',

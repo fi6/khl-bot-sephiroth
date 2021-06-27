@@ -1,6 +1,6 @@
 import { AppCommand, AppFunc, BaseSession, GuildSession } from 'kbotify';
 import TrainingArena from 'models/TrainingArena';
-import { updateTrainingArenaInfo } from './shared/training.update-info';
+import { updateTraininginfo } from './shared/training.update-info';
 
 class TrainingJoin extends AppCommand {
     trigger = '排队';
@@ -63,7 +63,7 @@ class TrainingJoin extends AppCommand {
         arena.isNew = false;
         arena.markModified('queue');
         await arena.save();
-        updateTrainingArenaInfo(arena);
+        updateTraininginfo(arena);
         return session.replyTemp(
             ''.concat(
                 '成功加入排队：',

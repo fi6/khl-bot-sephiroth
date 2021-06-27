@@ -2,7 +2,7 @@ import { AppCommand, AppFunc } from 'kbotify';
 import Arena, { ArenaDoc } from '../../models/Arena';
 import { ArenaSession } from './arena.types';
 import { arenaGetValid } from './shared/arena.get-valid';
-import { updateArenaList } from './shared/arena.update-list';
+import { updateArenaTitle } from './shared/arena.update-list';
 
 class ArenaLeave extends AppCommand {
     trigger = '退出';
@@ -30,7 +30,7 @@ class ArenaLeave extends AppCommand {
         for (const a of session.arenas) {
             content += `\`${a.nickname}的房间\`\n`;
         }
-        updateArenaList();
+        updateArenaTitle();
         return session.replyTemp(content);
     };
     leave = async (arena: ArenaDoc, khlId: string) => {

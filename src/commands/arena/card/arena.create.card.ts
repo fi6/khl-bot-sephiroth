@@ -124,18 +124,7 @@ export function createSuccessCard(arena: ArenaDoc, helpFlag = false) {
                 type: 'section',
                 text: {
                     type: 'kmarkdown',
-                    content:
-                        `${mentionUser(
-                            arena._id
-                        )}房间创建成功！你的房间信息如下。` +
-                        '\n你可以点击`广播`以将房间广播给所有人。',
-                },
-            },
-            {
-                type: 'section',
-                text: {
-                    type: 'kmarkdown',
-                    content: `房间有效期为60分钟。如需更改房间信息或关闭房间，请点击上方管理房间按钮。如果无人加入，房间将于10分钟后自动关闭。`,
+                    content: `如需更改房间信息或关闭房间，请点击上方管理房间按钮。\n如果无人加入，房间将于10分钟后自动关闭。`,
                 },
             },
         ],
@@ -149,7 +138,7 @@ export function createSuccessCard(arena: ArenaDoc, helpFlag = false) {
                 type: 'header',
                 text: {
                     type: 'plain-text',
-                    content: `${arena.nickname} 的房间`,
+                    content: arena.title,
                 },
             },
             {
@@ -164,7 +153,7 @@ export function createSuccessCard(arena: ArenaDoc, helpFlag = false) {
                         },
                         {
                             type: 'kmarkdown',
-                            content: `**房间信息**\n${arena.arenaInfo ?? ''}`,
+                            content: `**房间信息**\n${arena.info ?? ''}`,
                         },
                         {
                             type: 'kmarkdown',

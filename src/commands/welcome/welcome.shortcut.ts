@@ -1,48 +1,31 @@
-import { AppCommand, AppFunc, BaseSession } from 'kbotify';
+import { AppCommand, AppFunc, BaseSession, GuildSession } from 'kbotify';
+import { Card } from 'kbotify/dist/core/card';
 import Arena from 'models/Arena';
 import channel from '../../configs/channels';
 import { parseCard } from '../../utils/card-parser';
 import { mentionUser } from '../../utils/khl';
+import { arenaCreate } from '../arena/arena.create.app';
 import { arenaList } from '../arena/arena.list.app';
 import { ArenaSession } from '../arena/arena.types';
 import { createStartCard } from '../arena/card/arena.create.card';
 import { arenaListCard } from '../arena/card/arena.list.card';
 import { arenaGetValid } from '../arena/shared/arena.get-valid';
-import { updateArenaList } from '../arena/shared/arena.update-list';
+import { updateArenaTitle } from '../arena/shared/arena.update-list';
 
 class WelcomeShortcut extends AppCommand {
     code = 'list';
     trigger = '快捷';
     intro = '';
     help = '';
-    func: AppFunc<ArenaSession> = async (session) => {
+    func: AppFunc<BaseSession> = async (session) => {
         if (!session.args.length) {
             return;
         }
-        if (session.args[0] == '找房') {
-            // await session.mentionTemp(
-            //     `你也可以在 (chn)${channel.chat}(chn) 发送 \`.找房\` 快速查看房间。`
-            // );
-            await updateArenaList(undefined, undefined, true);
-            session.mentionTemp(
-                '房间列表已更新。你也可以在闲聊频道发送`.找房`查看房间列表，或退出房间等。'
-            );
-            // this.arenaList(session);
-        }
+
         if (session.args[0] == '斗天梯') {
             return session.mentionTemp(
                 `使用斗天梯请在 (chn)8769493745666772(chn)点击按钮启动。\n点击紫色字可以快速跳转频道。\n如果字体不是紫色，请返回欢迎频道点击开始使用以启用功能。`
             );
-        }
-        if (session.args[0] == '建房') {
-            session.mentionTemp(
-                `已在 (chn)${channel.chat}(chn) 频道发送创建帮助。\n请根据帮助上的指示完成创建。（点击紫色字可以快速跳转频道）`
-            );
-            session._send(parseCard(createStartCard()), undefined, {
-                msgType: 10,
-                temp: true,
-                channel: channel.chat,
-            });
         }
     };
     arenaList = async (session: ArenaSession) => {
@@ -51,7 +34,7 @@ class WelcomeShortcut extends AppCommand {
         if (!arenas || !arenas.length) {
             return session.sendCardTemp(arenaEmptyCard(session));
         }
-        return session.sendCardTemp(arenaListCard(session));
+        return session.sendCardTemp(arenaListCard(session, arenas));
     };
 }
 

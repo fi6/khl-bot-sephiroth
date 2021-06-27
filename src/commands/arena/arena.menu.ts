@@ -6,6 +6,7 @@ import { arenaJoin } from './arena.join.app';
 import { arenaList } from './arena.list.app';
 import { ArenaSession } from './arena.types';
 import { arenaLeave } from './arena.leave.app';
+import { arenaTitle } from './arena.title.app';
 
 const content = ''.concat(
     '> **房间功能使用帮助**\n\r',
@@ -34,7 +35,8 @@ export const arenaMenu = new ArenaMenu(
     arenaManage,
     arenaAlert,
     arenaJoin,
-    arenaLeave
+    arenaLeave,
+    arenaTitle
 );
 
 function cardMenu() {

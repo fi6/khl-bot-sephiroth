@@ -1,7 +1,7 @@
 import { AppCommand, AppFunc, BaseSession, GuildSession } from 'kbotify';
 import TrainingArena from '../../models/TrainingArena';
 import { trainingCallManager } from './shared/training.call.manager';
-import { updateTrainingArenaInfo } from './shared/training.update-info';
+import { updateTraininginfo } from './shared/training.update-info';
 
 class TrainingCheckIn extends AppCommand {
     response: 'guild' = 'guild';
@@ -21,7 +21,7 @@ class TrainingCheckIn extends AppCommand {
         trainingCallManager.response(session.user.id);
         user.state == 2;
         arena.markModified('queue');
-        updateTrainingArenaInfo(arena)
+        updateTraininginfo(arena);
         return session.replyTemp(
             '签到成功！以下是房间信息：\n' +
                 `${arena.code} ${arena.password} ${arena.connection}`

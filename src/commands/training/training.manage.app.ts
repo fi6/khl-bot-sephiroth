@@ -6,7 +6,7 @@ import { trainingManageCard } from './card/training.manage.card';
 import { trainingCallCard } from './card/training.call.card';
 import { trainingArenaSort } from './shared/training.arena-sort';
 import { trainingCallManager } from './shared/training.call.manager';
-import { updateTrainingArenaInfo } from './shared/training.update-info';
+import { updateTraininginfo } from './shared/training.update-info';
 import { Error } from 'mongoose';
 import { userInfo } from 'os';
 
@@ -58,7 +58,7 @@ class TrainingManage extends AppCommand {
                         user._id,
                         '你被移出教练房啦……下次记得结束后主动点击退出哦'
                     );
-                    updateTrainingArenaInfo(arena);
+                    updateTraininginfo(arena);
                     return this.sendManageCard(
                         session,
                         arena,
@@ -70,7 +70,7 @@ class TrainingManage extends AppCommand {
                         args[1],
                         '你被教练移出教练房啦……下次记得结束后主动点击退出哦'
                     );
-                    updateTrainingArenaInfo(arena);
+                    updateTraininginfo(arena);
                     return this.sendManageCard(session, arena, `已移出`);
                 } else {
                     return session.sendTemp('remove failed');
@@ -84,11 +84,11 @@ class TrainingManage extends AppCommand {
 
             if (session.args[1] == 'on') {
                 arena.register = true;
-                updateTrainingArenaInfo(arena);
+                updateTraininginfo(arena);
                 return this.sendManageCard(session, arena, '已开启注册');
             } else if (session.args[1] == 'off') {
                 arena.register = false;
-                updateTrainingArenaInfo(arena);
+                updateTraininginfo(arena);
                 return this.sendManageCard(session, arena, '已关闭注册');
             }
         } else if (session.args[0] == 'call') {
@@ -197,7 +197,7 @@ class TrainingManage extends AppCommand {
             10
         );
         trainingCallManager.call(user._id);
-        updateTrainingArenaInfo(arena);
+        updateTraininginfo(arena);
     };
 
     _remind(userId: string, content: string, type = 9) {

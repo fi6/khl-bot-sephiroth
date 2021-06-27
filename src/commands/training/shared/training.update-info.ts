@@ -6,7 +6,7 @@ import { trainingInfoCard } from '../card/training.info.card';
 /**
  * with save
  */
-export function updateTrainingArenaInfo(arena: TrainingArenaDoc): void {
+export function updateTraininginfo(arena: TrainingArenaDoc): void {
     if (!arena.card) {
         throw new Error('no arena card sent');
     }
