@@ -1,1 +1,2 @@
-export { default as channel } from './channel';
+export { default as channels } from './channels';
+export { default as roles } from './roles';

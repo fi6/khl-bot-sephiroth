@@ -1,6 +1,6 @@
-import { AppCommand } from 'kbotify';
+import { AppCommand, BaseSession, GuildSession } from 'kbotify';
 import { FuncResult, ResultTypes } from 'kbotify';
-import Arena from 'models/Arena';
+import Arena, { ArenaDoc } from 'models/Arena';
 import { ArenaSession } from './arena.types';
 import { arenaManageCard } from './card/arena.manage.card';
 import { updateArenaList } from './shared/arena.update-list';
@@ -8,37 +8,44 @@ import { updateArenaList } from './shared/arena.update-list';
 class ArenaManage extends AppCommand {
     code = 'manage';
     trigger = '管理';
-    help = '如需关闭房间，请输入\n`.关房`';
+    help = '你可以更新房间信息，或关闭房间。发送`.关房`可快速关闭房间。';
     intro = '';
-    func = async (
-        session: ArenaSession
-    ): Promise<FuncResult<ArenaSession> | ResultTypes> => {
-        session.arena = await Arena.findById(session.user.id).exec();
-        if (!session.arena) {
-            return session.replyTemp(
-                `未找到你的有效房间。如需创建房间，可发送\`.建房\``
+    func = async (s: BaseSession) => {
+        const arena = await Arena.findById(s.user.id).exec();
+        if (!arena) {
+            return s.replyTemp(
+                `未找到你的有效房间……如需创建房间，可发送\`.建房\``
             );
         }
+        const session = GuildSession.fromSession(s);
         if (session.args[0] == '关闭') {
-            return this.close(session);
+            return this.close(session, arena);
         }
-        return session.sendCardTemp(JSON.stringify(arenaManageCard(session)));
+        else if (session.args[0] == '更新') {
+            return this.update(session, arena);
+        }
+        return s.sendCardTemp(JSON.stringify(arenaManageCard(session)));
     };
 
-    private close = async (session: ArenaSession) => {
+    private update = async (session: GuildSession, arena: ArenaDoc) => {};
+
+    private close = async (
+        session: GuildSession,
+        arena: ArenaDoc | undefined
+    ) => {
         try {
-            if (!session.arena) {
+            if (!arena) {
                 return session.reply(`未找到可删除的房间。`);
             }
             await Arena.findByIdAndDelete(session.user.id).exec();
             updateArenaList();
-            return session.reply(`房间\`${session.arena.code}\`已关闭。`);
+            return session.reply(`房间\`${arena.code}\`已关闭。`);
         } catch (e) {
             console.error('Error when deleting arena', e, session);
             // data.result_status = ArenaResultStatus.error;
             // data.result.details = e;
             return session.reply(
-                '关闭房间时发生未知错误。请联系作者改bug(ಥ_ಥ)'
+                `关闭房间时发生未知错误。请联系作者改bug(ಥ_ಥ)\n${e}`
             );
         }
     };

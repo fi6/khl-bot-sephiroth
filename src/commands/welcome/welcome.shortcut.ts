@@ -1,6 +1,6 @@
 import { AppCommand, AppFunc, BaseSession } from 'kbotify';
 import Arena from 'models/Arena';
-import channel from '../../configs/channel';
+import channel from '../../configs/channels';
 import { parseCard } from '../../utils/card-parser';
 import { mentionUser } from '../../utils/khl';
 import { arenaList } from '../arena/arena.list.app';

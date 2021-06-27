@@ -1,6 +1,6 @@
 import { AppCommand, AppFunc, BaseSession, MenuCommand } from 'kbotify';
 import Arena from 'models/Arena';
-import channel from '../../configs/channel';
+import channel from '../../configs/channels';
 import { kaiheilaCard } from './card/kaiheila.card';
 import { welcomeStartApp } from './start.app';
 import { welcomeShortcut } from './welcome.shortcut';

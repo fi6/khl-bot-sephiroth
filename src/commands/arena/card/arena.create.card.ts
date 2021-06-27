@@ -1,9 +1,11 @@
+import { Card } from 'kbotify/dist/core/card';
+import { channels } from '../../../configs';
 import { ArenaDoc } from '../../../models/Arena';
 import { formatTime } from '../../../utils/format-time';
 import { mentionUser } from '../../../utils/khl';
 
 export function createStartCard() {
-    return {
+    return new Card({
         type: 'card',
         theme: 'info',
         size: 'lg',
@@ -53,12 +55,12 @@ export function createStartCard() {
                 },
             },
         ],
-    };
+    });
 }
 
 export function createHelpCard() {
-    let now = Date.now();
-    return {
+    const now = Date.now();
+    return new Card({
         type: 'card',
         theme: 'info',
         size: 'lg',
@@ -96,18 +98,17 @@ export function createHelpCard() {
                 elements: [
                     {
                         type: 'plain-text',
-                        content:
-                            '请在倒计时结束前完成输入，否则请重新开始创建。',
+                        content: '请在倒计时结束前完成输入。',
                     },
                 ],
             },
         ],
-    };
+    });
 }
 
-export function createSuccessCard(arena: ArenaDoc) {
-    let memberString = '房间中还没有人。快去广播吧！';
-    let card1 = {
+export function createSuccessCard(arena: ArenaDoc, helpFlag = false) {
+    const memberString = '房间中还没有人。快去广播吧！';
+    const card1 = new Card({
         type: 'card',
         theme: 'success',
         size: 'lg',
@@ -127,20 +128,19 @@ export function createSuccessCard(arena: ArenaDoc) {
                         `${mentionUser(
                             arena._id
                         )}房间创建成功！你的房间信息如下。` +
-                        '\n你可以点击`广播`以将房间广播给所有人。如需更新房间信息，重新创建即可。',
+                        '\n你可以点击`广播`以将房间广播给所有人。',
                 },
             },
             {
                 type: 'section',
                 text: {
                     type: 'kmarkdown',
-                    content:
-                        '房间有效期为60分钟。如需关闭房间，请发送`.关房`。如果无人加入，房间将于10分钟后自动关闭。',
+                    content: `房间有效期为60分钟。如需更改房间信息或关闭房间，请点击上方管理房间按钮。如果无人加入，房间将于10分钟后自动关闭。`,
                 },
             },
         ],
-    };
-    let card2 = {
+    });
+    const card2 = new Card({
         type: 'card',
         theme: 'info',
         size: 'lg',
@@ -196,6 +196,9 @@ export function createSuccessCard(arena: ArenaDoc) {
                 ],
             },
         ],
-    };
+    });
     return [card1, card2];
+}
+function mentionChannel(chat: string) {
+    throw new Error('Function not implemented.');
 }

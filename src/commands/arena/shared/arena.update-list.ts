@@ -1,4 +1,4 @@
-import { channel } from '../../../configs';
+import { channels } from '../../../configs';
 import arenaConfig from '../../../configs/arena';
 import bot from '../../../init/bot_init';
 import { ArenaDoc } from '../../../models/Arena';
@@ -31,15 +31,15 @@ export async function updateArenaList(
     }
 
     const card = _arenaListCard(arenas);
-    const sent = bot.API.message.create(10, channel.arenaBot, card);
+    const sent = bot.API.message.create(10, channels.arenaBot, card);
     cardId = (await sent).msgId;
     console.debug('card sent at:', cardId);
     arenaIds = newArenaIds;
     if (onCreate)
         bot.API.message.create(
             9,
-            channel.chat,
-            `有新的房间！请前往 (chn)${channel.arenaBot}(chn) 查看。`
+            channels.chat,
+            `有新的房间！请前往 (chn)${channels.arenaBot}(chn) 查看。`
         );
     return sent;
 }

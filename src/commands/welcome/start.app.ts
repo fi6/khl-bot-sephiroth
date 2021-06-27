@@ -1,5 +1,5 @@
 import { AppCommand, AppFunc, BaseSession } from 'kbotify';
-import { channel } from '../../configs';
+import { channels } from '../../configs';
 import { parseCard } from '../../utils/card-parser';
 import { verifyCard } from './card/phone-verify.card';
 import { startCard } from './card/start.card';
@@ -25,7 +25,7 @@ class WelcomeStartApp extends AppCommand {
                     return session.sendCardTemp(parseCard(startCard()));
                 else
                     return session.mentionTemp(
-                        `授予角色失败了……如果你已经完成了手机认证，请在 (chn)${channel.feedback}(chn) 反馈问题。`
+                        `授予角色失败了……如果你已经完成了手机认证，请在 (chn)${channels.feedback}(chn) 反馈问题。`
                     );
             }
             default:

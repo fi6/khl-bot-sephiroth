@@ -3,7 +3,7 @@ import { AppCommand, AppFunc, BaseSession, GuildSession } from 'kbotify';
 import { checkRoles } from './shared/training.checkroles';
 
 import { parseCard } from '../../utils/card-parser';
-import { channel } from '../../configs';
+import { channels } from '../../configs';
 
 import TrainingArena, { TrainingArenaDoc } from '../../models/TrainingArena';
 import { formatTime } from '../../utils/format-time';
@@ -46,7 +46,7 @@ class TrainingCreate extends AppCommand {
             );
 
         const result = await session._send(trainingInfoCard(arena), undefined, {
-            channel: channel.arenaBot,
+            channel: channels.arenaBot,
             msgType: 10,
         });
         if (result.msgSent) {

@@ -1,4 +1,4 @@
-import { channel } from '../../../configs';
+import { channels } from '../../../configs';
 import bot from '../../../init/bot_init';
 import { TrainingArenaDoc } from '../../../models/TrainingArena';
 import { trainingInfoCard } from '../card/training.info.card';
@@ -16,7 +16,7 @@ export function updateTrainingArenaInfo(arena: TrainingArenaDoc): void {
     });
 
     bot.API.message
-        .create(10, channel.arenaBot, trainingInfoCard(arena))
+        .create(10, channels.arenaBot, trainingInfoCard(arena))
         .then((result) => {
             arena.card = result.msgId;
             arena.save();

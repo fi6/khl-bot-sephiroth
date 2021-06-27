@@ -1,5 +1,5 @@
 import { AppCommand, AppFunc, BaseSession, GuildSession } from 'kbotify';
-import { channel } from '../../configs';
+import { channels } from '../../configs';
 import TrainingArena, { TrainingArenaDoc } from '../../models/TrainingArena';
 import { parseCard } from '../../utils/card-parser';
 import { trainingManageCard } from './card/training.manage.card';
@@ -203,12 +203,12 @@ class TrainingManage extends AppCommand {
     _remind(userId: string, content: string, type = 9) {
         this._botInstance?.API.message.create(
             type,
-            channel.chat,
+            channels.chat,
             `(met)${userId}(met) ${content}`
         );
         this._botInstance?.API.message.create(
             type,
-            channel.arenaBot,
+            channels.arenaBot,
             `${content}`,
             undefined,
             userId
