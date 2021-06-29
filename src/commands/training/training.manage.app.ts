@@ -112,7 +112,7 @@ class TrainingManage extends AppCommand {
                 return session.replyTemp('未收到输入，请重试');
             }
             this.inputInfo(arena, inputMsg?.content);
-            this._botInstance?.API.message.delete(inputMsg.msgId);
+            this.client?.API.message.delete(inputMsg.msgId);
             return session.replyTemp(
                 `房间信息已更新为：${arena.code} ${arena.password}\n连接方式：${arena.connection}`
             );
@@ -201,12 +201,12 @@ class TrainingManage extends AppCommand {
     };
 
     _remind(userId: string, content: string, type = 9) {
-        this._botInstance?.API.message.create(
+        this.client?.API.message.create(
             type,
             channels.chat,
             `(met)${userId}(met) ${content}`
         );
-        this._botInstance?.API.message.create(
+        this.client?.API.message.create(
             type,
             channels.arenaBot,
             `${content}`,

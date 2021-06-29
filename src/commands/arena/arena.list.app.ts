@@ -17,15 +17,18 @@ class ArenaList extends AppCommand {
         const arenas = await arenaGetValid();
         updateArenaTitle(arenas);
         if (session.channel.id == channels.arenaBot) {
-            if (!arenas || !arenas?.length)
-                return session.updateMessageTemp(
+            if (!arenas || !arenas?.length) {
+                session.updateMessageTemp(
                     arenaConfig.mainCardId,
                     arenaEmptyCard()
                 );
-            return session.updateMessageTemp(
+                return;
+            }
+            session.updateMessageTemp(
                 arenaConfig.mainCardId,
                 JSON.stringify(arenaListCard(session, arenas))
             );
+            return;
         } else {
             if (!arenas || !arenas?.length)
                 return session.sendCardTemp(arenaEmptyCard());

@@ -14,12 +14,14 @@ import { utilApp } from '../commands/util.app';
 import { welcomeEntry } from '../commands/welcome/welcome.entry';
 import { TextMessage } from 'kbotify/dist/core/message';
 import { trainingMenu } from '../commands/training/training.menu';
+import { log } from './logger';
 
 const bot = new KBotify({
     mode: 'websocket',
     token: auth.khltoken,
 
     ignoreDecryptError: false,
+    debug: true,
 });
 
 bot.connect();
@@ -51,7 +53,7 @@ bot.execute = async (command: string, args: string[], msg: any) => {
     //     return;
     // }
     const input: [string, string[], TextMessage] = [command, args, msg];
-    console.debug(input);
+    log.debug(input);
     const cloudReg = /克劳德/;
     const regex = /^[\u4e00-\u9fa5]/;
     const cmd = bot.commandMap.get(command);
@@ -95,7 +97,9 @@ bot.execute = async (command: string, args: string[], msg: any) => {
         //     '帮助文字还没写，别急'
         // );
     }
-    console.log(command, args);
+    log.debug(command, args);
 };
+
+log.error('something', { another: 'object' }, bot);
 
 export default bot;

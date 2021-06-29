@@ -24,7 +24,7 @@ class ArenaMenu extends MenuCommand {
     useCardMenu = true;
     menu = cardMenu();
     async exec(session: BaseSession) {
-        console.log(session);
+        // console.log(session);
         return await this.func(session);
     }
 }

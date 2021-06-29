@@ -11,6 +11,7 @@ const ArenaSchema = createSchema(
         remark: Type.string(),
         createdAt: Type.date({ required: true }),
         expireAt: Type.date({ required: true }),
+        voice: Type.string({ required: true }),
         member: Type.array({ required: true, default: [] }).of({
             _id: Type.string({ required: true }),
             nickname: Type.string({ required: true, alias: 'userNick' }),

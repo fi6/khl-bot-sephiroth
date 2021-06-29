@@ -5,6 +5,7 @@ import { roles } from '../../configs';
 import arenaConfig from '../../configs/arena';
 import { ArenaSession } from './arena.types';
 import { arenaManageCard } from './card/arena.manage.card';
+import { arenaUpdateCard } from './card/arena.update.card';
 import { updateArenaTitle } from './shared/arena.update-list';
 
 class ArenaManage extends AppCommand {
@@ -21,7 +22,8 @@ class ArenaManage extends AppCommand {
         if (session.args[0] == '关闭') {
             return this.close(session, arena);
         } else if (session.args[0] == '更新') {
-            return this.update(session, arena);
+            this.update(session, arena);
+            return;
         }
         s.updateMessage(
             arenaConfig.mainCardId,
@@ -31,8 +33,16 @@ class ArenaManage extends AppCommand {
     };
 
     private update = async (session: GuildSession, arena: ArenaDoc) => {
-        await session.user.grantRole(roles.tempInput)
-        // await session.updateMessageTemp(arenaConfig.mainCardId, arenaUpdateCard())
+        await session.user.grantRole(roles.tempInput);
+        await session.updateMessageTemp(
+            arenaConfig.mainCardId,
+            arenaUpdateCard(arena)
+        );
+        const input = await session.awaitMessage(/^\w{5}/);
+        if (!input)
+            return session.updateMessageTemp(arenaConfig.mainCardId, [
+                arenaManageCard(session, arena),
+            ]);
     };
 
     private close = async (

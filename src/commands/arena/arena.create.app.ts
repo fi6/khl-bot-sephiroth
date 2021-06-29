@@ -2,7 +2,6 @@ import {
     AppCommand,
     AppFunc,
     BaseSession,
-    createSession,
     GuildSession,
     TextMessage,
 } from 'kbotify';
@@ -11,11 +10,12 @@ import { Error } from 'mongoose';
 import { channels } from '../../configs';
 import arenaConfig from '../../configs/arena';
 import roles from '../../configs/roles';
-import { parseCard } from '../../utils/card-parser';
+import { log } from '../../init/logger';
 import { createHelpCard, createSuccessCard } from './card/arena.create.card';
 import { arenaGetValid } from './shared/arena.get-valid';
 import { arenaIsEmpty } from './shared/arena.is-empty';
 import { updateArenaTitle } from './shared/arena.update-list';
+import { voiceChannelManager } from './shared/arena.voice-manage';
 // import { arenaListMsg } from './shared/arena.list.msg';
 
 class ArenaCreate extends AppCommand {
@@ -34,7 +34,7 @@ class ArenaCreate extends AppCommand {
                 args = await this.helpCreate(GuildSession.fromSession(session));
                 helpFlag = true;
             } else if (session.msg instanceof TextMessage)
-                session._botInstance.API.message.delete(session.msg.msgId);
+                session.client.API.message.delete(session.msg.msgId);
             args = this.argsChecker(args);
         } catch (error) {
             const e = error as Error;
@@ -46,10 +46,11 @@ class ArenaCreate extends AppCommand {
         );
         // updateArenaList(undefined, true);
         // session.arenas = await arenaGetValid();
-        return session.updateMessageTemp(
+        await session.updateMessageTemp(
             arenaConfig.mainCardId,
             JSON.stringify(createSuccessCard(arena, helpFlag))
         );
+        return;
     };
 
     private argsChecker(args?: string[]) {
@@ -79,9 +80,11 @@ class ArenaCreate extends AppCommand {
     async helpCreate(session: GuildSession) {
         await session.user.grantRole(roles.tempInput);
         if (session.channel.id == channels.arenaBot) {
-            await session.updateMessageTemp(
-                arenaConfig.mainCardId,
-                JSON.stringify([createHelpCard()])
+            log.debug(
+                await session.updateMessageTemp(
+                    arenaConfig.mainCardId,
+                    JSON.stringify([createHelpCard()])
+                )
             );
         } else {
             await session.sendCardTemp(createHelpCard());
@@ -89,12 +92,13 @@ class ArenaCreate extends AppCommand {
         const input = await session.awaitMessage(/.+/, 120 * 1e3);
         session.user.revokeRole(roles.tempInput);
         if (!input) throw new Error('没有收到输入……请重新开始。');
-        session._botInstance.API.message.delete(input.msgId);
+        session.client.API.message.delete(input.msgId);
         return Array(...input.content.split(/ +/));
     }
 
     private async create(session: GuildSession, args: string[]) {
         const [arenaCode, password, info] = [args[0], args[1], args[2]];
+        const nickname = session.user.nickname ?? session.user.username;
         let remark = '';
         if (args.length === 4 && args[3]) {
             remark = args[3];
@@ -103,18 +107,20 @@ class ArenaCreate extends AppCommand {
         }
         const expire = new Date();
         expire.setHours(expire.getHours() + 1);
+        const channel = await voiceChannelManager.create(session);
         const arena = await Arena.findByIdAndUpdate(
             session.user.id,
             {
-                nickname: session.user.username,
+                nickname: nickname,
                 code: arenaCode,
                 password: password,
                 info: info,
-                title: remark ?? `${session.user.nickname} 的房间`,
+                title: remark ?? `${nickname} 的房间`,
                 member: [],
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 expireAt: expire,
+                voice: channel.id,
             },
             {
                 upsert: true,

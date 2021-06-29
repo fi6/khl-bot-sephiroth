@@ -51,7 +51,7 @@ class TrainingJoin extends AppCommand {
         }
         const nickname = inputMsg.author.nickname;
         const gameName = inputMsg.content;
-        session._botInstance.API.message.delete(inputMsg.msgId);
+        session.client.API.message.delete(inputMsg.msgId);
 
         arena.queue.push({
             _id: session.userId,
