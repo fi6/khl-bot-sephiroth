@@ -102,11 +102,11 @@ export function arenaManageCard(arena: ArenaDoc) {
                     {
                         type: 'button',
                         theme: 'secondary',
-                        value: '.房间 广播',
-                        click: '', // 'return-val',
+                        value: '.房间 管理 延期',
+                        click: 'return-val',
                         text: {
                             type: 'plain-text',
-                            content: '广播',
+                            content: '延长有效期',
                         },
                     },
                 ],

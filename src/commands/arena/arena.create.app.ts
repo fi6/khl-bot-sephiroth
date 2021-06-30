@@ -120,6 +120,7 @@ class ArenaCreate extends AppCommand {
                 expireAt: expire,
                 voice: channel.id,
                 invite: await channel.getInvite(),
+                _empty: true,
             },
             {
                 upsert: true,
@@ -130,13 +131,12 @@ class ArenaCreate extends AppCommand {
         setTimeout(async () => {
             const arena = await Arena.findOne({ code: arenaCode }).exec();
             if (!arena) return;
-            if (!arenaIsEmpty(arena)) return;
+            if (!arena._empty) return;
             Arena.findByIdAndUpdate(session.user.id, {
                 expireAt: new Date(),
             }).exec();
-            session.mentionTemp(
-                '房间中似乎没有人，自动关闭了……下次可以试试广播？'
-            );
+            log.info('closing arena due to empty 10min', arena);
+            session.mentionTemp('房间中似乎没有人，自动关闭了……');
         }, arenaConfig.allowedEmptyTime);
         return arena as ArenaDoc;
     }

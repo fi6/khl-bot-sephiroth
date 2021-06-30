@@ -54,6 +54,7 @@ class ArenaJoin extends AppCommand {
             _id: session.user.id,
             nickname: session.user.username,
         });
+        arena._empty = false;
         arena.isNew = false;
         arena.markModified('member');
         await arena.save();

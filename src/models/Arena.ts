@@ -14,6 +14,7 @@ const ArenaSchema = createSchema(
         voice: Type.string({ required: true }),
         invite: Type.string({ required: true }),
         join: Type.boolean({ required: true, default: true }),
+        _empty: Type.boolean({ required: true }),
         member: Type.array({ required: true, default: [] }).of({
             _id: Type.string({ required: true }),
             nickname: Type.string({ required: true, alias: 'userNick' }),

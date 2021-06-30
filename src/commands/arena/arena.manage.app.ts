@@ -36,6 +36,15 @@ class ArenaManage extends AppCommand {
         } else if (session.args[0] == 'join') {
             this.join(session, arena);
             return;
+        } else if (session.args[0] == '延期') {
+            const expire = new Date();
+            expire.setHours(expire.getHours() + 1);
+            arena.expireAt = expire;
+            arena.save();
+            return session.updateMessageTemp(configs.arena.mainCardId, [
+                new Card().addText('房间有效期已延长1小时'),
+                arenaManageCard(arena),
+            ]);
         }
     };
 
