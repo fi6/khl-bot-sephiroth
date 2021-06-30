@@ -11,12 +11,12 @@ class ArenaTitle extends AppCommand {
         if (!session.args.length) {
             await session.updateMessage(
                 arenaConfig.titleCardId,
-                `[${arenaTitleCard().toString()}]`
+                arenaTitleCard().toString()
             );
 
             await session.updateMessage(
                 arenaConfig.mainCardId,
-                `[${arenaMainCard().toString()}]`
+                arenaMainCard().toString()
             );
             return;
         } else {
