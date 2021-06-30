@@ -1,5 +1,6 @@
-import { AppCommand, AppFunc } from 'kbotify';
+import { AppCommand, AppFunc, Card } from 'kbotify';
 import Arena from 'models/Arena';
+import configs from '../../configs';
 import { arenaLeave } from './arena.leave.app';
 import { arenaList } from './arena.list.app';
 import { ArenaSession } from './arena.types';
@@ -42,7 +43,7 @@ class ArenaJoin extends AppCommand {
         arenas.forEach((arena) => {
             if (arenaCheckMember(arena, session.userId)) {
                 arenaLeave.leave(arena, session.userId);
-                leaveMessage = `已退出${arena.nickname}的房间。`;
+                leaveMessage = `已退出${arena.nickname}的房间。\n`;
             }
         });
         console.log('queue:', arena.member);
@@ -56,14 +57,27 @@ class ArenaJoin extends AppCommand {
         arena.isNew = false;
         arena.markModified('member');
         await arena.save();
-        arenaList.func(session);
-        return session.mentionTemp(
-            ''.concat(
-                leaveMessage,
-                `\n欢迎加入${arena.nickname}的房间！`,
-                `\n房间号：${arena.code}，房间密码：${arena.password}`
-            )
+        updateArenaTitle();
+        session._send(
+            `语音房间链接：${arena.invite}\n点击下方按钮即可加入，也可以分享链接给群友一起聊天～`,
+            undefined,
+            {
+                msgType: 1,
+                temp: true,
+            }
         );
+        return await session.updateMessageTemp(configs.arena.mainCardId, [
+            new Card()
+                .addTitle('加入房间')
+                .addText(
+                    ''.concat(
+                        leaveMessage,
+                        `欢迎加入${arena.title}！`,
+                        `\n房间号：${arena.code}，房间密码：${arena.password}`
+                    )
+                )
+                .addText('语音房间链接在下方，点击即可加入。'),
+        ]);
     };
 }
 

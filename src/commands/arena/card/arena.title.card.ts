@@ -14,7 +14,7 @@ export function arenaTitleCard(
               })
               .join(', ')
         : '暂无';
-    if (activePlayers.length > 5) nicknames = nicknames + '等';
+    if (activePlayers.length > 5) nicknames = nicknames + `等`;
     const card = new Card({
         type: 'card',
         theme: 'info',
@@ -30,10 +30,25 @@ export function arenaTitleCard(
             {
                 type: 'section',
                 text: {
+                    type: 'paragraph',
+                    cols: 3,
+                    fields: [
+                        {
+                            type: 'kmarkdown',
+                            content: `**活跃房间**\n${activeArena}`,
+                        },
+                        {
+                            type: 'kmarkdown',
+                            content: `**更新时间**\n${formatTime(new Date())}`,
+                        },
+                    ],
+                },
+            },
+            {
+                type: 'section',
+                text: {
                     type: 'kmarkdown',
-                    content: `活跃房间：${activeArena} (更新于：${formatTime(
-                        new Date()
-                    )})\n活跃玩家：${nicknames}`,
+                    content: `玩家：${nicknames}`,
                 },
             },
             {
@@ -97,7 +112,7 @@ export function arenaMainCard(): Card {
                 elements: [
                     {
                         type: 'plain-text',
-                        content: '点击按钮以查看房间详情',
+                        content: '点击按钮查看房间列表',
                     },
                 ],
             },

@@ -3,7 +3,7 @@ import { Channel, GuildSession, KBotify } from 'kbotify';
 import configs, { channels, roles } from '../../../configs';
 import bot from '../../../init/bot_init';
 import { log } from '../../../init/logger';
-import { ArenaDoc } from '../../../models/Arena';
+import Arena, { ArenaDoc } from '../../../models/Arena';
 
 class VoiceChannelManager extends EventEmitter {
     constructor() {
@@ -28,13 +28,38 @@ class VoiceChannelManager extends EventEmitter {
         return result;
     };
 
-    get = async (arena: ArenaDoc) => {
-        const result = await bot.get('v3/channel/view', {
-            target_id: arena.voice,
+    list = async () => {
+        const result = await bot.API.channel.list('1843044184972950');
+        const voices = result.items.filter((c) => {
+            return (
+                c.parentId == channels.voiceCategory && c.name.startsWith('🎤')
+            );
         });
-        if (result.data.code !== 0) throw new Error('channel not found');
-        // this.grantUserPermission(result.data.data.id, profile.id);
-        return result.data.data;
+        return voices;
+    };
+
+    recycleUnused = async () => {
+        const channels = await this.list();
+        for (const channel of channels) {
+            const arena = await Arena.findOne({ voice: channel.id }).exec();
+            if (!arena) {
+                log.info('arena not found for channel, recycling', channel);
+                this.recycle(channel.id);
+            } else if (
+                arena.expireAt < new Date() &&
+                (await this.isChannelEmpty(channel.id))
+            )
+                log.info(
+                    'arena expired with no people, recycling voice channel',
+                    channel
+                );
+            this.recycle(channel.id);
+        }
+    };
+
+    get = async (arena: ArenaDoc) => {
+        const result = await bot.API.channel.view(arena.voice);
+        return result;
     };
 
     publish = async (channelId: string) => {
@@ -50,7 +75,20 @@ class VoiceChannelManager extends EventEmitter {
             value: roles.basic,
             type: 'role_id',
             allow: 146835456, // visible and free to talk. invisible: 146833408
+            deny: 0,
         });
+    };
+
+    isChannelEmpty = async (channelId: string) => {
+        try {
+            const result = bot.get('v3/channel/user-list', {
+                channel_id: channelId,
+            });
+            if ((await result).data.items.length == 0) return true;
+        } catch (e) {
+            log.error(e);
+            return false;
+        }
     };
 
     recycle = async (channelId: string) => {

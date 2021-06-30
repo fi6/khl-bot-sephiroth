@@ -100,6 +100,4 @@ bot.execute = async (command: string, args: string[], msg: any) => {
     log.debug(command, args);
 };
 
-log.error('something', { another: 'object' }, bot);
-
 export default bot;

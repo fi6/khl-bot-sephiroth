@@ -17,12 +17,12 @@ export function infoModules(
     }
     const buttonJoin = {
         type: 'button',
-        theme: 'primary',
+        theme: arena.join ? 'primary' : 'secondary',
         value: `.房间 加入 ${arena.id}`,
-        click: 'return-val',
+        click: arena.join ? 'return-val' : '',
         text: {
             type: 'plain-text',
-            content: '加入',
+            content: arena.join ? '加入' : '暂停加入',
         },
     };
     const buttonLeave = {
@@ -68,7 +68,7 @@ export function infoModules(
                     },
                     {
                         type: 'kmarkdown',
-                        content: `**创建时间**\n${formatTime(arena.createdAt)}`,
+                        content: `**有效至**\n${formatTime(arena.expireAt)}`,
                     },
                 ],
             },

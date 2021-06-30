@@ -1,6 +1,8 @@
-import { AppCommand, AppFunc } from 'kbotify';
+import { AppCommand, AppFunc, Card } from 'kbotify';
+import configs from '../../configs';
 import Arena, { ArenaDoc } from '../../models/Arena';
 import { ArenaSession } from './arena.types';
+import { arenaListCard } from './card/arena.list.card';
 import { arenaGetValid } from './shared/arena.get-valid';
 import { updateArenaTitle } from './shared/arena.update-list';
 
@@ -28,10 +30,14 @@ class ArenaLeave extends AppCommand {
         }
         let content = '已离开：\n';
         for (const a of session.arenas) {
-            content += `\`${a.nickname}的房间\`\n`;
+            content += `\`${a.title}\`\n`;
         }
         updateArenaTitle();
-        return session.replyTemp(content);
+        const arenas = await arenaGetValid();
+        return session.updateMessageTemp(configs.arena.mainCardId, [
+            new Card().addText(content).setTheme('secondary'),
+            ...arenaListCard(session, arenas),
+        ]);
     };
     leave = async (arena: ArenaDoc, khlId: string) => {
         const result = await Arena.updateOne(

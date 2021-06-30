@@ -2,6 +2,7 @@ import { AppCommand, AppFunc, BaseSession } from 'kbotify';
 import Arena from 'models/Arena';
 import { channels } from '../../configs';
 import arenaConfig from '../../configs/arena';
+import { log } from '../../init/logger';
 import { arenaCreate } from './arena.create.app';
 import { ArenaSession } from './arena.types';
 import { arenaListCard } from './card/arena.list.card';

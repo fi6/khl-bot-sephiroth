@@ -6,8 +6,8 @@ import { log } from './init/logger';
 
 db.on('error', console.error.bind(console, 'connection error:'));
 
-bot.on('allMessages', (e) => {
-    console.debug('raw event', e);
+bot.on('allMessages', (e: any) => {
+    log.debug(e.type, e);
 });
 
 log.debug(arenaCardJob.nextInvocation());

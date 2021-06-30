@@ -14,7 +14,7 @@ export async function arenaGetValid(): Promise<ArenaDoc[]> {
                 $gte: Date().valueOf(),
             },
         })
-            .sort([['expireAt', -1]])
+            .sort([['updatedAt', -1]])
             .exec()) as [];
         return rawArenas;
     } catch (e) {

@@ -35,7 +35,7 @@ class ArenaCreate extends AppCommand {
                 helpFlag = true;
             } else if (session.msg instanceof TextMessage)
                 session.client.API.message.delete(session.msg.msgId);
-            args = this.argsChecker(args);
+            this.argsChecker(args);
         } catch (error) {
             const e = error as Error;
             return session.mentionTemp(e.message);
@@ -50,6 +50,15 @@ class ArenaCreate extends AppCommand {
             arenaConfig.mainCardId,
             JSON.stringify(createSuccessCard(arena, helpFlag))
         );
+        await session._send(
+            `你的专属语音房间链接：${arena.invite}\n点击下方按钮即可加入，也可以分享链接给群友一起聊天～`,
+            undefined,
+            {
+                msgType: 1,
+                temp: true,
+            }
+        );
+        updateArenaTitle();
         return;
     };
 
@@ -69,12 +78,7 @@ class ArenaCreate extends AppCommand {
             throw new Error(
                 `创建失败，请检查房间号、密码格式，并确认加速/人数文字长度小于8。\n${args}`
             );
-        const [arenaCode, password, info] = [
-            args[0].toUpperCase(),
-            args[1],
-            args[2],
-        ];
-        return [arenaCode, password, info];
+        return;
     }
 
     async helpCreate(session: GuildSession) {
@@ -97,14 +101,8 @@ class ArenaCreate extends AppCommand {
     }
 
     private async create(session: GuildSession, args: string[]) {
-        const [arenaCode, password, info] = [args[0], args[1], args[2]];
+        const [arenaCode, password, info, title] = [...args];
         const nickname = session.user.nickname ?? session.user.username;
-        let remark = '';
-        if (args.length === 4 && args[3]) {
-            remark = args[3];
-        } else {
-            remark = '';
-        }
         const expire = new Date();
         expire.setHours(expire.getHours() + 1);
         const channel = await voiceChannelManager.create(session);
@@ -112,15 +110,16 @@ class ArenaCreate extends AppCommand {
             session.user.id,
             {
                 nickname: nickname,
-                code: arenaCode,
+                code: arenaCode.toUpperCase(),
                 password: password,
                 info: info,
-                title: remark ?? `${nickname} 的房间`,
+                title: title ?? `${nickname} 的房间`,
                 member: [],
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 expireAt: expire,
                 voice: channel.id,
+                invite: await channel.getInvite(),
             },
             {
                 upsert: true,

@@ -28,14 +28,14 @@ class WelcomeShortcut extends AppCommand {
             );
         }
     };
-    arenaList = async (session: ArenaSession) => {
-        const arenas = await arenaGetValid();
-        session.arenas = arenas;
-        if (!arenas || !arenas.length) {
-            return session.sendCardTemp(arenaEmptyCard(session));
-        }
-        return session.sendCardTemp(arenaListCard(session, arenas));
-    };
+    // arenaList = async (session: ArenaSession) => {
+    //     const arenas = await arenaGetValid();
+    //     session.arenas = arenas;
+    //     if (!arenas || !arenas.length) {
+    //         return session.sendCardTemp(arenaEmptyCard(session));
+    //     }
+    //     return session.sendCardTemp(arenaListCard(session, arenas));
+    // };
 }
 
 function arenaEmptyCard(session: BaseSession) {

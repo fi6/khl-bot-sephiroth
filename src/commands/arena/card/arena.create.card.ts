@@ -157,8 +157,8 @@ export function createSuccessCard(arena: ArenaDoc, helpFlag = false) {
                         },
                         {
                             type: 'kmarkdown',
-                            content: `**创建时间**\n${formatTime(
-                                arena.createdAt
+                            content: `**有效至**\n${formatTime(
+                                arena.expireAt
                             )}`,
                         },
                     ],
