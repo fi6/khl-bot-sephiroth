@@ -55,18 +55,14 @@ class ArenaManage extends AppCommand {
             return session.updateMessageTemp(arenaConfig.mainCardId, [
                 arenaManageCard(arena),
             ]);
+        this.client?.API.message.delete(input.msgId);
         const [code, password, info, title] = [...input.content.split(/ +/)];
-        arena = await arena
-            .update(
-                {
-                    code: code,
-                    password: password ?? arena.password,
-                    info: info ?? arena.info,
-                    title: title ?? arena.title,
-                },
-                { new: true }
-            )
-            .exec();
+        arena.code = code;
+        arena.password = password ?? arena.password;
+        arena.info = info ?? arena.info;
+        arena.title = title ?? arena.title;
+        arena.save();
+
         return session.updateMessageTemp(configs.arena.mainCardId, [
             arenaManageCard(arena),
         ]);
