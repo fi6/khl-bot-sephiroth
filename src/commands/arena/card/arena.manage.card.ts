@@ -13,7 +13,7 @@ export function arenaManageCard(arena: ArenaDoc) {
     }
     return new Card({
         type: 'card',
-        theme: 'secondary',
+        theme: 'primary',
         size: 'lg',
         modules: [
             {
@@ -101,7 +101,7 @@ export function arenaManageCard(arena: ArenaDoc) {
                     },
                     {
                         type: 'button',
-                        theme: 'secondary',
+                        theme: 'primary',
                         value: '.房间 管理 延期',
                         click: 'return-val',
                         text: {

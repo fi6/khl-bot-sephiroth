@@ -42,10 +42,13 @@ class VoiceChannelManager extends EventEmitter {
         const channels = await this.list();
         for (const channel of channels) {
             const arena = await Arena.findOne({ voice: channel.id }).exec();
+
             if (!arena) {
                 log.info('arena not found for channel, recycling', channel);
                 this.recycle(channel.id);
-            } else if (
+                return;
+            }
+            if (
                 arena.expireAt < new Date() &&
                 (await this.isChannelEmpty(channel.id))
             ) {
@@ -82,10 +85,11 @@ class VoiceChannelManager extends EventEmitter {
 
     isChannelEmpty = async (channelId: string) => {
         try {
-            const result = bot.get('v3/channel/user-list', {
+            const result = await bot.get('v3/channel/user-list', {
                 channel_id: channelId,
             });
-            if ((await result).data.items.length == 0) return true;
+            if (result.data.data.length == 0) return true;
+            else return false;
         } catch (e) {
             log.error(e);
             return false;

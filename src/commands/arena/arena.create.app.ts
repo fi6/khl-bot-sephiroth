@@ -132,11 +132,15 @@ class ArenaCreate extends AppCommand {
             const arena = await Arena.findOne({ code: arenaCode }).exec();
             if (!arena) return;
             if (!arena._empty) return;
+            log.info('closing arena due to empty 10min', arena);
             Arena.findByIdAndUpdate(session.user.id, {
                 expireAt: new Date(),
             }).exec();
-            log.info('closing arena due to empty 10min', arena);
-            session.mentionTemp('房间中似乎没有人，自动关闭了……');
+            updateArenaTitle();
+            voiceChannelManager.recycle(arena.voice);
+            session.mentionTemp(
+                '房间中似乎没有人，自动关闭了……\n下次请尝试邀请小伙伴加入房间哦～'
+            );
         }, arenaConfig.allowedEmptyTime);
         return arena as ArenaDoc;
     }
