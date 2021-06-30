@@ -50,14 +50,14 @@ class ArenaCreate extends AppCommand {
             arenaConfig.mainCardId,
             JSON.stringify(createSuccessCard(arena, helpFlag))
         );
-        await session._send(
-            `你的专属语音房间链接：${arena.invite}\n点击下方按钮即可加入，也可以分享链接给群友一起聊天～\n(如需参加邀请活动，请在左侧频道列表生成自己的邀请链接)`,
-            undefined,
-            {
-                msgType: 1,
-                temp: true,
-            }
-        );
+        // await session._send(
+        //     `你的专属语音房间链接：${arena.invite}\n点击下方按钮即可加入，也可以分享链接给群友一起聊天～\n(如需参加邀请活动，请在左侧频道列表生成自己的邀请链接)`,
+        //     undefined,
+        //     {
+        //         msgType: 1,
+        //         temp: true,
+        //     }
+        // );
         updateArenaTitle();
         return;
     };

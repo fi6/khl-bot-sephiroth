@@ -21,6 +21,12 @@ class ArenaManage extends AppCommand {
             return;
         }
         const session = GuildSession.fromSession(s);
+        if (!session.args.length) {
+            session.updateMessageTemp(arenaConfig.mainCardId, [
+                arenaManageCard(arena),
+            ]);
+            return;
+        }
         if (session.args[0] == '关闭') {
             this.close(session, arena);
             return;
@@ -31,8 +37,6 @@ class ArenaManage extends AppCommand {
             this.join(session, arena);
             return;
         }
-        session.updateMessage(arenaConfig.mainCardId, [arenaManageCard(arena)]);
-        return;
     };
 
     private join = async (session: GuildSession, arena: ArenaDoc) => {

@@ -20,7 +20,7 @@ export function arenaManageCard(arena: ArenaDoc) {
                 type: 'header',
                 text: {
                     type: 'plain-text',
-                    content: '房间管理',
+                    content: '房间管理菜单',
                 },
             },
             {
