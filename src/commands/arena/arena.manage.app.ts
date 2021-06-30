@@ -60,11 +60,11 @@ class ArenaManage extends AppCommand {
                 arenaManageCard(arena),
             ]);
         this.client?.API.message.delete(input.msgId);
-        const [code, password, info, title] = [...input.content.split(/ +/)];
+        const [code, password, info, ...title] = [...input.content.split(/ +/)];
         arena.code = code;
         arena.password = password ?? arena.password;
         arena.info = info ?? arena.info;
-        arena.title = title ?? arena.title;
+        arena.title = title?.length ? title.join(' ') : arena.title;
         arena.save();
 
         return session.updateMessageTemp(configs.arena.mainCardId, [

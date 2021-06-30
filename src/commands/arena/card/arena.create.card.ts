@@ -166,9 +166,9 @@ export function createSuccessCard(arena: ArenaDoc, helpFlag = false) {
                 mode: 'right',
                 accessory: {
                     type: 'button',
-                    theme: 'primary',
+                    theme: 'secondary',
                     value: `.房间 广播`,
-                    click: 'return-val',
+                    click: '', //'return-val',
                     text: {
                         type: 'plain-text',
                         content: '广播',

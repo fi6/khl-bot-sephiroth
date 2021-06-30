@@ -71,7 +71,7 @@ export function arenaManageCard(arena: ArenaDoc) {
                 elements: [
                     {
                         type: 'button',
-                        theme: arena.join ? 'danger' : 'success',
+                        theme: arena.join ? 'warning' : 'success',
                         value: `.房间 管理 join ${arena.join ? 0 : 1}`,
                         click: 'return-val',
                         text: {
@@ -103,7 +103,7 @@ export function arenaManageCard(arena: ArenaDoc) {
                         type: 'button',
                         theme: 'secondary',
                         value: '.房间 广播',
-                        click: 'return-val',
+                        click: '', // 'return-val',
                         text: {
                             type: 'plain-text',
                             content: '广播',
