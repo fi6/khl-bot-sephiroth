@@ -48,12 +48,13 @@ class VoiceChannelManager extends EventEmitter {
             } else if (
                 arena.expireAt < new Date() &&
                 (await this.isChannelEmpty(channel.id))
-            )
+            ) {
                 log.info(
                     'arena expired with no people, recycling voice channel',
                     channel
                 );
-            this.recycle(channel.id);
+                this.recycle(channel.id);
+            }
         }
     };
 
@@ -122,7 +123,7 @@ class VoiceChannelManager extends EventEmitter {
             channel_id: channelId,
             type: 'user_id',
             value: userId,
-            allow: owner ? 146900992 : 146833408,
+            allow: owner ? 146901000 : 146833408,
         });
     };
 

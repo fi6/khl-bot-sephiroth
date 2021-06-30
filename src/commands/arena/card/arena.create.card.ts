@@ -186,7 +186,13 @@ export function createSuccessCard(arena: ArenaDoc, helpFlag = false) {
             },
         ],
     });
-    return [card1, card2];
+    return [
+        card1,
+        card2,
+        new Card().addText(
+            '你的语音房间已在左侧显示，**创建邀请链接**并**邀请2名好友加入**就可以获得开黑啦会员～\n[活动地址](https://www.kaiheila.cn/activities/1/index.html)'
+        ),
+    ];
 }
 function mentionChannel(chat: string) {
     throw new Error('Function not implemented.');

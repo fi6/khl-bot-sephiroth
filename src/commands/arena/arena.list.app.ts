@@ -3,6 +3,7 @@ import Arena from 'models/Arena';
 import { channels } from '../../configs';
 import arenaConfig from '../../configs/arena';
 import { log } from '../../init/logger';
+import { formatTime } from '../../utils/format-time';
 import { arenaCreate } from './arena.create.app';
 import { ArenaSession } from './arena.types';
 import { arenaListCard } from './card/arena.list.card';
@@ -51,14 +52,16 @@ function arenaEmptyCard() {
                     type: 'header',
                     text: {
                         type: 'plain-text',
-                        content: '查看房间列表',
+                        content: '房间列表',
                     },
                 },
                 {
                     type: 'section',
                     text: {
                         type: 'kmarkdown',
-                        content: `暂时没有活跃的房间……你可以点击上方按钮创建房间。`,
+                        content: `暂时没有活跃的房间……你可以点击上方按钮创建房间。\n更新于: ${formatTime(
+                            new Date()
+                        )}`,
                     },
                 },
                 {
