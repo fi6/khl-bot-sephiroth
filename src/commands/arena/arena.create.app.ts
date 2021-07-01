@@ -5,7 +5,7 @@ import {
     GuildSession,
     TextMessage,
 } from 'kbotify';
-import Arena, { ArenaDoc } from 'models/Arena';
+import Arena, { ArenaDoc } from 'models/ArenaLegacy';
 import { Error } from 'mongoose';
 import { channels } from '../../configs';
 import arenaConfig from '../../configs/arena';
@@ -78,6 +78,8 @@ class ArenaCreate extends AppCommand {
             throw new Error(
                 `创建失败，请检查房间号、密码格式，并确认加速/人数文字长度小于8。\n${args}`
             );
+        if (!/\d/.test(args[2]))
+            throw new Error('创建失败，房间信息中需包含人数信息');
         return;
     }
 
@@ -121,6 +123,9 @@ class ArenaCreate extends AppCommand {
                 voice: channel.id,
                 invite: await channel.getInvite(),
                 _empty: true,
+                limit: /\d/.exec(info)?.length
+                    ? parseInt(/\d/.exec(info)![0])
+                    : 4,
             },
             {
                 upsert: true,

@@ -1,5 +1,5 @@
 import { AppCommand, AppFunc, BaseSession, createSession } from 'kbotify';
-import Arena from 'models/Arena';
+import Arena from 'models/ArenaLegacy';
 import { checkRoles } from 'utils/check-roles';
 import { ArenaSession } from './arena.types';
 import { arenaAlertCard, arenaAlertHelper } from './card/arena.alert.card';

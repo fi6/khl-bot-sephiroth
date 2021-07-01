@@ -3,7 +3,7 @@ import { Channel, GuildSession, KBotify } from 'kbotify';
 import configs, { channels, roles } from '../../../configs';
 import bot from '../../../init/bot_init';
 import { log } from '../../../init/logger';
-import Arena, { ArenaDoc } from '../../../models/Arena';
+import Arena, { ArenaDoc } from '../../../models/ArenaLegacy';
 
 class VoiceChannelManager extends EventEmitter {
     constructor() {

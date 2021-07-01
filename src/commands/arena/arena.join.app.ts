@@ -1,6 +1,6 @@
-import { AppCommand, AppFunc, Card } from 'kbotify';
-import Arena from 'models/Arena';
-import configs from '../../configs';
+import { AppCommand, AppFunc, BaseSession, Card } from 'kbotify';
+import Arena, { ArenaDoc } from 'models/ArenaLegacy';
+import configs, { channels } from '../../configs';
 import { arenaLeave } from './arena.leave.app';
 import { arenaList } from './arena.list.app';
 import { ArenaSession } from './arena.types';
@@ -59,6 +59,7 @@ class ArenaJoin extends AppCommand {
         arena.markModified('member');
         await arena.save();
         updateArenaTitle();
+        if (arena.memberCount() >= arena.limit) this.remindHost(arena);
         session._send(
             `语音房间链接：${arena.invite}\n点击下方按钮即可加入，也可以分享链接给群友一起聊天～`,
             undefined,
@@ -79,6 +80,15 @@ class ArenaJoin extends AppCommand {
                 )
                 .addText('语音房间链接在下方，点击即可加入。'),
         ]);
+    };
+    remindHost = async (arena: ArenaDoc, full = true) => {
+        this.client?.API.message.create(
+            9,
+            channels.chat,
+            `(met)${arena.id}(met) 房间似乎已满……请点击管理房间-暂停加入。`,
+            undefined,
+            arena.id
+        );
     };
 }
 

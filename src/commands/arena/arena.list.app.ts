@@ -1,5 +1,5 @@
 import { AppCommand, AppFunc, BaseSession } from 'kbotify';
-import Arena from 'models/Arena';
+import Arena from 'models/ArenaLegacy';
 import { channels } from '../../configs';
 import arenaConfig from '../../configs/arena';
 import { log } from '../../init/logger';

@@ -1,6 +1,6 @@
 import { ArenaSession } from 'commands/arena/arena.types';
 import { AppCommand, AppFunc, BaseSession, GuildSession } from 'kbotify';
-import Arena from 'models/Arena';
+import Arena from 'models/ArenaLegacy';
 
 class TrainingLeave extends AppCommand {
     trigger = '退出';

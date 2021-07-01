@@ -1,4 +1,4 @@
-import { ArenaDoc } from '../../../models/Arena';
+import { ArenaDoc } from '../../../models/ArenaLegacy';
 import { infoModules } from './arena.info.section';
 
 export function arenaAlertCard(arena: ArenaDoc): string {

@@ -1,33 +1,57 @@
-import { createSchema, ExtractDoc, Type, typedModel } from 'ts-mongoose';
+import { model, Model, Schema } from 'mongoose';
+import { default as mongoose } from 'mongoose';
 
-const ArenaSchema = createSchema(
-    {
-        _id: Type.string({ required: true }),
-        nickname: Type.string({ required: true, alias: 'userNick' }),
-        code: Type.string({ required: true }),
-        title: Type.string({ required: true }),
-        password: Type.string({ required: true }),
-        info: Type.string({ required: true }),
-        remark: Type.string(),
-        createdAt: Type.date({ required: true }),
-        expireAt: Type.date({ required: true }),
-        voice: Type.string({ required: true }),
-        invite: Type.string({ required: true }),
-        join: Type.boolean({ required: true, default: true }),
-        _empty: Type.boolean({ required: true }),
-        member: Type.array({ required: true, default: [] }).of({
-            _id: Type.string({ required: true }),
-            nickname: Type.string({ required: true, alias: 'userNick' }),
-        }),
-        ...({} as { expired: () => boolean }),
-    },
-    { timestamps: { createdAt: false, updatedAt: true } }
-);
+export interface ArenaDoc {
+    _id: string;
+    nickname: string;
+    code: string;
+    title: string;
+    password: string;
+    info: string;
+    limit: number;
+    remark: string;
+    createdAt: Date;
+    expireAt: Date;
+    voice: string;
+    invite: string;
+    join: boolean;
+    _empty: boolean;
+    member: {
+        _id: string;
+        nickname: string;
+    }[];
+    expired: boolean;
+    memberCount: number;
+}
 
-ArenaSchema.methods.expired = function () {
-    return (this as any).expireAt < new Date();
-};
+const ArenaSchema = new Schema<ArenaDoc, Model<ArenaDoc>, ArenaDoc>({
+    _id: { type: String, required: true },
+    nickname: { type: String, required: true, alias: 'userNick' },
+    code: { type: String, required: true },
+    title: { type: String, required: true },
+    password: { type: String, required: true },
+    info: { type: String, required: true },
+    limit: { type: Number, required: true },
+    createdAt: { type: Date, required: true } as unknown as Date,
+    expireAt: { type: Date, required: true } as unknown as Date,
+    voice: { type: String, required: true },
+    invite: { type: String, required: true },
+    join: { type: Boolean, required: true, default: true },
+    _empty: { type: Boolean, required: true },
+    member: [
+        {
+            _id: { type: String, required: true },
+            nickname: { type: String, required: true, alias: 'userNick' },
+        },
+    ],
+});
 
-export type ArenaDoc = ExtractDoc<typeof ArenaSchema>;
+ArenaSchema.virtual('expired').get(function () {
+    return this.expireAt < new Date();
+});
 
-export default typedModel('Arena', ArenaSchema);
+ArenaSchema.virtual('memberCount').get(function () {
+    return this.member.length + 1;
+});
+
+export default model<ArenaDoc>('Arena', ArenaSchema);

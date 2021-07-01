@@ -1,5 +1,5 @@
 import { AppCommand, BaseSession, Card, GuildSession } from 'kbotify';
-import Arena, { ArenaDoc } from 'models/Arena';
+import Arena, { ArenaDoc } from 'models/ArenaLegacy';
 import configs, { roles } from '../../configs';
 import arenaConfig from '../../configs/arena';
 import { arenaManageCard } from './card/arena.manage.card';

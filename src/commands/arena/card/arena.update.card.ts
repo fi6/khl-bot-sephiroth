@@ -1,5 +1,5 @@
 import { Card } from 'kbotify/dist/core/card';
-import { ArenaDoc } from '../../../models/Arena';
+import { ArenaDoc } from '../../../models/ArenaLegacy';
 
 export function arenaUpdateCard(arena: ArenaDoc) {
     const currentInfo = [

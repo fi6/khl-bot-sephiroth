@@ -1,6 +1,6 @@
 import { BaseSession } from 'kbotify';
 import { Card } from 'kbotify/dist/core/card';
-import { ArenaDoc } from '../../../models/Arena';
+import { ArenaDoc } from '../../../models/ArenaLegacy';
 import { formatTime } from '../../../utils/format-time';
 import { infoModules } from './arena.info.section';
 

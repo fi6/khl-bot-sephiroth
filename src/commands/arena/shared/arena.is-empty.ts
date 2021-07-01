@@ -1,4 +1,4 @@
-import { ArenaDoc } from '../../../models/Arena';
+import { ArenaDoc } from '../../../models/ArenaLegacy';
 
 /**
  * return true if arena is empty else

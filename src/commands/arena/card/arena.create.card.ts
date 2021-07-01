@@ -1,6 +1,6 @@
 import { Card } from 'kbotify/dist/core/card';
 import { channels } from '../../../configs';
-import { ArenaDoc } from '../../../models/Arena';
+import { ArenaDoc } from '../../../models/ArenaLegacy';
 import { formatTime } from '../../../utils/format-time';
 import { mentionUser } from '../../../utils/khl';
 

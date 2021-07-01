@@ -1,5 +1,5 @@
 import { BaseSession, Card } from 'kbotify';
-import { ArenaDoc } from '../../../models/Arena';
+import { ArenaDoc } from '../../../models/ArenaLegacy';
 import { formatTime } from '../../../utils/format-time';
 import { ArenaSession } from '../arena.types';
 
@@ -39,7 +39,7 @@ export function arenaManageCard(arena: ArenaDoc) {
                 text: {
                     type: 'plain-text',
                     content: `${arena.nickname} 的房间 (${
-                        arena.join ? '允许加入中' : '已停止加入'
+                        arena.join ? '允许加入中' : '已暂停加入'
                     })`,
                 },
             },
@@ -76,7 +76,7 @@ export function arenaManageCard(arena: ArenaDoc) {
                         click: 'return-val',
                         text: {
                             type: 'plain-text',
-                            content: arena.join ? '停止加入' : '允许加入',
+                            content: arena.join ? '暂停加入' : '允许加入',
                         },
                     },
                     {
