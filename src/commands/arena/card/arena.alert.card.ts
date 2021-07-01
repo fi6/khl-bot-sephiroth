@@ -1,4 +1,4 @@
-import { ArenaDoc } from '../../../models/ArenaLegacy';
+import { ArenaDoc } from '../../../models/Arena';
 import { infoModules } from './arena.info.section';
 
 export function arenaAlertCard(arena: ArenaDoc): string {
@@ -12,7 +12,7 @@ export function arenaAlertCard(arena: ArenaDoc): string {
 }
 
 export function arenaAlertHelper() {
-    let now = Date.now();
+    const now = Date.now();
     return JSON.stringify([
         {
             type: 'card',

@@ -1,4 +1,4 @@
-import { ArenaDoc } from '../../../models/ArenaLegacy';
+import { ArenaDoc } from '../../../models/Arena';
 import { formatTime } from '../../../utils/format-time';
 import { mentionUser } from '../../../utils/khl';
 import { arenaCheckMember } from '../shared/arena.check-member';
@@ -13,7 +13,7 @@ export function infoModules(
         const nickList = arena.member.map((member) => {
             return member.nickname;
         });
-        memberString =`(${arena.memberCount()}/${arena.limit}) `
+        memberString =`(${arena.memberCount}/${arena.limit}) `
             nickList.join(', ') +
             ` 在房间中`;
     }

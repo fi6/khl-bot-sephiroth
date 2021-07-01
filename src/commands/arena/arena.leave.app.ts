@@ -1,6 +1,6 @@
 import { AppCommand, AppFunc, Card } from 'kbotify';
 import configs from '../../configs';
-import Arena, { ArenaDoc } from '../../models/ArenaLegacy';
+import Arena, { ArenaDoc } from '../../models/Arena';
 import { ArenaSession } from './arena.types';
 import { arenaListCard } from './card/arena.list.card';
 import { arenaGetValid } from './shared/arena.get-valid';

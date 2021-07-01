@@ -32,7 +32,7 @@ bot.addAlias(arenaCreate, '建房');
 // bot.addAlias(arenaDelete, '关房');
 
 bot.on('unknownEvent', (e) => {
-    console.debug(e);
+    log.debug(e);
 });
 
 bot.message.on('text', (msg) => {

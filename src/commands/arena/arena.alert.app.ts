@@ -1,10 +1,9 @@
 import { AppCommand, AppFunc, BaseSession, createSession } from 'kbotify';
-import Arena from 'models/ArenaLegacy';
 import { checkRoles } from 'utils/check-roles';
-import { ArenaSession } from './arena.types';
 import { arenaAlertCard, arenaAlertHelper } from './card/arena.alert.card';
 import LRUCache from 'lru-cache';
 import { isNotifyTime } from '../../utils/notif-time';
+import Arena from '../../models/Arena';
 
 class ArenaAlert extends AppCommand {
     code = 'alert';
@@ -12,7 +11,7 @@ class ArenaAlert extends AppCommand {
     help = '';
     intro = '';
     cache = new LRUCache<string, () => void>({ maxAge: 90 * 1e3 });
-    func: AppFunc<ArenaSession> = async (session) => {
+    func: AppFunc<BaseSession> = async (session) => {
         let timeLimit;
         // if (checkRoles(session.msg.author.roles, 'up')) {
         //     timeLimit = 10 * 6e4;
@@ -30,14 +29,18 @@ class ArenaAlert extends AppCommand {
                 '当前不是可广播的时间。工作日晚18-24点，非工作日早8点-晚24点可以广播。'
             );
         if (!session.args.length) {
-            let cancel_handle = session.setTextTrigger('', 60 * 1e3, (msg) => {
-                this.func(createSession(this, [msg.content], msg));
-            });
+            const cancel_handle = session.setTextTrigger(
+                '',
+                60 * 1e3,
+                (msg) => {
+                    this.func(createSession(this, [msg.content], msg));
+                }
+            );
             this.cache.set(session.userId, cancel_handle);
             return session.sendCardTemp(arenaAlertHelper());
         }
         if (session.args[0] == 'cancel') {
-            let cancel_handle = this.cache.get(session.userId);
+            const cancel_handle = this.cache.get(session.userId);
             if (!cancel_handle) {
                 return session.sendTemp('出错了，不能取消……你好像没有在广播？');
             }

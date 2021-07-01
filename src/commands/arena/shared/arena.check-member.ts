@@ -1,5 +1,5 @@
 import { Session } from 'inspector';
-import { ArenaDoc } from '../../../models/ArenaLegacy';
+import { ArenaDoc } from '../../../models/Arena';
 
 export function arenaCheckMember(arena: ArenaDoc, khlId: string): boolean {
     if (!arena.member?.length) {

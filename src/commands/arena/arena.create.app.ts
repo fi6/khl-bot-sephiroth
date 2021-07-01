@@ -5,7 +5,7 @@ import {
     GuildSession,
     TextMessage,
 } from 'kbotify';
-import Arena, { ArenaDoc } from 'models/ArenaLegacy';
+import Arena, { ArenaDoc } from 'models/Arena';
 import { Error } from 'mongoose';
 import { channels } from '../../configs';
 import arenaConfig from '../../configs/arena';

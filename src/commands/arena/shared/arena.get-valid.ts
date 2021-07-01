@@ -1,8 +1,8 @@
 import arenaConfig from 'configs/arena';
-// import ArenaLegacy, { ArenaDoc } from 'models/ArenaLegacy';
+// import Arena, { ArenaDoc } from 'models/Arena';
 import Arena, { ArenaDoc } from 'models/Arena';
 
-export async function arenaGetValid() {
+export async function arenaGetValid(): Promise<ArenaDoc[]> {
     const arenaExpireTime = new Date(
         new Date().valueOf() - arenaConfig.expireTime
     );

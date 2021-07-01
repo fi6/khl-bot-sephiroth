@@ -1,5 +1,5 @@
 import { AppCommand, AppFunc, BaseSession } from 'kbotify';
-import Arena from 'models/ArenaLegacy';
+import Arena from 'models/Arena';
 import { updateArenaTitle } from './arena/shared/arena.update-list';
 
 class UtilApp extends AppCommand {

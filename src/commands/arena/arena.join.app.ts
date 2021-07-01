@@ -1,5 +1,5 @@
 import { AppCommand, AppFunc, BaseSession, Card } from 'kbotify';
-import Arena, { ArenaDoc } from 'models/ArenaLegacy';
+import Arena, { ArenaDoc } from 'models/Arena';
 import configs, { channels } from '../../configs';
 import { arenaLeave } from './arena.leave.app';
 import { arenaList } from './arena.list.app';
@@ -59,7 +59,7 @@ class ArenaJoin extends AppCommand {
         arena.markModified('member');
         await arena.save();
         updateArenaTitle();
-        if (arena.memberCount() >= arena.limit) this.remindHost(arena);
+        if (arena.memberCount >= arena.limit) this.remindHost(arena);
         session._send(
             `语音房间链接：${arena.invite}\n点击下方按钮即可加入，也可以分享链接给群友一起聊天～`,
             undefined,

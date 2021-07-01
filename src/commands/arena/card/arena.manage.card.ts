@@ -1,5 +1,5 @@
 import { BaseSession, Card } from 'kbotify';
-import { ArenaDoc } from '../../../models/ArenaLegacy';
+import { ArenaDoc } from '../../../models/Arena';
 import { formatTime } from '../../../utils/format-time';
 import { ArenaSession } from '../arena.types';
 
