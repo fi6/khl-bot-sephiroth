@@ -8,15 +8,15 @@ export function infoModules(
     khlId?: string,
     showPassword = false
 ): any[] {
-    let memberString = '房间中还没有人。快来加入吧！';
-    if (arena.member?.length) {
-        const nickList = arena.member.map((member) => {
-            return member.nickname;
-        });
-        memberString =`(${arena.memberCount}/${arena.limit}) `
-            nickList.join(', ') +
-            ` 在房间中`;
-    }
+    const memberString = arena.memberString ?? '房间中还没有人。快来加入吧！';
+    // if (arena.member?.length) {
+    //     const nickList = arena.member.map((member) => {
+    //         return member.nickname;
+    //     });
+    //     memberString =`(${arena.memberCount}/${arena.limit}) ` +
+    //         nickList.join(', ') +
+    //         ` 在房间中`;
+    // }
     const buttonJoin = {
         type: 'button',
         theme: arena.join ? 'primary' : 'secondary',

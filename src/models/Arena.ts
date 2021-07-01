@@ -23,6 +23,7 @@ export interface ArenaDoc extends Document {
     updatedAt: Date;
     expired: boolean;
     memberCount: number;
+    memberString: string | undefined;
 }
 
 const ArenaSchema = new Schema<ArenaDoc, Model<ArenaDoc>, ArenaDoc>(
@@ -56,6 +57,18 @@ ArenaSchema.virtual('expired').get(function (this: any) {
 
 ArenaSchema.virtual('memberCount').get(function (this: any) {
     return (this as any).member.length + 1;
+});
+
+ArenaSchema.virtual('memberString').get(function (this: any) {
+    if (!this.member?.length) return;
+    const nickList = this.member.map((member: { nickname: string }) => {
+        return member.nickname;
+    });
+    return (
+        `(${this.memberCount}/${this.limit}) ` +
+        nickList.join(', ') +
+        ` 在房间中`
+    );
 });
 
 export default model<ArenaDoc>('Arena', ArenaSchema);
