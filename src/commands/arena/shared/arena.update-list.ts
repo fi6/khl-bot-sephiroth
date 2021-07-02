@@ -12,9 +12,9 @@ import { arenaGetValid } from './arena.get-valid';
 export async function updateArenaTitle(arenas?: ArenaDoc[]): Promise<any> {
     arenas = arenas ?? (await arenaGetValid());
     const players = arenas.map((arena) => {
-        return arena.member.length ? arena.member[0] : arena;
+        return [arena, ...arena.member];
     });
-    const card = arenaTitleCard(arenas.length, players);
+    const card = arenaTitleCard(arenas.length, players.flat());
     bot.API.message.update(arenaConfig.titleCardId, JSON.stringify([card]));
 }
 

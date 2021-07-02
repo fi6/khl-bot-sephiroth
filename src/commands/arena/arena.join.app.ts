@@ -58,7 +58,8 @@ class ArenaJoin extends AppCommand {
             this.remindHost(session, arena, true);
         else this.remindHost(session, arena, false);
         session._send(
-            `\`${arena.title}\`的语音房间链接：${arena.invite}\n点击下方按钮即可加入，也可以分享链接给群友一起聊天～`,
+            // eslint-disable-next-line no-useless-escape
+            `\[${arena.title}\]的语音房间链接：${arena.invite}\n点击下方按钮即可加入，也可以分享链接给群友一起聊天～`,
             undefined,
             {
                 msgType: 1,
