@@ -70,7 +70,11 @@ bot.execute = async (command: string, args: string[], msg: any) => {
         // case '房间':
         //     return arenaMenu.exec(...input);
         case '帮助':
-            bot.API.message.create(9, msg.channelId, '帮助文字还没写，别急');
+            bot.API.message.create(
+                9,
+                msg.channelId,
+                '[使用帮助](https://www.bilibili.com/read/cv11967248)'
+            );
             break;
         // case '档案':
         //     profileCommand(command, args, msg)

@@ -87,11 +87,11 @@ export function arenaTitleCard(
                     {
                         type: 'button',
                         theme: 'secondary',
-                        value: '.欢迎 快捷 斗天梯',
-                        click: 'return-val',
+                        value: 'https://www.bilibili.com/read/cv11967248',
+                        click: 'link',
                         text: {
                             type: 'plain-text',
-                            content: '斗天梯',
+                            content: '如何使用？',
                         },
                     },
                 ],

@@ -19,6 +19,9 @@ class ArenaAlert extends AppCommand {
         //     timeLimit = 30 * 6e4;
         // }
         // check args
+        return session.replyTemp(
+            '广播功能暂时不可使用……你可以截图分享给群里的小伙伴们～等QQ/微信机器人同步上线后即可使用。'
+        );
         const arena = await Arena.findById(session.user.id).exec();
         if (!arena)
             return session.replyTemp(
