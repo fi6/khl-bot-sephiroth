@@ -39,13 +39,15 @@ class ExpireManager {
         const expireRemind = new Date(arena.expireAt);
         expireRemind.setMinutes(expireRemind.getMinutes() - 15);
         current.expireReminder = scheduleJob(expireRemind, () => {
+            log.info('running expire reminder', arena);
             this.remind(arena.id);
         });
         current.expire = scheduleJob(arena.expireAt, () => {
+            log.info('running expire', arena);
             this.expire(arena.id);
         });
         this.cache.set(arena.id, current);
-        log.info(
+        log.debug(
             'new jobs set',
             arena.id,
             arena.nickname,
