@@ -49,6 +49,12 @@ export const log = winston.createLogger({
         new ConsoleTransport(),
         new winston.transports.File({
             filename: path.resolve(folder, now.toFormat('HH-mm-ss')),
+            format: format.combine(
+                format.timestamp(),
+                format.errors(),
+                format.metadata(),
+                format.json()
+            ),
         }),
     ],
 });
