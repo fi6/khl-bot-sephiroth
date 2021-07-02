@@ -14,3 +14,7 @@ export function formatTime(s: Date): string {
     }
     return dateString + timeString;
 }
+
+export function getNow(tz = 'Asia/Shanghai'): DateTime {
+    return DateTime.fromJSDate(new Date()).setZone(tz);
+}

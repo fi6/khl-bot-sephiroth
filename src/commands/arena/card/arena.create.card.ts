@@ -58,8 +58,20 @@ export function createStartCard() {
     });
 }
 
-export function createHelpCard() {
+export function createHelpCard(oldArena: ArenaDoc | null) {
     const now = Date.now();
+    let example = '例: `5F23C  147  帆游自动3人  随便打打`';
+    if (oldArena) {
+        example =
+            '上次的房间信息：`' +
+            [
+                oldArena.code,
+                oldArena.password,
+                oldArena.info,
+                oldArena.title,
+            ].join(' ') +
+            '`\n房间号为必填，其他为选填。系统会自动继承上次的房间信息。';
+    }
     return new Card({
         type: 'card',
         theme: 'info',
@@ -77,14 +89,14 @@ export function createHelpCard() {
                 text: {
                     type: 'kmarkdown',
                     content:
-                        '请输入房间号、密码、房间信息，用空格分开，房间必须为公开且有密码。',
+                        '请输入`房间号  密码  房间信息  房间用途`，用空格分开。',
                 },
             },
             {
                 type: 'section',
                 text: {
                     type: 'kmarkdown',
-                    content: '\n例: `5F23C  147  帆游自动3人`',
+                    content: example,
                 },
             },
             {

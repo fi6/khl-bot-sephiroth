@@ -14,7 +14,7 @@ fi
 
 mkdir -p logs/$DATE
 
-nohup node --nolazy -r ts-node/register -r tsconfig-paths/register src/index.ts &> logs/$DATE/$NOW.log & echo $! > run.pid
+nohup node --nolazy -r ts-node/register -r tsconfig-paths/register src/index.ts &> /dev/null & echo $! > run.pid
 echo "run at pid $(cat run.pid)"
 
 # unset -v latest

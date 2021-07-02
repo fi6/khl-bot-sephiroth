@@ -14,17 +14,18 @@ class ArenaManage extends AppCommand {
     intro = '';
     func = async (s: BaseSession) => {
         const arena = await Arena.findById(s.user.id).exec();
-        if (!arena || arena.expireAt < new Date()) {
+        if (!arena) {
             s.updateMessageTemp(configs.arena.mainCardId, [
                 new Card().addText('没有找到可以管理的房间……请先创建房间。'),
             ]);
             return;
         }
-        const session = GuildSession.fromSession(s);
+        const session = await GuildSession.fromSession(s);
         if (!session.args.length) {
-            session.updateMessageTemp(arenaConfig.mainCardId, [
-                arenaManageCard(arena),
-            ]);
+            session.updateMessageTemp(
+                arenaConfig.mainCardId,
+                arenaManageCard(arena)
+            );
             return;
         }
         if (session.args[0] == '关闭') {
@@ -37,14 +38,7 @@ class ArenaManage extends AppCommand {
             this.join(session, arena);
             return;
         } else if (session.args[0] == '延期') {
-            const expire = new Date();
-            expire.setHours(expire.getHours() + 1);
-            arena.expireAt = expire;
-            arena.save();
-            return session.updateMessageTemp(configs.arena.mainCardId, [
-                new Card().addText('房间有效期已延长1小时'),
-                arenaManageCard(arena),
-            ]);
+            this.extend(session, arena);
         }
     };
 
@@ -52,9 +46,10 @@ class ArenaManage extends AppCommand {
         if (session.args[1] == '1') arena.join = true;
         else arena.join = false;
         arena.save();
-        return session.updateMessageTemp(configs.arena.mainCardId, [
-            arenaManageCard(arena),
-        ]);
+        return session.updateMessageTemp(
+            configs.arena.mainCardId,
+            arenaManageCard(arena)
+        );
     };
 
     private update = async (session: GuildSession, arena: ArenaDoc) => {
@@ -65,9 +60,10 @@ class ArenaManage extends AppCommand {
         );
         const input = await session.awaitMessage(/^\w{5}/, 120 * 1e3);
         if (!input)
-            return session.updateMessageTemp(arenaConfig.mainCardId, [
-                arenaManageCard(arena),
-            ]);
+            return session.updateMessageTemp(
+                arenaConfig.mainCardId,
+                arenaManageCard(arena)
+            );
         this.client?.API.message.delete(input.msgId);
         const [code, password, info, ...title] = [...input.content.split(/ +/)];
         arena.code = code;
@@ -76,9 +72,10 @@ class ArenaManage extends AppCommand {
         arena.title = title?.length ? title.join(' ') : arena.title;
         arena.save();
 
-        return session.updateMessageTemp(configs.arena.mainCardId, [
-            arenaManageCard(arena),
-        ]);
+        return session.updateMessageTemp(
+            configs.arena.mainCardId,
+            arenaManageCard(arena)
+        );
     };
 
     private close = async (
@@ -109,6 +106,16 @@ class ArenaManage extends AppCommand {
                 `关闭房间时发生未知错误。请联系作者改bug(ಥ_ಥ)\n${e}`
             );
         }
+    };
+    private extend = async (session: GuildSession, arena: ArenaDoc) => {
+        const expire = new Date();
+        expire.setHours(expire.getHours() + 1);
+        arena.expireAt = expire;
+        arena.save();
+        return session.updateMessageTemp(configs.arena.mainCardId, [
+            new Card().addText('房间有效期已延长1小时'),
+            ...arenaManageCard(arena),
+        ]);
     };
 }
 

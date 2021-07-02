@@ -1,14 +1,13 @@
 import bunyan from 'bunyan';
 import fs from 'fs';
+import { DateTime } from 'luxon';
 import path from 'path';
 import winston, { format } from 'winston';
+import { getNow } from '../utils/format-time';
 
-const now = new Date();
-const folder = path.resolve(
-    process.cwd(),
-    'logs',
-    `${now.getMonth()}-${now.getDate()}`
-);
+const now = getNow();
+
+const folder = path.resolve(process.cwd(), 'logs', `${now.toISODate()}`);
 console.log('log folder: ', folder);
 if (!fs.existsSync(folder)) fs.mkdirSync(folder, { recursive: true });
 
@@ -41,8 +40,17 @@ class ConsoleTransport extends winston.transports.Console {
 
 export const log = winston.createLogger({
     level: 'debug',
-    format: format.combine(format.timestamp(), format.errors({ stack: true })),
-    transports: [new ConsoleTransport()],
+    format: format.combine(
+        format.timestamp(),
+        format.errors({ stack: true }),
+        format.json()
+    ),
+    transports: [
+        new ConsoleTransport(),
+        new winston.transports.File({
+            filename: path.resolve(folder, now.toFormat('HH-mm-ss')),
+        }),
+    ],
 });
 
 // export const log = bunyan.createLogger({

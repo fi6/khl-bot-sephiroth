@@ -1,6 +1,7 @@
-import { AppCommand, AppFunc, BaseSession, Card } from 'kbotify';
+import { AppCommand, AppFunc, BaseSession, Card, GuildSession } from 'kbotify';
 import Arena, { ArenaDoc } from 'models/Arena';
 import configs, { channels } from '../../configs';
+import { log } from '../../init/logger';
 import { arenaLeave } from './arena.leave.app';
 import { arenaList } from './arena.list.app';
 import { ArenaSession } from './arena.types';
@@ -12,16 +13,10 @@ class ArenaJoin extends AppCommand {
     trigger = '加入';
 
     help = '仅可通过按钮加入';
-    func: AppFunc<ArenaSession> = async (session: ArenaSession) => {
-        const [msg, args] = [session.msg, session.args as string[]];
+    func: AppFunc<BaseSession> = async (s) => {
+        log.info('session:', s);
+        const session = await GuildSession.fromSession(s, true);
 
-        // if (msg.mention.user.length != 1) {
-        //     session.reply(this.help);
-        // }
-        // if (!session.user.roles.includes(15186))
-        //     return session.mentionTemp(
-        //         '你好像还是临时用户……请点击左上角切换至欢迎频道，点击“开始使用”。'
-        //     );
         const arena = await Arena.findOne({
             _id: session.args[0],
         }).exec();
@@ -46,7 +41,7 @@ class ArenaJoin extends AppCommand {
                 leaveMessage = `已退出${arena.nickname}的房间。\n`;
             }
         });
-        console.log('queue:', arena.member);
+        log.info('queue:', arena.member);
         if (!arena.member) {
             arena.member = [];
         }
@@ -59,9 +54,11 @@ class ArenaJoin extends AppCommand {
         arena.markModified('member');
         await arena.save();
         updateArenaTitle();
-        if (arena.memberCount >= arena.limit) this.remindHost(arena);
+        if (arena.memberCount >= arena.limit)
+            this.remindHost(session, arena, true);
+        else this.remindHost(session, arena, false);
         session._send(
-            `语音房间链接：${arena.invite}\n点击下方按钮即可加入，也可以分享链接给群友一起聊天～`,
+            `\`${arena.title}\`的语音房间链接：${arena.invite}\n点击下方按钮即可加入，也可以分享链接给群友一起聊天～`,
             undefined,
             {
                 msgType: 1,
@@ -81,11 +78,23 @@ class ArenaJoin extends AppCommand {
                 .addText('语音房间链接在下方，点击即可加入。'),
         ]);
     };
-    remindHost = async (arena: ArenaDoc, full = true) => {
+    remindHost = async (
+        session: GuildSession,
+        arena: ArenaDoc,
+        full = true
+    ) => {
+        let reminder = `(met)${arena.id}(met) 有玩家加入房间：\`${
+            session.user.nickname ?? session.user.username
+        }\``;
+        if (full)
+            reminder =
+                reminder +
+                `\n房间似乎已满……你可以在(chn)${channels.arenaBot}(chn)点击管理房间-暂停加入。`;
+
         this.client?.API.message.create(
             9,
             channels.chat,
-            `(met)${arena.id}(met) 房间似乎已满……请点击管理房间-暂停加入。`,
+            reminder,
             undefined,
             arena.id
         );

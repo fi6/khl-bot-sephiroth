@@ -7,7 +7,7 @@ import {
 } from 'kbotify';
 import Arena, { ArenaDoc } from 'models/Arena';
 import { Error } from 'mongoose';
-import { channels } from '../../configs';
+import configs, { channels } from '../../configs';
 import arenaConfig from '../../configs/arena';
 import roles from '../../configs/roles';
 import { log } from '../../init/logger';
@@ -31,7 +31,9 @@ class ArenaCreate extends AppCommand {
         let helpFlag = false;
         try {
             if (!args.length) {
-                args = await this.helpCreate(GuildSession.fromSession(session));
+                args = await this.helpCreate(
+                    await GuildSession.fromSession(session)
+                );
                 helpFlag = true;
             } else if (session.msg instanceof TextMessage)
                 session.client.API.message.delete(session.msg.msgId);
@@ -41,11 +43,10 @@ class ArenaCreate extends AppCommand {
             return session.mentionTemp(e.message);
         }
         const arena = await this.create(
-            GuildSession.fromSession(session),
+            await GuildSession.fromSession(session),
             args
         );
-        // updateArenaList(undefined, true);
-        // session.arenas = await arenaGetValid();
+
         await session.updateMessageTemp(
             arenaConfig.mainCardId,
             JSON.stringify(createSuccessCard(arena, helpFlag))
@@ -65,7 +66,7 @@ class ArenaCreate extends AppCommand {
     private argsChecker(args?: string[]) {
         if (!args || args.length < 3) {
             throw new Error(
-                `参数不符合要求……请检查参数个数，并确认用空格正确分开。\n${args}`
+                `参数不符合要求……请检查参数个数，并确认已用空格正确分开。\n${args}`
             );
         }
         const arenaReg = /^\w{5}$/;
@@ -84,22 +85,30 @@ class ArenaCreate extends AppCommand {
     }
 
     async helpCreate(session: GuildSession) {
+        const arena = await Arena.findById(session.user.id).exec();
         await session.user.grantRole(roles.tempInput);
         if (session.channel.id == channels.arenaBot) {
-            log.debug(
-                await session.updateMessageTemp(
-                    arenaConfig.mainCardId,
-                    JSON.stringify([createHelpCard()])
-                )
+            await session.updateMessageTemp(
+                arenaConfig.mainCardId,
+                createHelpCard(arena).toString()
             );
         } else {
-            await session.sendCardTemp(createHelpCard());
+            await session.sendCardTemp(createHelpCard(arena));
         }
         const input = await session.awaitMessage(/.+/, 120 * 1e3);
         session.user.revokeRole(roles.tempInput);
         if (!input) throw new Error('没有收到输入……请重新开始。');
         session.client.API.message.delete(input.msgId);
-        return Array(...input.content.split(/ +/));
+        let args = input.content.split(/ +/);
+        if (args.length > 4)
+            args = [...args.splice(0, 3), args.join(' ')];
+        if (!arena) return args;
+        return [
+            ...args,
+            ...[arena.code, arena.password, arena.info, arena.title].splice(
+                args.length
+            ),
+        ];
     }
 
     private async create(session: GuildSession, args: string[]) {
@@ -115,7 +124,7 @@ class ArenaCreate extends AppCommand {
                 code: arenaCode.toUpperCase(),
                 password: password,
                 info: info,
-                title: title ?? `${nickname} 的房间`,
+                title: title ?? `${nickname}的房间`,
                 member: [],
                 createdAt: new Date(),
                 updatedAt: new Date(),
@@ -134,21 +143,35 @@ class ArenaCreate extends AppCommand {
         ).exec();
 
         setTimeout(async () => {
-            const arena = await Arena.findOne({ code: arenaCode }).exec();
-            if (!arena) return;
-            if (!arena._empty) return;
-            log.info('closing arena due to empty 10min', arena);
-            Arena.findByIdAndUpdate(session.user.id, {
-                expireAt: new Date(),
-            }).exec();
-            updateArenaTitle();
-            voiceChannelManager.recycle(arena.voice);
-            session.mentionTemp(
-                '房间中似乎没有人，自动关闭了……\n下次请尝试邀请小伙伴加入房间哦～'
-            );
+            this.checkEmpty(session, arenaCode);
         }, arenaConfig.allowedEmptyTime);
+        setTimeout(async () => {
+            this.remindExpire(session);
+        }, configs.arena.expireTime);
         return arena as ArenaDoc;
     }
+    checkEmpty = async (session: BaseSession, arenaCode: string) => {
+        const arena = await Arena.findById(session.user.id).exec();
+        if (!arena) return;
+        if (!voiceChannelManager.isChannelEmpty(arena.voice)) return;
+        log.info('closing arena due to empty 10min', arena);
+        Arena.findByIdAndUpdate(session.user.id, {
+            expireAt: new Date(),
+        }).exec();
+        updateArenaTitle();
+        voiceChannelManager.recycle(arena.voice);
+        session.mentionTemp(
+            '房间中似乎没有人，自动关闭了……\n下次请尝试邀请小伙伴加入房间哦～'
+        );
+    };
+    remindExpire = async (session: BaseSession) => {
+        const arena = await Arena.findOne({ _id: session.user.id }).exec();
+        if (!arena) return;
+        log.info('reminding user for arena expire');
+        session.mentionTemp(
+            '你的房间已满1小时……\n如果没有延长有效期，则不会在房间列表中继续显示哦～\n语音房间将在1天后回收，下次创建时会新建语音房间。'
+        );
+    };
 }
 
 export const arenaCreate = new ArenaCreate();
