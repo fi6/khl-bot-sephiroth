@@ -56,8 +56,8 @@ class ExpireManager {
             arena.id,
             arena.nickname,
             arena.expireAt,
-            current.expire.nextInvocation(),
-            current.expireReminder.nextInvocation()
+            current.expireReminder.nextInvocation(),
+            current.expire.nextInvocation()
         );
     };
 
