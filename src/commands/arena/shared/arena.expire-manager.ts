@@ -44,7 +44,11 @@ class ExpireManager {
         });
         current.expire = scheduleJob(arena.expireAt, () => {
             log.info('running expire', arena);
-            this.expire(arena.id);
+            try {
+                this.expire(arena.id);
+            } catch (error) {
+                log.error(error);
+            }
         });
         this.cache.set(arena.id, current);
         log.debug(
