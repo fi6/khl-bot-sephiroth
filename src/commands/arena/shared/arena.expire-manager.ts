@@ -45,7 +45,7 @@ class ExpireManager {
         current.expire = scheduleJob(arena.expireAt, () => {
             log.info('running expire', arena);
             try {
-                this.expire(arena.id);
+                this.expire(arena.id, true);
             } catch (error) {
                 log.error(error);
             }
@@ -73,7 +73,7 @@ class ExpireManager {
         );
     }
 
-    async expire(arenaId: string) {
+    async expire(arenaId: string, remind = false) {
         const arena = await Arena.findById(arenaId).exec();
         if (!arena || arena._closed) return;
         voiceChannelManager.recycle(arena.voice);
@@ -83,6 +83,15 @@ class ExpireManager {
         arena.member = [];
         arena.markModified('member');
         arena.save();
+        if (remind) {
+            bot.API.message.create(
+                9,
+                channels.chat,
+                `(met)${arena.id}(met) 你的房间已到有效期，将不显示在房间列表中。语音房间已回收。\n你可以在管理房间界面中延长有效期，或重新创建房间。`,
+                undefined,
+                arena.id
+            );
+        }
     }
 }
 
