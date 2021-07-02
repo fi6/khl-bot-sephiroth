@@ -1,5 +1,4 @@
 import LRUCache from 'lru-cache';
-import { KBotify } from 'kBotify/dist';
 import Arena, { ArenaDoc } from '../../../models/Arena';
 import schedule, { scheduleJob } from 'node-schedule';
 import configs, { channels } from '../../../configs';
