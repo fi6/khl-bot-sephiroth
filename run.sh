@@ -12,8 +12,6 @@ then
    # Do something knowing the pid exists, i.e. the process with $PID is running
 fi
 
-mkdir -p logs/$DATE
-
 nohup node --nolazy -r ts-node/register -r tsconfig-paths/register src/index.ts &> /dev/null & echo $! > run.pid
 echo "run at pid $(cat run.pid)"
 
