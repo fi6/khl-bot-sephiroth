@@ -51,7 +51,7 @@ export const log = winston.createLogger({
             filename: path.resolve(folder, now.toFormat('HH-mm-ss')),
             format: format.combine(
                 format.timestamp(),
-                format.errors(),
+                format.errors({ stack: true }),
                 format.metadata(),
                 format.json()
             ),
