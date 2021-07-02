@@ -10,14 +10,18 @@ class VoiceChannelManager extends EventEmitter {
         super();
     }
     create = async (session: GuildSession): Promise<Required<Channel>> => {
-        const result = await bot.API.channel.create(
-            session.guild.id,
-            '🎤 ' + (session.user.nickname ?? session.user.username),
-            '2',
-            channels.voiceCategory,
-            16,
-            3
-        );
+        const arena = await Arena.findById(session.user.id).exec();
+        let result: Required<Channel> | undefined = undefined;
+        if (arena?.voice) result = await this.get(arena.voice);
+        if (!result)
+            result = await bot.API.channel.create(
+                session.guild.id,
+                '🎤 ' + (session.user.nickname ?? session.user.username),
+                '2',
+                channels.voiceCategory,
+                16,
+                3
+            );
 
         const voiceChannelId: string = result.id;
 
@@ -61,8 +65,8 @@ class VoiceChannelManager extends EventEmitter {
         }
     };
 
-    get = async (arena: ArenaDoc) => {
-        const result = await bot.API.channel.view(arena.voice);
+    get = async (channelId: string) => {
+        const result = await bot.API.channel.view(channelId);
         return result;
     };
 
