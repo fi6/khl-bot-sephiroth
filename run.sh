@@ -17,7 +17,7 @@ cat /dev/null > logs/latest.log
 nohup node --nolazy -r ts-node/register -r tsconfig-paths/register src/index.ts &> logs/latest.log & echo $! > run.pid
 echo "run at pid $(cat run.pid)"
 
-tail -vf -n 30 logs/latest.log
+# tail -vf -n 30 logs/latest.log
 
 # unset -v latest
 
