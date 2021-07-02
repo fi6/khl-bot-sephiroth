@@ -66,8 +66,12 @@ class VoiceChannelManager extends EventEmitter {
     };
 
     get = async (channelId: string) => {
-        const result = await bot.API.channel.view(channelId);
-        return result;
+        try {
+            const result = await bot.API.channel.view(channelId);
+            return result;
+        } catch (error) {
+            log.debug('channel not found', channelId);
+        }
     };
 
     publish = async (channelId: string) => {

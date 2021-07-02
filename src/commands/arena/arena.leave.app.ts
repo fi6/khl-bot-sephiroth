@@ -1,5 +1,6 @@
 import { AppCommand, AppFunc, Card } from 'kbotify';
 import configs from '../../configs';
+import { log } from '../../init/logger';
 import Arena, { ArenaDoc } from '../../models/Arena';
 import { ArenaSession } from './arena.types';
 import { arenaListCard } from './card/arena.list.card';
@@ -44,7 +45,7 @@ class ArenaLeave extends AppCommand {
             { _id: arena._id },
             { $pull: { member: { _id: khlId } } }
         );
-        console.debug(result);
+        log.debug('leave result: ', result);
     };
 }
 

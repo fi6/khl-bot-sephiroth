@@ -88,7 +88,6 @@ class ArenaManage extends AppCommand {
             }
             expireManager.expire(arena.id);
             updateArenaTitle();
-
             return await session.updateMessageTemp(configs.arena.mainCardId, [
                 new Card().addText(
                     `房间 \`${arena.code}\` ${arena.title} 已关闭，语音频道将被回收。`
