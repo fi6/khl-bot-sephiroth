@@ -14,8 +14,9 @@ import { log } from '../../init/logger';
 import { createHelpCard, createSuccessCard } from './card/arena.create.card';
 import { arenaGetValid } from './shared/arena.get-valid';
 import { arenaIsEmpty } from './shared/arena.is-empty';
+import { expireManager } from './shared/arena.expire-manager';
 import { updateArenaTitle } from './shared/arena.update-list';
-import { voiceChannelManager } from './shared/arena.voice-manage';
+import { voiceChannelManager } from './shared/arena.voice-manager';
 // import { arenaListMsg } from './shared/arena.list.msg';
 
 class ArenaCreate extends AppCommand {
@@ -43,7 +44,7 @@ class ArenaCreate extends AppCommand {
             return session.mentionTemp(e.message);
         }
         const arena = await this.create(
-            await GuildSession.fromSession(session),
+            await GuildSession.fromSession(session, true),
             args
         );
 
@@ -100,8 +101,7 @@ class ArenaCreate extends AppCommand {
         if (!input) throw new Error('没有收到输入……请重新开始。');
         session.client.API.message.delete(input.msgId);
         let args = input.content.split(/ +/);
-        if (args.length > 4)
-            args = [...args.splice(0, 3), args.join(' ')];
+        if (args.length > 4) args = [...args.splice(0, 3), args.join(' ')];
         if (!arena) return args;
         return [
             ...args,
@@ -132,6 +132,7 @@ class ArenaCreate extends AppCommand {
                 voice: channel.id,
                 invite: await channel.getInvite(),
                 _empty: true,
+                _closed: false,
                 limit: /\d/.exec(info)?.length
                     ? parseInt(/\d/.exec(info)![0])
                     : 4,
@@ -143,16 +144,14 @@ class ArenaCreate extends AppCommand {
         ).exec();
 
         setTimeout(async () => {
-            this.checkEmpty(session, arenaCode);
+            this.checkEmpty(session);
         }, arenaConfig.allowedEmptyTime);
-        setTimeout(async () => {
-            this.remindExpire(session);
-        }, configs.arena.expireTime);
+        expireManager.setJobs(arena);
         return arena as ArenaDoc;
     }
-    checkEmpty = async (session: BaseSession, arenaCode: string) => {
+    checkEmpty = async (session: BaseSession) => {
         const arena = await Arena.findById(session.user.id).exec();
-        if (!arena) return;
+        if (!arena || arena._closed) return;
         if (!voiceChannelManager.isChannelEmpty(arena.voice)) return;
         log.info('closing arena due to empty 10min', arena);
         Arena.findByIdAndUpdate(session.user.id, {
@@ -161,17 +160,17 @@ class ArenaCreate extends AppCommand {
         updateArenaTitle();
         voiceChannelManager.recycle(arena.voice);
         session.mentionTemp(
-            '房间中似乎没有人，自动关闭了……\n下次请尝试邀请小伙伴加入房间哦～'
+            '房间中似乎没有人，自动关闭了……\n下次可以分享邀请小伙伴加入房间哦～'
         );
     };
-    remindExpire = async (session: BaseSession) => {
-        const arena = await Arena.findOne({ _id: session.user.id }).exec();
-        if (!arena) return;
-        log.info('reminding user for arena expire');
-        session.mentionTemp(
-            '你的房间已满1小时……\n如果没有延长有效期，则不会在房间列表中继续显示哦～\n语音房间将在1天后回收，下次创建时会新建语音房间。'
-        );
-    };
+    // remindExpire = async (session: BaseSession) => {
+    //     const arena = await Arena.findOne({ _id: session.user.id }).exec();
+    //     if (!arena) return;
+    //     log.info('reminding user for arena expire');
+    //     session.mentionTemp(
+    //         '你的房间已满1小时……\n如果没有延长有效期，则不会在房间列表中继续显示哦～\n语音房间将在1天后回收，下次创建时会新建语音房间。'
+    //     );
+    // };
 }
 
 export const arenaCreate = new ArenaCreate();

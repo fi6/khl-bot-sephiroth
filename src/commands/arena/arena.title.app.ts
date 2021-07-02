@@ -3,7 +3,7 @@ import { channels } from '../../configs';
 import arenaConfig from '../../configs/arena';
 import bot from '../../init/bot_init';
 import { arenaMainCard, arenaTitleCard } from './card/arena.title.card';
-import { voiceChannelManager } from './shared/arena.voice-manage';
+import { voiceChannelManager } from './shared/arena.voice-manager';
 
 class ArenaTitle extends AppCommand {
     trigger = 'title';

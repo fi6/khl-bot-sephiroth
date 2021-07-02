@@ -16,6 +16,7 @@ export interface ArenaDoc extends Document {
     invite: string;
     join: boolean;
     _empty: boolean;
+    _closed: boolean;
     member: {
         _id: string;
         nickname: string;
@@ -41,6 +42,7 @@ const ArenaSchema = new Schema<ArenaDoc, Model<ArenaDoc>, ArenaDoc>(
         invite: { type: String, required: true },
         join: { type: Boolean, required: true, default: true },
         _empty: { type: Boolean, required: true },
+        _closed: { type: Boolean, required: true },
         member: [
             {
                 _id: { type: String, required: true },

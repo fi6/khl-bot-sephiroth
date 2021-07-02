@@ -1,6 +1,6 @@
 import schedule, { scheduleJob } from 'node-schedule';
 import { updateArenaTitle } from '../commands/arena/shared/arena.update-list';
-import { voiceChannelManager } from '../commands/arena/shared/arena.voice-manage';
+import { voiceChannelManager } from '../commands/arena/shared/arena.voice-manager';
 import { roleManager } from '../commands/profile/shared/profile.role-manager';
 
 export const arenaCardJob = scheduleJob('0/10 * * * *', function () {

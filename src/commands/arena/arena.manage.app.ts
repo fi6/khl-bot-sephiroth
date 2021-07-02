@@ -4,8 +4,9 @@ import configs, { roles } from '../../configs';
 import arenaConfig from '../../configs/arena';
 import { arenaManageCard } from './card/arena.manage.card';
 import { arenaUpdateCard } from './card/arena.update.card';
+import { expireManager } from './shared/arena.expire-manager';
 import { updateArenaTitle } from './shared/arena.update-list';
-import { voiceChannelManager } from './shared/arena.voice-manage';
+import { voiceChannelManager } from './shared/arena.voice-manager';
 
 class ArenaManage extends AppCommand {
     code = 'manage';
@@ -78,21 +79,16 @@ class ArenaManage extends AppCommand {
         );
     };
 
-    private close = async (
-        session: GuildSession,
-        arena: ArenaDoc | undefined
-    ) => {
+    close = async (session: GuildSession, arena: ArenaDoc | undefined) => {
         try {
             if (!arena) {
                 return session.updateMessageTemp(configs.arena.mainCardId, [
                     new Card().addText('没有找到可关闭的房间……'),
                 ]);
             }
-            await Arena.findByIdAndUpdate(session.user.id, {
-                expireAt: new Date(),
-            }).exec();
+            expireManager.expire(arena.id);
             updateArenaTitle();
-            voiceChannelManager.recycle(arena.voice);
+
             return await session.updateMessageTemp(configs.arena.mainCardId, [
                 new Card().addText(
                     `房间 \`${arena.code}\` ${arena.title} 已关闭，语音频道将被回收。`
@@ -112,6 +108,7 @@ class ArenaManage extends AppCommand {
         expire.setHours(expire.getHours() + 1);
         arena.expireAt = expire;
         arena.save();
+        expireManager.setJobs(arena);
         return session.updateMessageTemp(configs.arena.mainCardId, [
             new Card().addText('房间有效期已延长1小时'),
             ...arenaManageCard(arena),

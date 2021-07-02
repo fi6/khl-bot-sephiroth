@@ -13,15 +13,10 @@ class ArenaAlert extends AppCommand {
     cache = new LRUCache<string, () => void>({ maxAge: 90 * 1e3 });
     func: AppFunc<BaseSession> = async (session) => {
         let timeLimit;
-        // if (checkRoles(session.msg.author.roles, 'up')) {
-        //     timeLimit = 10 * 6e4;
-        // } else {
-        //     timeLimit = 30 * 6e4;
-        // }
-        // check args
         return session.replyTemp(
-            '广播功能暂时不可使用……你可以截图分享给群里的小伙伴们～等QQ/微信机器人同步上线后即可使用。'
+            '广播功能暂时不可使用……你可以截图分享给群里的小伙伴们～QQ/微信机器人同步上线后即可使用。'
         );
+        /*
         const arena = await Arena.findById(session.user.id).exec();
         if (!arena)
             return session.replyTemp(
@@ -75,6 +70,7 @@ class ArenaAlert extends AppCommand {
         // sleep for 300 ms
         await new Promise((resolve) => setTimeout(resolve, 50));
         return await session.sendCard(arenaAlertCard(arena));
+        */
     };
 }
 
