@@ -1,6 +1,6 @@
 #!/bin/bash
 NOW=$(date +"%H-%M-%S")
-DATE=$(date +"%m-%d-%y")
+DATE=$(date +"%Y-%m-%d")
 
 PID=$(cat run.pid)
 PID_EXIST=$(ps aux | awk '{print $2}'| grep -w $PID)
@@ -12,8 +12,12 @@ then
    # Do something knowing the pid exists, i.e. the process with $PID is running
 fi
 
-nohup node --nolazy -r ts-node/register -r tsconfig-paths/register src/index.ts &> /dev/null & echo $! > run.pid
+mkdir -p logs
+
+nohup node --nolazy -r ts-node/register -r tsconfig-paths/register src/index.ts &> logs/latest.log & echo $! > run.pid
 echo "run at pid $(cat run.pid)"
+
+tail -vf -n 30 logs/latest.log
 
 # unset -v latest
 
