@@ -15,7 +15,10 @@ export async function updateArenaTitle(arenas?: ArenaDoc[]): Promise<any> {
         return [arena, ...arena.member];
     });
     const card = arenaTitleCard(arenas.length, players.flat());
-    bot.API.message.update(arenaConfig.titleCardId, JSON.stringify([card]));
+    await bot.API.message.update(
+        arenaConfig.titleCardId,
+        JSON.stringify([card])
+    );
 }
 
 function isEqual(ids: string[], newIds: string[]) {

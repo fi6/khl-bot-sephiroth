@@ -52,10 +52,7 @@ class VoiceChannelManager extends EventEmitter {
                 this.recycle(channel.id);
                 return;
             }
-            if (
-                arena.expireAt < new Date() &&
-                (await this.isChannelEmpty(channel.id))
-            ) {
+            if (arena.expired && (await this.isChannelEmpty(channel.id))) {
                 log.info(
                     'arena expired with no people, recycling voice channel',
                     channel

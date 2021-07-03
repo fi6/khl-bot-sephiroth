@@ -33,7 +33,8 @@ class ArenaLeave extends AppCommand {
         for (const a of session.arenas) {
             content += `\`${a.title}\`\n`;
         }
-        updateArenaTitle();
+        await updateArenaTitle();
+        
         const arenas = await arenaGetValid();
         return session.updateMessageTemp(configs.arena.mainCardId, [
             new Card().addText(content).setTheme('secondary'),
