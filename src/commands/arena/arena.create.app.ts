@@ -2,6 +2,7 @@ import {
     AppCommand,
     AppFunc,
     BaseSession,
+    Card,
     GuildSession,
     TextMessage,
 } from 'kbotify';
@@ -41,8 +42,11 @@ class ArenaCreate extends AppCommand {
             this.argsChecker(args);
         } catch (error) {
             const e = error as Error;
-            return session.mentionTemp(e.message);
+            return session.updateMessageTemp(configs.arena.mainCardId, [
+                new Card().addText(e.message),
+            ]);
         }
+
         const arena = await this.create(
             await GuildSession.fromSession(session, true),
             args
