@@ -151,14 +151,15 @@ class ArenaCreate extends AppCommand {
     }
     checkEmpty = async (session: BaseSession) => {
         const arena = await Arena.findById(session.user.id).exec();
-        if (!arena || arena._closed) return;
+        if (!arena || !arena._empty || arena._closed) return;
         if (!voiceChannelManager.isChannelEmpty(arena.voice)) return;
         log.info('closing arena due to empty 10min', arena);
-        Arena.findByIdAndUpdate(session.user.id, {
-            expireAt: new Date(),
-        }).exec();
-        updateArenaTitle();
-        voiceChannelManager.recycle(arena.voice);
+        // Arena.findByIdAndUpdate(session.user.id, {
+        //     expireAt: new Date(),
+        // }).exec();
+        // updateArenaTitle();
+        // voiceChannelManager.recycle(arena.voice);
+        expireManager.expire(arena.id, false);
         session.mentionTemp(
             '房间中似乎没有人，自动关闭了……\n下次可以分享邀请小伙伴加入房间哦～'
         );
