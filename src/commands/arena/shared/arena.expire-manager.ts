@@ -67,7 +67,7 @@ class ExpireManager {
         bot.API.message.create(
             9,
             channels.chat,
-            `(met)${arena.id}(met) 你的房间还有15分钟过期……\n如果需要延期，请在过期前点击管理房间-延长有效期。`,
+            `(met)${arena.id}(met) 你的房间还有15分钟过期……\n如果需要延期，请点击管理房间-延长有效期。`,
             undefined,
             arena.id
         );
@@ -87,7 +87,7 @@ class ExpireManager {
             bot.API.message.create(
                 9,
                 channels.chat,
-                `(met)${arena.id}(met) 你的房间已到有效期，将不显示在房间列表中。语音房间已回收。\n你可以在管理房间界面中延长有效期，或重新创建房间。`,
+                `(met)${arena.id}(met) 你的房间已到有效期，将不显示在房间列表中，语音房间已回收。\n你可以在管理房间界面中延长有效期，或重新创建房间。`,
                 undefined,
                 arena.id
             );
