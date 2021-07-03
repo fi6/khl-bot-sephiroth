@@ -17,7 +17,7 @@ export function arenaManageCard(arena: ArenaDoc) {
             new Card()
                 .setTheme('warning')
                 .addText(
-                    '你的房间已关闭，不会显示在房间列表中。\n你可以点击延长有效期来刷新。'
+                    '你的房间已关闭，不会显示在房间列表中。\n你可以点击延长有效期来刷新，或重新创建。'
                 )
         );
     return [
