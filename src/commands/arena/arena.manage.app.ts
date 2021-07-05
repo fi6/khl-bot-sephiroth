@@ -2,6 +2,7 @@ import { AppCommand, BaseSession, Card, GuildSession } from 'kbotify';
 import Arena, { ArenaDoc } from 'models/Arena';
 import configs, { roles } from '../../configs';
 import arenaConfig from '../../configs/arena';
+import { log } from '../../init/logger';
 import { arenaManageCard } from './card/arena.manage.card';
 import { arenaUpdateCard } from './card/arena.update.card';
 import { expireManager } from './shared/arena.expire-manager';
@@ -80,6 +81,7 @@ class ArenaManage extends AppCommand {
     };
 
     close = async (session: GuildSession, arena: ArenaDoc | undefined) => {
+        log.info('closing arena', arena);
         try {
             if (!arena) {
                 return session.updateMessageTemp(configs.arena.mainCardId, [

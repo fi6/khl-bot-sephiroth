@@ -89,6 +89,7 @@ class ExpireManager {
                 undefined,
                 arena.id
             );
+            log.info('arena voice channel not empty, expire += 1h', arena);
         }
         voiceChannelManager.recycle(arena.voice);
         this.getCurrent(arena, true);
