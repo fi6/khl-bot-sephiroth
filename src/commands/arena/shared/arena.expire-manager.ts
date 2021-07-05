@@ -79,9 +79,9 @@ class ExpireManager {
     async expire(arenaId: string, remind = false) {
         const arena = await Arena.findById(arenaId).exec();
         if (!arena || arena._closed || !arena.expired) return;
-        if (!voiceChannelManager.isChannelEmpty(arena.voice)) {
+        if (!(await voiceChannelManager.isChannelEmpty(arena.voice))) {
             const expire = new Date();
-            expire.setMinutes(expire.getMinutes() + 90);
+            expire.setMinutes(expire.getMinutes() + 60);
             arena.expireAt = expire;
             arena.save();
             this.setJobs(arena);
