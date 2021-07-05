@@ -16,7 +16,7 @@ class VoiceChannelManager extends EventEmitter {
         if (!result)
             result = await bot.API.channel.create(
                 session.guild.id,
-                '🎤 ' + (session.user.nickname ?? session.user.username),
+                '🎤 ' + (session.user.nickname ?? session.user.username) + '的语音房',
                 '2',
                 channels.voiceCategory,
                 16,

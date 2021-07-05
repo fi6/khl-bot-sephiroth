@@ -51,7 +51,7 @@ export function infoModules(
             type: 'header',
             text: {
                 type: 'plain-text',
-                content: arena.title ?? `${arena.nickname} 的房间`,
+                content: arena.title.includes(arena.nickname) ? arena.title:  `${arena.title} (By${arena.nickname})`,
             },
         },
         {

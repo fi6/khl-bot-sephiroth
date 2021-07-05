@@ -85,7 +85,7 @@ class ArenaCreate extends AppCommand {
                 `创建失败，请检查房间号、密码格式，并确认加速/人数文字长度小于8。\n${args}`
             );
         if (!/\d/.test(args[2]))
-            throw new Error('创建失败，房间信息中需包含人数信息');
+            throw new Error(`创建失败，房间信息中需包含人数信息\n${args}`);
         return;
     }
 
