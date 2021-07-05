@@ -16,7 +16,9 @@ class VoiceChannelManager extends EventEmitter {
         if (!result)
             result = await bot.API.channel.create(
                 session.guild.id,
-                '🎤 ' + (session.user.nickname ?? session.user.username) + '的语音房',
+                '🎤 ' +
+                    (session.user.nickname ?? session.user.username) +
+                    '的语音房',
                 '2',
                 channels.voiceCategory,
                 16,
@@ -93,10 +95,10 @@ class VoiceChannelManager extends EventEmitter {
             const result = await bot.get('v3/channel/user-list', {
                 channel_id: channelId,
             });
-            if (result.data.data.length == 0) return true;
+            if (result.data.data.length === 0) return true;
             else return false;
         } catch (e) {
-            log.error(e);
+            log.error('is channel empty error: ', e);
             return false;
         }
     };

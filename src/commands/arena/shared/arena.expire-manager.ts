@@ -14,42 +14,45 @@ interface Jobs {
 class ExpireManager {
     cache: LRUCache<string, Jobs>;
     constructor() {
-        this.cache = new LRUCache({ maxAge: 90 * 6e4 });
+        this.cache = new LRUCache({ maxAge: 120 * 6e4 });
     }
 
     getCurrent(arena: ArenaDoc, cancel = false): Jobs {
         const current = this.cache.get(arena.id) ?? {};
         if (cancel) {
+            log.info(
+                'cancelling current job',
+                arena.id,
+                arena.nickname,
+                arena.expireAt
+            );
             if (current.expireReminder || current.expire) {
-                log.info(
-                    'cancelling current jobs ',
-                    arena.id,
-                    arena.nickname,
-                    arena.expireAt
-                );
-                current.expireReminder?.cancel();
-                current.expire?.cancel();
+                log.info('current job exists');
             }
+            current.expireReminder?.cancel();
+            current.expire?.cancel();
         }
         return current;
     }
 
     setJobs = (arena: ArenaDoc) => {
         const current = this.getCurrent(arena, true);
-        const expireRemind = new Date(arena.expireAt);
-        expireRemind.setMinutes(expireRemind.getMinutes() - 15);
+        const expireRemind = new Date(arena.expireAt.valueOf() - 15 * 6e4);
         current.expireReminder = scheduleJob(expireRemind, () => {
             log.info('running expire reminder', arena);
             this.remind(arena.id);
         });
-        current.expire = scheduleJob(arena.expireAt, () => {
-            log.info('running expire', arena);
-            try {
-                this.expire(arena.id, true);
-            } catch (error) {
-                log.error(error);
+        current.expire = scheduleJob(
+            new Date(arena.expireAt.valueOf() + 3e4),
+            () => {
+                log.info('running expire', arena);
+                try {
+                    this.expire(arena.id, true);
+                } catch (error) {
+                    log.error(error);
+                }
             }
-        });
+        );
         this.cache.set(arena.id, current);
         log.debug(
             'new jobs set',
@@ -75,10 +78,10 @@ class ExpireManager {
 
     async expire(arenaId: string, remind = false) {
         const arena = await Arena.findById(arenaId).exec();
-        if (!arena || arena._closed) return;
+        if (!arena || arena._closed || !arena.expired) return;
         if (!voiceChannelManager.isChannelEmpty(arena.voice)) {
             const expire = new Date();
-            expire.setHours(expire.getHours() + 1);
+            expire.setMinutes(expire.getMinutes() + 90);
             arena.expireAt = expire;
             arena.save();
             this.setJobs(arena);
@@ -90,6 +93,7 @@ class ExpireManager {
                 arena.id
             );
             log.info('arena voice channel not empty, expire += 1h', arena);
+            return;
         }
         voiceChannelManager.recycle(arena.voice);
         this.getCurrent(arena, true);

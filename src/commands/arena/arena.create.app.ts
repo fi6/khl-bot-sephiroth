@@ -119,7 +119,7 @@ class ArenaCreate extends AppCommand {
         const [arenaCode, password, info, title] = [...args];
         const nickname = session.user.nickname ?? session.user.username;
         const expire = new Date();
-        expire.setHours(expire.getHours() + 1);
+        expire.setMinutes(expire.getMinutes() + 90);
         const channel = await voiceChannelManager.create(session);
         const arena = await Arena.findByIdAndUpdate(
             session.user.id,

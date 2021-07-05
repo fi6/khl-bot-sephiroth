@@ -106,12 +106,12 @@ class ArenaManage extends AppCommand {
     };
     private extend = async (session: GuildSession, arena: ArenaDoc) => {
         const expire = new Date();
-        expire.setHours(expire.getHours() + 1);
+        expire.setMinutes(expire.getMinutes() + 90);
         arena.expireAt = expire;
         arena.save();
         expireManager.setJobs(arena);
         return session.updateMessageTemp(configs.arena.mainCardId, [
-            new Card().addText('房间有效期已延长1小时'),
+            new Card().addText('房间有效期已延长90分钟'),
             ...arenaManageCard(arena),
         ]);
     };
