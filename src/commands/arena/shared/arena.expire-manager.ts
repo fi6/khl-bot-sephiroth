@@ -76,6 +76,20 @@ class ExpireManager {
     async expire(arenaId: string, remind = false) {
         const arena = await Arena.findById(arenaId).exec();
         if (!arena || arena._closed) return;
+        if (!voiceChannelManager.isChannelEmpty(arena.voice)) {
+            const expire = new Date();
+            expire.setHours(expire.getHours() + 1);
+            arena.expireAt = expire;
+            arena.save();
+            this.setJobs(arena);
+            bot.API.message.create(
+                9,
+                channels.chat,
+                `(met)${arena.id}(met) 语音房间中似乎还有人……已为你自动延长1小时。`,
+                undefined,
+                arena.id
+            );
+        }
         voiceChannelManager.recycle(arena.voice);
         this.getCurrent(arena, true);
         arena.expireAt = new Date();
