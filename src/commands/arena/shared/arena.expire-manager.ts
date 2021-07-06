@@ -131,6 +131,25 @@ class ExpireManager {
                 arena.id
             );
         }
+        this.shutdown(arena, remind);
+    }
+    async shutdown(arena: ArenaDoc, remind = false) {
+        voiceChannelManager.recycle(arena.voice);
+        this.getCurrent(arena, true);
+        arena.expireAt = new Date();
+        arena._closed = true;
+        arena.member = [];
+        arena.markModified('member');
+        arena.save();
+        if (remind) {
+            bot.API.message.create(
+                9,
+                channels.chat,
+                `(met)${arena.id}(met) 你的房间已到有效期，将不显示在房间列表中，语音房间已回收。\n你可以在管理房间界面中延长有效期，或重新创建房间。`,
+                undefined,
+                arena.id
+            );
+        }
     }
 }
 

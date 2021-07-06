@@ -51,7 +51,7 @@ class VoiceChannelManager extends EventEmitter {
 
             if (!arena) {
                 log.info('arena not found for channel, recycling', channel);
-                this.recycle(channel.id);
+                this.recycle(channel.id, true);
                 return;
             }
             if (arena.expired && (await this.isChannelEmpty(channel.id))) {
@@ -103,7 +103,17 @@ class VoiceChannelManager extends EventEmitter {
         }
     };
 
-    recycle = async (channelId: string) => {
+    recycle = async (channelId: string, force = false) => {
+        if (!force && !(await this.isChannelEmpty(channelId))) {
+            bot.post('v3/channel-role/update', {
+                channel_id: channelId,
+                value: roles.basic,
+                type: 'role_id',
+                allow: 0,
+                deny: 0,
+            });
+            return;
+        }
         try {
             await bot.post('v3/channel/delete', {
                 channel_id: channelId,
