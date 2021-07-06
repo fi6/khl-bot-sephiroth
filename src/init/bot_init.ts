@@ -19,7 +19,8 @@ import { log } from './logger';
 const bot = new KBotify({
     mode: 'webhook',
     token: auth.khltoken,
-    verifyToken: auth.khlVerify,
+    port: auth.khlport,
+    verifyToken: auth.khlverify,
     key: auth.khlkey,
     ignoreDecryptError: false,
     debug: true,
