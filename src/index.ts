@@ -6,7 +6,11 @@ import { log } from './init/logger';
 db.on('error', console.error.bind(console, 'connection error:'));
 
 bot.on('allMessages', (e: any) => {
-    if ((e.data?.type as string).startsWith('guild_member')) return;
+    if (
+        typeof e.data?.type === 'string' &&
+        (e.data?.type as string).startsWith('guild_member')
+    )
+        return;
     log.debug(e.data?.type, e);
 });
 
