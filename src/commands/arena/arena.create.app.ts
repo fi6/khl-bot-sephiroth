@@ -65,6 +65,11 @@ class ArenaCreate extends AppCommand {
         //     }
         // );
         updateArenaTitle();
+        this.client?.API.message.create(
+            9,
+            channels.chat,
+            `${arena.nickname}刚刚创建了新的房间：\`${arena.title}\`\n请前往(chn)${channels.arenaBot}(chn)查看房间号与密码。`
+        );
         return;
     };
 
