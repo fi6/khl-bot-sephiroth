@@ -66,14 +66,34 @@ class ExpireManager {
 
     async remind(arenaId: string) {
         const arena = await Arena.findById(arenaId).exec();
-        if (!arena || arena.expired) return;
-        bot.API.message.create(
-            9,
-            channels.chat,
-            `(met)${arena.id}(met) 你的房间还有15分钟过期……\n如果需要延期，请点击管理房间-延长有效期。`,
-            undefined,
-            arena.id
-        );
+        if (!arena || arena.expired || arena?._closed) return;
+        if (await voiceChannelManager.isChannelEmpty(arena.voice)) {
+            bot.API.message.create(
+                9,
+                channels.chat,
+                `(met)${arena.id}(met) 你的房间还有15分钟过期……\n语音房间似乎是空的。15分钟后系统将回收房间。\n如果需要延期，请点击管理房间-延长有效期。`,
+                undefined,
+                arena.id
+            );
+        } else {
+            this.extend(arena, 75);
+            bot.API.message.create(
+                9,
+                channels.chat,
+                `(met)${arena.id}(met) 你的房间还有15分钟过期……\n语音房间中还有人，有效期已自动延长1小时。`,
+                undefined,
+                arena.id
+            );
+        }
+    }
+
+    async extend(arena: ArenaDoc, minutes = 60) {
+        const expire = new Date();
+        expire.setMinutes(expire.getMinutes() + minutes);
+        arena.expireAt = expire;
+        arena.save();
+        expireManager.setJobs(arena);
+        log.info('arena extended', minutes, arena);
     }
 
     async expire(arenaId: string, remind = false) {

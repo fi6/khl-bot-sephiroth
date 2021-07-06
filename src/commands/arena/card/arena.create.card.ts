@@ -202,7 +202,7 @@ export function createSuccessCard(arena: ArenaDoc, helpFlag = false) {
         card1,
         card2,
         new Card().addText(
-            '你的**专属语音房间**已在左侧显示，**创建邀请链接**并**邀请2名好友加入**就可以获得开黑啦会员～\n[活动地址](https://www.kaiheila.cn/activities/1/index.html)'
+            '[活动地址](https://www.kaiheila.cn/activities/1/index.html)你的**专属语音房间**已在左侧显示，**创建邀请链接**并**邀请2名好友加入**就可以获得开黑啦会员～'
         ),
     ];
 }
