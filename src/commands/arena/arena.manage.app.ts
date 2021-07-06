@@ -88,7 +88,7 @@ class ArenaManage extends AppCommand {
                     new Card().addText('没有找到可关闭的房间……'),
                 ]);
             }
-            expireManager.expire(arena.id);
+            expireManager.shutdown(arena);
             updateArenaTitle();
             return await session.updateMessageTemp(configs.arena.mainCardId, [
                 new Card().addText(
@@ -105,8 +105,8 @@ class ArenaManage extends AppCommand {
         }
     };
     private extend = async (session: GuildSession, arena: ArenaDoc) => {
-        expireManager.extend(arena, 90)
-        
+        expireManager.extend(arena, 90);
+
         return session.updateMessageTemp(configs.arena.mainCardId, [
             new Card().addText('房间有效期已延长90分钟'),
             ...arenaManageCard(arena),
