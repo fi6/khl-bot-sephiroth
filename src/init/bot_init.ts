@@ -17,9 +17,10 @@ import { trainingMenu } from '../commands/training/training.menu';
 import { log } from './logger';
 
 const bot = new KBotify({
-    mode: 'websocket',
+    mode: 'webhook',
     token: auth.khltoken,
-
+    verifyToken: auth.khlVerify,
+    key: auth.khlkey,
     ignoreDecryptError: false,
     debug: true,
 });
