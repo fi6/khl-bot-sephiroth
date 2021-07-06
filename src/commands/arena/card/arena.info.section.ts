@@ -24,7 +24,7 @@ export function infoModules(
         click: arena.join ? 'return-val' : '',
         text: {
             type: 'plain-text',
-            content: arena.join ? '加入' : '暂停加入',
+            content: arena.join ? '查看密码' : '暂停加入',
         },
     };
     const buttonLeave = {
