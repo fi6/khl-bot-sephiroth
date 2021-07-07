@@ -1,4 +1,4 @@
-import { Card } from 'kBotify/dist';
+import { Card } from 'kbotify';
 import { ArenaDoc } from '../../../models/Arena';
 
 export function createTrainingHelpCard(oldArena: ArenaDoc | null) {
