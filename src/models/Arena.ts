@@ -28,7 +28,7 @@ export interface ArenaDoc extends Document {
     memberString: string | undefined;
     checkMember: (khlId: string) => boolean | undefined;
     toInfoModule: (
-        khlId: string,
+        khlId?: string,
         infoOnly?: boolean,
         showPassword?: boolean
     ) => unknown[];
@@ -96,7 +96,7 @@ ArenaSchema.method('checkMember', function (khlId: string) {
 
 ArenaSchema.method(
     'toInfoModule',
-    function (khlId: string, infoOnly = false, showPassword = false) {
+    function (khlId?: string, infoOnly = false, showPassword = false) {
         const memberString =
             this.memberString ?? '房间中还没有人。快来加入吧！';
         const buttonJoin = {
