@@ -5,6 +5,15 @@ import Arena, { ArenaDoc } from './Arena';
 export interface TrainingArenaDoc extends ArenaDoc {
     schedule: Date;
     start: boolean;
+    register: boolean;
+    avatar: string;
+    queue: {
+        _id: string;
+        nickname: string;
+        gameName: string;
+        number: number;
+        state: number;
+    }[];
 }
 
 const TrainingArenaSchema = new Schema<

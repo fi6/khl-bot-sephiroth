@@ -53,12 +53,12 @@ export function trainingInfoCard(arena: TrainingArenaDoc): string {
                             {
                                 type: 'kmarkdown',
                                 content: `**开始时间**\n${formatTime(
-                                    arena.startAt
+                                    arena.schedule
                                 )}`,
                             },
                             {
                                 type: 'kmarkdown',
-                                content: `**网络信息**\n${arena.connection}`,
+                                content: `**网络信息**\n${arena.info}`,
                             },
                             {
                                 type: 'kmarkdown',

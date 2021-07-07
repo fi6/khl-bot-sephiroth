@@ -56,7 +56,7 @@ export const trainingManageCard = (
                     text: {
                         type: 'kmarkdown',
                         content:
-                            `房间信息：${arena.code} ${arena.password}\n连接方式：${arena.connection}\n` +
+                            `房间信息：${arena.code} ${arena.password} ${arena.info}\n` +
                             content,
                     },
                 },
