@@ -204,8 +204,8 @@ export function createSuccessCard(arena: ArenaDoc, helpFlag = false) {
         card2,
         new Card()
             .addText(
-                '你的专属语音房间已在左侧显示。**请尽量加入语音，有交流的对战还是更有趣的**\n' +
-                    `你也可以在(chn)${channels.chat}(chn)和其他人聊聊天～`
+                '你的专属语音房间已在左侧显示。**请尽量加入语音，有交流的对战更有趣！**\n' +
+                    `你也可以在(chn)${channels.chat}(chn)和其他人聊聊天。`
             )
             .addModule({
                 type: 'context',
