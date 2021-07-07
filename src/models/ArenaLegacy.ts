@@ -34,6 +34,6 @@ ArenaSchema.methods.memberCount = function () {
     return (this as unknown as typeof ArenaSchema.definition).member.length + 1;
 };
 
-export type ArenaDoc = ExtractDoc<typeof ArenaSchema>;
+type ArenaDoc = ExtractDoc<typeof ArenaSchema>;
 
 export default typedModel('Arena', ArenaSchema);

@@ -1,13 +1,18 @@
-import { AppCommand, AppFunc, BaseSession, GuildSession } from 'kbotify';
+import { AppCommand, AppFunc, BaseSession, Card, GuildSession } from 'kbotify';
 
 import { checkRoles } from './shared/training.checkroles';
 
 import { parseCard } from '../../utils/card-parser';
-import { channels } from '../../configs';
+import configs, { channels, roles } from '../../configs';
 
 import TrainingArena, { TrainingArenaDoc } from '../../models/TrainingArena';
 import { formatTime } from '../../utils/format-time';
 import { trainingInfoCard } from './card/training.info.card';
+import { log } from '../../init/logger';
+import { createHelpCard } from '../arena/card/arena.create.card';
+import Arena from '../../models/Arena';
+import { createTrainingHelpCard } from './card/training.create.card';
+import arenaConfig from '../../configs/arena';
 
 class TrainingCreate extends AppCommand {
     code = 'create';
@@ -22,11 +27,14 @@ class TrainingCreate extends AppCommand {
         if (!checkRoles((await session.user.full()).roles, 'coach')) {
             return session.replyTemp('权限不足，只有教练组可以发起特训房。');
         }
-        if (!session.args.length) {
-            return session.sendTemp(this.help);
-        } else if (session.args.length !== 4) {
-            // no args found, return menu
-            return session.replyTemp('参数数量错误' + this.help);
+        try {
+            if (!session.args.length)
+                session.args = await this.helpCreate(session);
+        } catch (error) {
+            log.error(error);
+            return session.updateMessageTemp(arenaConfig.mainCardId, [
+                new Card().addText(error.message),
+            ]);
         }
 
         const arena = await this.create(session);
@@ -49,14 +57,43 @@ class TrainingCreate extends AppCommand {
             channel: channels.arenaBot,
             msgType: 10,
         });
-        if (result.msgSent) {
-            arena.card = result.msgSent.msgId;
-            arena.save();
-        }
         return result;
     };
 
+    async helpCreate(session: GuildSession): Promise<string[]> {
+        const oldArena = await Arena.findById(session.user.id).exec();
+        await session.updateMessageTemp(configs.arena.mainCardId, [
+            new Card()
+                .addText(
+                    '请输入预计的开始时间(24小时制)\n格式为`小时:分钟`，如：`21:15`'
+                )
+                .addCountdown('second', new Date().valueOf() + 6e4),
+        ]);
+        await session.user.grantRole(roles.tempInput);
+        try {
+            let input = await session.awaitMessage(/.+/, 6e4);
+            if (!input) throw new Error('未收到开始时间输入，请重试');
+            await input.delete();
+            if (!/\d\d[:：]\d\d/.test(input.content))
+                throw new Error('开始时间格式错误，请重试');
+            await session.updateMessageTemp(configs.arena.mainCardId, [
+                createTrainingHelpCard(oldArena),
+            ]);
+            input = await session.awaitMessage(/.+/, 6e4);
+            if (!input) throw new Error('未收到房间信息输入，请重试');
+            await input.delete();
+            return input.content.split(/ +/);
+        } catch (e) {
+            await session.user.revokeRole(roles.tempInput);
+            log.info(e);
+            throw e;
+        }
+    }
+
     create(session: BaseSession): Promise<TrainingArenaDoc> {
+        if (!(session.args.length === 4))
+            throw new Error(`参数有误 ${session.args}`);
+
         let time, connection, limit, remark;
         try {
             time = parseTime(session.args[0]);
@@ -64,7 +101,7 @@ class TrainingCreate extends AppCommand {
             limit = session.args[2].match(/\d+/)![0];
             remark = session.args[3];
         } catch (error) {
-            session.replyTemp('参数有误');
+            session.replyTemp(`参数有误 ${session.args}`);
             throw error;
         }
         return TrainingArena.findByIdAndUpdate(

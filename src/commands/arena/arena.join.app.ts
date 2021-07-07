@@ -3,8 +3,7 @@ import Arena, { ArenaDoc } from 'models/Arena';
 import configs, { channels } from '../../configs';
 import { log } from '../../init/logger';
 import { arenaLeave } from './arena.leave.app';
-import { arenaList } from './arena.list.app';
-import { ArenaSession } from './arena.types';
+import LRUCache from 'lru-cache';
 import { arenaCheckMember } from './shared/arena.check-member';
 import { arenaGetValid } from './shared/arena.get-valid';
 import { updateArenaTitle } from './shared/arena.update-list';
@@ -13,6 +12,9 @@ class ArenaJoin extends AppCommand {
     trigger = '加入';
 
     help = '仅可通过按钮加入';
+    fullCache: LRUCache<string, Map<string, boolean>> = new LRUCache({
+        maxAge: 10 * 6e4,
+    });
     func: AppFunc<BaseSession> = async (s) => {
         log.info('session:', s);
         const session = await GuildSession.fromSession(s, true);
@@ -22,6 +24,12 @@ class ArenaJoin extends AppCommand {
         }).exec();
         if (!arena) return session.sendTemp('没有找到对应房间。');
 
+        if (session.args.length == 2) {
+            return this.reportFull(session, arena);
+        } else return this.join(session, arena);
+    };
+
+    join = async (session: GuildSession, arena: ArenaDoc) => {
         if (arena.member?.length) {
             for (const user of arena.member) {
                 if (user._id == session.userId) {
@@ -53,13 +61,13 @@ class ArenaJoin extends AppCommand {
         arena.isNew = false;
         arena.markModified('member');
         await arena.save();
-        updateArenaTitle();
         if (arena.memberCount >= arena.limit)
             this.remindHost(session, arena, true);
         else this.remindHost(session, arena, false);
+        updateArenaTitle();
         session._send(
             // eslint-disable-next-line no-useless-escape
-            `\[${arena.title}\]的语音房间链接：${arena.invite}\n点击下方按钮即可加入，也可以分享链接给群友一起聊天～`,
+            `\[${arena.title}\]${arena.invite}\n点击下方按钮加入语音房间`,
             undefined,
             {
                 msgType: 1,
@@ -74,11 +82,53 @@ class ArenaJoin extends AppCommand {
                         leaveMessage,
                         `欢迎加入${arena.title}！`,
                         `\n房间号：${arena.code}，房间密码：${arena.password}`
-                    )
+                    ),
+                    undefined,
+                    'right',
+                    {
+                        type: 'button',
+                        click: 'return-val',
+                        value: `.房间 加入 ${arena.id} full`,
+                        theme: 'warning',
+                        text: {
+                            type: 'plain-text',
+                            content: '房间已满？',
+                        },
+                    }
                 )
-                .addText('语音房间链接在下方，点击即可加入。'),
+                .addText(
+                    '**请尽量点击下方按钮加入语音，有交流的对战会更有趣哦！**'
+                ),
         ]);
     };
+
+    reportFull = async (session: GuildSession, arena: ArenaDoc) => {
+        const fullMap = this.fullCache.get(arena.id);
+        if (fullMap) fullMap.set(session.user.id, true);
+        this.fullCache.set(
+            arena.id,
+            fullMap ?? new Map([[session.user.id, true]])
+        );
+
+        const num = fullMap?.size;
+        if (num && num >= 3) {
+            arena.join = false;
+            arena.save();
+        }
+        session.updateMessageTemp(configs.arena.mainCardId, [
+            new Card().addText(
+                '报告成功。如果有多人报告房间已满，系统会将房间标记为暂停加入。\n你可以重新查看列表并加入其他房间。'
+            ),
+        ]);
+        this.client?.API.message.create(
+            9,
+            channels.chat,
+            `(met)${arena.id}(met) 你的房间似乎是满的……如果有多人报告房间已满，系统会将房间标记为暂停加入。\n你也可以在房间管理菜单中暂停/开启加入。`,
+            undefined,
+            arena.id
+        );
+    };
+
     remindHost = async (
         session: GuildSession,
         arena: ArenaDoc,
@@ -90,7 +140,7 @@ class ArenaJoin extends AppCommand {
         if (full)
             reminder =
                 reminder +
-                `\n房间似乎已满……你可以在(chn)${channels.arenaBot}(chn)点击管理房间-暂停加入。`;
+                `\n房间似乎已满……请在(chn)${channels.arenaBot}(chn)点击管理房间-暂停加入。`;
 
         this.client?.API.message.create(
             9,

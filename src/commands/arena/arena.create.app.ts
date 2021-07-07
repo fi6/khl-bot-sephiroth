@@ -56,14 +56,14 @@ class ArenaCreate extends AppCommand {
             arenaConfig.mainCardId,
             JSON.stringify(createSuccessCard(arena, helpFlag))
         );
-        // await session._send(
-        //     `你的专属语音房间链接：${arena.invite}\n点击下方按钮即可加入，也可以分享链接给群友一起聊天～\n(如需参加邀请活动，请在左侧频道列表生成自己的邀请链接)`,
-        //     undefined,
-        //     {
-        //         msgType: 1,
-        //         temp: true,
-        //     }
-        // );
+        await session._send(
+            `你的专属语音房间链接：${arena.invite}`,
+            undefined,
+            {
+                msgType: 1,
+                temp: true,
+            }
+        );
         updateArenaTitle();
         this.client?.API.message.create(
             9,
@@ -90,7 +90,9 @@ class ArenaCreate extends AppCommand {
                 `创建失败，请检查房间号、密码格式，并确认加速/人数文字长度小于8。\n${args}`
             );
         if (!/\d/.test(args[2]))
-            throw new Error(`创建失败，房间信息中需包含人数信息\n${args}`);
+            throw new Error(
+                `创建失败，房间信息中需包含人数，如\`裸连3人\`\n${args}`
+            );
         return;
     }
 
@@ -164,24 +166,11 @@ class ArenaCreate extends AppCommand {
         if (!arena || !arena._empty || arena._closed) return;
         if (!(await voiceChannelManager.isChannelEmpty(arena.voice))) return;
         log.info('closing arena due to empty 10min', arena);
-        // Arena.findByIdAndUpdate(session.user.id, {
-        //     expireAt: new Date(),
-        // }).exec();
-        // updateArenaTitle();
-        // voiceChannelManager.recycle(arena.voice);
         expireManager.expire(arena.id, false);
         session.mentionTemp(
             '房间中似乎没有人，自动关闭了……\n下次可以分享邀请小伙伴加入房间哦～'
         );
     };
-    // remindExpire = async (session: BaseSession) => {
-    //     const arena = await Arena.findOne({ _id: session.user.id }).exec();
-    //     if (!arena) return;
-    //     log.info('reminding user for arena expire');
-    //     session.mentionTemp(
-    //         '你的房间已满1小时……\n如果没有延长有效期，则不会在房间列表中继续显示哦～\n语音房间将在1天后回收，下次创建时会新建语音房间。'
-    //     );
-    // };
 }
 
 export const arenaCreate = new ArenaCreate();

@@ -60,7 +60,7 @@ export function createStartCard() {
 
 export function createHelpCard(oldArena: ArenaDoc | null) {
     const now = Date.now();
-    let example = '例: `5F23C  147  帆游自动3人  随便打打`';
+    let example = '例: `5F23C  147  帆游自动3人  剑人练习专场`';
     if (oldArena) {
         example =
             '上次的房间信息：`' +
@@ -89,7 +89,7 @@ export function createHelpCard(oldArena: ArenaDoc | null) {
                 text: {
                     type: 'kmarkdown',
                     content:
-                        '请输入`房间号  密码  房间信息  房间用途`，用空格分开。',
+                        '请输入`房间号  密码  房间信息  房间标题`，用空格分开。',
                 },
             },
             {
@@ -110,7 +110,8 @@ export function createHelpCard(oldArena: ArenaDoc | null) {
                 elements: [
                     {
                         type: 'plain-text',
-                        content: '请在倒计时结束前完成输入。',
+                        content:
+                            '请在倒计时结束前完成输入。如果不打算使用语音，请在房间标题中说明。',
                     },
                 ],
             },
@@ -201,11 +202,20 @@ export function createSuccessCard(arena: ArenaDoc, helpFlag = false) {
     return [
         card1,
         card2,
-        new Card().addText(
-            '[活动地址](https://www.kaiheila.cn/activities/1/index.html)你的**专属语音房间**已在左侧显示，**创建邀请链接**并**邀请2名好友加入**就可以获得开黑啦会员～'
-        ),
+        new Card()
+            .addText(
+                '你的专属语音房间已在左侧显示。**请尽量加入语音，有交流的对战还是更有趣的**\n' +
+                    `你也可以在(chn)${channels.chat}(chn)和其他人聊聊天～`
+            )
+            .addModule({
+                type: 'context',
+                elements: [
+                    {
+                        type: 'kmarkdown',
+                        content:
+                            '开黑啦官方活动：创建邀请链接并邀请2名好友加入就可以获得开黑啦会员～[活动地址](https://www.kaiheila.cn/activities/1/index.html)',
+                    },
+                ],
+            }),
     ];
-}
-function mentionChannel(chat: string) {
-    throw new Error('Function not implemented.');
 }
