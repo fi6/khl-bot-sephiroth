@@ -57,7 +57,7 @@ class ArenaCreate extends AppCommand {
             JSON.stringify(createSuccessCard(arena, helpFlag))
         );
         await session._send(
-            `你的专属语音房间链接：${arena.invite}`,
+            `你的专属语音房间链接：${arena.invite}\n请尽量加入语音，有交流的对战更有趣～`,
             undefined,
             {
                 msgType: 1,
