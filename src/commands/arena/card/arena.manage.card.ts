@@ -102,22 +102,22 @@ export function arenaManageCard(arena: ArenaDoc) {
                         },
                         {
                             type: 'button',
-                            theme: 'danger',
-                            value: '.房间 管理 关闭',
-                            click: 'return-val',
-                            text: {
-                                type: 'plain-text',
-                                content: '关闭房间',
-                            },
-                        },
-                        {
-                            type: 'button',
                             theme: 'primary',
                             value: '.房间 管理 延期',
                             click: 'return-val',
                             text: {
                                 type: 'plain-text',
                                 content: '延长有效期',
+                            },
+                        },
+                        {
+                            type: 'button',
+                            theme: 'danger',
+                            value: '.房间 管理 关闭',
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: '关闭房间',
                             },
                         },
                     ],

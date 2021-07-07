@@ -89,7 +89,7 @@ class ArenaJoin extends AppCommand {
                         type: 'button',
                         click: 'return-val',
                         value: `.房间 加入 ${arena.id} full`,
-                        theme: 'warning',
+                        theme: 'primary',
                         text: {
                             type: 'plain-text',
                             content: '房间已满？',
