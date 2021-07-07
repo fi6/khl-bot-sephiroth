@@ -97,7 +97,7 @@ class ArenaJoin extends AppCommand {
                     }
                 )
                 .addText(
-                    '**请尽量点击下方按钮加入语音，有交流的对战会更有趣哦！**'
+                    '**请尽量加入语音，有交流的对战会更有趣哦！**'
                 ),
         ]);
     };

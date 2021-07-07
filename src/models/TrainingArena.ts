@@ -37,7 +37,7 @@ TrainingArenaSchema.method(
             click: this.join ? 'return-val' : '',
             text: {
                 type: 'plain-text',
-                content: this.join ? '查看密码' : '暂停加入',
+                content: this.join ? '加入' : '暂停加入',
             },
         };
         const buttonLeave = {
