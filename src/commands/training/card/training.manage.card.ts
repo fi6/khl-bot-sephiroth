@@ -1,9 +1,7 @@
+import { Card } from 'kbotify';
 import { TrainingArenaDoc } from '../../../models/TrainingArena';
 
-export const trainingManageCard = (
-    arena: TrainingArenaDoc,
-    content: string = ''
-) => {
+export const trainingManageCard = (arena: TrainingArenaDoc) => {
     arena.queue.sort((a, b) => {
         return a.time.valueOf() - b.time.valueOf();
     });
@@ -38,58 +36,54 @@ export const trainingManageCard = (
         };
     }
 
-    return [
-        {
-            type: 'card',
-            theme: 'secondary',
-            size: 'lg',
-            modules: [
-                {
-                    type: 'header',
-                    text: {
-                        type: 'plain-text',
-                        content: '教练房管理',
-                    },
+    return new Card({
+        type: 'card',
+        theme: 'secondary',
+        size: 'lg',
+        modules: [
+            {
+                type: 'header',
+                text: {
+                    type: 'plain-text',
+                    content: '教练房管理',
                 },
-                {
-                    type: 'section',
-                    text: {
-                        type: 'kmarkdown',
-                        content:
-                            `房间信息：${arena.code} ${arena.password} ${arena.info}\n` +
-                            content,
-                    },
+            },
+            {
+                type: 'section',
+                text: {
+                    type: 'kmarkdown',
+                    content: `房间信息：${arena.code} ${arena.password} ${arena.info}\n`,
                 },
-                {
-                    type: 'action-group',
-                    elements: [
-                        {
-                            type: 'button',
-                            theme: 'primary',
-                            value: '.教练房 管理 info',
-                            click: 'return-val',
-                            text: {
-                                type: 'plain-text',
-                                content: '更新房间信息',
-                            },
+            },
+            {
+                type: 'action-group',
+                elements: [
+                    {
+                        type: 'button',
+                        theme: 'primary',
+                        value: '.教练房 管理 info',
+                        click: 'return-val',
+                        text: {
+                            type: 'plain-text',
+                            content: '更新房间信息',
                         },
-                        button,
-                        {
-                            type: 'button',
-                            theme: 'danger',
-                            value: '.教练房 管理 kick next',
-                            click: 'return-val',
-                            text: {
-                                type: 'plain-text',
-                                content: '移除第一位',
-                            },
+                    },
+                    button,
+                    {
+                        type: 'button',
+                        theme: 'danger',
+                        value: '.教练房 管理 kick next',
+                        click: 'return-val',
+                        text: {
+                            type: 'plain-text',
+                            content: '移除第一位',
                         },
-                    ],
-                },
-                ...modules,
-            ],
-        },
-    ];
+                    },
+                ],
+            },
+            ...modules,
+        ],
+    });
 };
 
 function memberModule(user: TrainingArenaDoc['queue'][number]) {

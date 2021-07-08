@@ -199,6 +199,7 @@ export function createSuccessCard(arena: ArenaDoc, helpFlag = false) {
             },
         ],
     });
+
     return [
         card1,
         card2,

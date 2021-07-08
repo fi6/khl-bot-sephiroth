@@ -24,7 +24,7 @@
     "bunyan": "^1.8.15",
     "date-holidays": "^2.0.2",
     "dotenv": "^8.2.0",
-    "kbotify": "^0.2.5-rc.3",
+    "kbotify": "file:../kBotify",
     "lru-cache": "^6.0.0",
     "luxon": "^1.26.0",
     "mongoose": "^5.13.2",

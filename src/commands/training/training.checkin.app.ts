@@ -1,6 +1,6 @@
 import { AppCommand, AppFunc, BaseSession, GuildSession } from 'kbotify';
 import TrainingArena from '../../models/TrainingArena';
-import { trainingCallManager } from './shared/training.call.manager';
+import { queueManager } from './shared/training.queue-manager';
 import { updateTraininginfo } from './shared/training.update-info';
 
 class TrainingCheckIn extends AppCommand {

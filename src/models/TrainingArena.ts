@@ -12,8 +12,15 @@ export interface TrainingArenaDoc extends ArenaDoc {
         nickname: string;
         gameName: string;
         number: number;
+        /**
+         * -1: training finished / kicked, 0: in queue, 1: called, 2: checkin finished
+         */
         state: number;
+        time: Date;
     }[];
+    joinValidation: (khlId: string) => void;
+    nextNumber: number;
+    sortQueue: () => void;
 }
 
 const TrainingArenaSchema = new Schema<
@@ -23,6 +30,29 @@ const TrainingArenaSchema = new Schema<
 >({
     start: { type: Boolean, required: true, default: false },
     schedule: { type: Date, required: true },
+    queue: [
+        {
+            _id: { type: String, required: true },
+            nickname: { type: String, required: true },
+            gameName: { type: String, required: true },
+            number: { type: Number, required: true },
+            state: { type: Number, required: true },
+            time: { type: Date, required: true },
+        },
+    ],
+});
+
+TrainingArenaSchema.virtual('nextNumber').get(function (
+    this: TrainingArenaDoc
+) {
+    this.sortQueue();
+    return this.queue.length ? this.queue[this.queue.length - 1].number + 1 : 1;
+});
+
+TrainingArenaSchema.method('sortQueue', function () {
+    this.queue.sort((a, b) => {
+        return a.time.valueOf() - b.time.valueOf();
+    });
 });
 
 TrainingArenaSchema.method(
@@ -108,6 +138,20 @@ TrainingArenaSchema.method(
     }
 );
 
+TrainingArenaSchema.method('joinValidation', function (khlId: string) {
+    for (const user of this.queue) {
+        if (user._id == khlId) {
+            if (user.state == -1) {
+                throw new Error(
+                    '你未能按时签到，或已完成特训。请等待下次的教练房。'
+                );
+            } else if (user.state in [1, 2]) {
+                throw new Error('你正在被呼叫或已完成签到，请不要重复加入队伍');
+            }
+        }
+    }
+});
+
 export default Arena.discriminator('TrainingArena', TrainingArenaSchema);
 
 // const TrainingArenaSchema = createSchema({
@@ -129,9 +173,7 @@ export default Arena.discriminator('TrainingArena', TrainingArenaSchema);
 //         gameName: Type.string({ required: true }),
 //         time: Type.date({ required: true, default: new Date() }),
 //         number: Type.number({ required: true }),
-//         /**
-//          * -1: training finished / kicked, 0: in queue, 1: called, 2: checkin finished
-//          */
+
 //         state: Type.number({ default: 0 }),
 //     }),
 // });

@@ -7,14 +7,12 @@ import {
     TextMessage,
 } from 'kbotify';
 import Arena, { ArenaDoc } from 'models/Arena';
-import { Error } from 'mongoose';
 import configs, { channels } from '../../configs';
 import arenaConfig from '../../configs/arena';
 import roles from '../../configs/roles';
 import { log } from '../../init/logger';
 import { createHelpCard, createSuccessCard } from './card/arena.create.card';
-import { arenaGetValid } from './shared/arena.get-valid';
-import { arenaIsEmpty } from './shared/arena.is-empty';
+
 import { expireManager } from './shared/arena.expire-manager';
 import { updateArenaTitle } from './shared/arena.update-list';
 import { voiceChannelManager } from './shared/arena.voice-manager';
@@ -73,7 +71,7 @@ class ArenaCreate extends AppCommand {
         return;
     };
 
-    private argsChecker(args?: string[]) {
+    argsChecker(args?: string[]) {
         if (!args || args.length < 3) {
             throw new Error(
                 `参数不符合要求……请检查参数个数，并确认已用空格正确分开。\n${args}`

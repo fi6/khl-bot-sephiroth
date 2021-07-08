@@ -1,3 +1,4 @@
+import { Card } from '../../../../../kBotify/dist';
 import { TrainingArenaDoc } from '../../../models/TrainingArena';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -11,7 +12,7 @@ export function trainingCallCard(arena: TrainingArenaDoc, userId: string) {
     }
 
     return [
-        {
+        new Card({
             type: 'card',
             theme: 'warning',
             size: 'lg',
@@ -57,6 +58,6 @@ export function trainingCallCard(arena: TrainingArenaDoc, userId: string) {
                     },
                 },
             ],
-        },
+        }),
     ];
 }
