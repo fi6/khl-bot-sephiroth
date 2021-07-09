@@ -13,7 +13,9 @@ class TrainingMenu extends MenuCommand {
     exec = async (s: BaseSession) => {
         const session = await GuildSession.fromSession(s, true);
         for (const role of [configs.roles.up, configs.roles.coach]) {
-            if (session.user.roles?.includes(role)) return this.func(session);
+            if (session.user.roles?.includes(role)) {
+                return this.func(session);
+            }
         }
         await session.sendTemp(
             '只有教练和Up主可以使用此功能。请向冰飞申请，以开放使用权。'
@@ -31,5 +33,43 @@ export const trainingMenu = new TrainingMenu(
 );
 
 function trainingMenuCard() {
-    return new Card().setTheme('primary').addTitle('教练房菜单');
+    return new Card({
+        type: 'card',
+        theme: 'primary',
+        size: 'lg',
+        modules: [
+            {
+                type: 'header',
+                text: {
+                    type: 'plain-text',
+                    content: '教练房菜单',
+                },
+            },
+            {
+                type: 'action-group',
+                elements: [
+                    {
+                        type: 'button',
+                        theme: 'primary',
+                        value: '.教练房 创建',
+                        click: 'return-val',
+                        text: {
+                            type: 'plain-text',
+                            content: '创建教练房',
+                        },
+                    },
+                    {
+                        type: 'button',
+                        theme: 'danger',
+                        value: '.教练房 管理',
+                        click: 'return-val',
+                        text: {
+                            type: 'plain-text',
+                            content: '管理教练房',
+                        },
+                    },
+                ],
+            },
+        ],
+    });
 }

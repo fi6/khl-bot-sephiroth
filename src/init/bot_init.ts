@@ -15,9 +15,10 @@ import { welcomeEntry } from '../commands/welcome/welcome.entry';
 import { TextMessage } from 'kbotify/dist/core/message';
 import { trainingMenu } from '../commands/training/training.menu';
 import { log } from './logger';
+import configs from '../configs';
 
 const bot = new KBotify({
-    mode: 'webhook',
+    mode: 'websocket',
     token: auth.khltoken,
     port: auth.khlport,
     verifyToken: auth.khlverify,
@@ -43,7 +44,7 @@ bot.message.on('text', (msg) => {
     }
 });
 
-bot.execute = async (command: string, args: string[], msg: any) => {
+bot.execute = async (command: string, args: string[], msg: TextMessage) => {
     // const channelList = ['4873200132116685', '3072169336937497'];
     // if (!channelList.includes(msg.channelId)) {
     //     bot.API.message.create(
@@ -61,48 +62,12 @@ bot.execute = async (command: string, args: string[], msg: any) => {
     const cmd = bot.commandMap.get(command);
     // console.debug(bot.commandMap);
     if (cmd) return cmd.exec(createSession(cmd, args, msg));
-    switch (command) {
-        case '开房':
-        case '建房':
-            return arenaCreate.exec(...input);
-        case '找房':
-            return arenaList.exec(...input);
-        case '关房':
-            return arenaManage.exec(command, ['关闭'], msg);
-        // case '房间':
-        //     return arenaMenu.exec(...input);
-        case '帮助':
-            bot.API.message.create(
-                9,
-                msg.channelId,
-                '[使用帮助](https://www.bilibili.com/read/cv11967248)'
-            );
-            break;
-        // case '档案':
-        //     profileCommand(command, args, msg)
-        default:
-            if (cloudReg.test(command)) {
-                const line = callCloud.call();
-                if (line) {
-                    bot.API.message.create(1, msg.channelId, line);
-                    break;
-                }
-            }
-            return;
-        // if (regex.test(command) && command != '天梯') {
-        //     bot.API.message.create(
-        //         1,
-        //         msg.channelId,
-        //         '不是有效的命令。查看帮助请发送[.帮助]'
-        //     );
-        //     break;
-        // }
-        // return bot.API.message.create(
-        //     9,
-        //     msg.channelId,
-        //     '帮助文字还没写，别急'
-        // );
-    }
+
+    if (
+        msg.channelId == configs.channels.coach &&
+        msg.mention.user.includes(bot.userId)
+    )
+        return trainingMenu.exec(createSession(trainingMenu, args, msg));
     log.debug(command, args);
 };
 
