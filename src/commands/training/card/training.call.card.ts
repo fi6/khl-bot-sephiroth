@@ -1,4 +1,4 @@
-import { Card } from '../../../../../kBotify/dist';
+import { Card } from 'kbotify';
 import { TrainingArenaDoc } from '../../../models/TrainingArena';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
