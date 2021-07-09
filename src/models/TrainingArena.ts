@@ -3,7 +3,7 @@ import { formatTime } from '../utils/format-time';
 import Arena, { ArenaDoc } from './Arena';
 
 export interface TrainingArenaDoc extends ArenaDoc {
-    schedule: Date;
+    schedule?: Date;
     start: boolean;
     avatar: string;
     endNumber: number;
@@ -33,7 +33,7 @@ const TrainingArenaSchema = new Schema<
     endNumber: Number,
     avatar: String,
     remark: String,
-    schedule: { type: Date, required: true },
+    schedule: { type: Date },
     queue: [
         {
             _id: { type: String, required: true },
@@ -101,7 +101,9 @@ TrainingArenaSchema.method(
                             content: `**房间号/密码**\n${
                                 this.start
                                     ? codePass
-                                    : `将于${formatTime(this.schedule)}开放`
+                                    : `将于${formatTime(
+                                          this.schedule ?? new Date()
+                                      )}开放`
                             }`,
                         },
                         {

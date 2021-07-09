@@ -18,7 +18,7 @@ import { log } from './logger';
 import configs from '../configs';
 
 const bot = new KBotify({
-    mode: 'websocket',
+    mode: 'webhook',
     token: auth.khltoken,
     port: auth.khlport,
     verifyToken: auth.khlverify,

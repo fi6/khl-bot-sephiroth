@@ -7,6 +7,7 @@ import { trainingManageCard } from './card/training.manage.card';
 import { queueManager } from './shared/training.queue-manager';
 import { updateTraininginfo } from './shared/training.update-info';
 import { log } from '../../init/logger';
+import { arenaManage } from '../arena/arena.manage.app';
 
 class TrainingManage extends AppCommand {
     trigger = '管理';
@@ -31,7 +32,9 @@ class TrainingManage extends AppCommand {
             return session.mentionTemp('没有找到可管理的教练房');
         }
 
-        if (!session.args.length) this.sendManageCard(session, arena);
+        if (!session.args.length) return this.sendManageCard(session, arena);
+        else if (session.args[0] == 'close')
+            return arenaManage.close(session, arena);
         else if (session.args[0] == 'kick' && session.args.length == 2) {
             return this.kick(session, arena);
         } else if (session.args[0] == 'join' && session.args.length == 2) {
