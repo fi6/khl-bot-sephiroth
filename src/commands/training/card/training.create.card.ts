@@ -1,5 +1,7 @@
 import { Card } from 'kbotify';
 import { ArenaDoc } from '../../../models/Arena';
+import { TrainingArenaDoc } from '../../../models/TrainingArena';
+import { formatTime } from '../../../utils/format-time';
 
 export function createTrainingHelpCard(oldArena: ArenaDoc | null) {
     const now = Date.now();
@@ -60,4 +62,137 @@ export function createTrainingHelpCard(oldArena: ArenaDoc | null) {
             },
         ],
     });
+}
+
+export function createTrainingSuccessCard(arena: TrainingArenaDoc) {
+    return [
+        new Card({
+            type: 'card',
+            theme: 'secondary',
+            size: 'lg',
+            modules: [
+                {
+                    type: 'header',
+                    text: {
+                        type: 'plain-text',
+                        content: '教学房间管理',
+                    },
+                },
+                {
+                    type: 'section',
+                    text: {
+                        type: 'kmarkdown',
+                        content: '开黑啦是最好的~~语音~~软件:smile:',
+                    },
+                },
+                {
+                    type: 'section',
+                    text: {
+                        type: 'paragraph',
+                        cols: 3,
+                        fields: [
+                            {
+                                type: 'kmarkdown',
+                                content: `**房间号/密码**\n${arena.code} ${arena.password}`,
+                            },
+                            {
+                                type: 'kmarkdown',
+                                content: `**房间信息**\n${arena.info}`,
+                            },
+                            {
+                                type: 'kmarkdown',
+                                content: `**排队状态**\n${
+                                    arena.register ? '允许排队' : '停止排队'
+                                }`,
+                            },
+                        ],
+                    },
+                },
+                {
+                    type: 'action-group',
+                    elements: [
+                        {
+                            type: 'button',
+                            theme: arena.register ? 'warning' : 'success',
+                            value: `.教练房 管理 register ${
+                                arena.register ? '0' : '1'
+                            }`,
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: arena.register
+                                    ? '禁止排队'
+                                    : '允许排队',
+                            },
+                        },
+                        {
+                            type: 'button',
+                            theme: 'info',
+                            value: '.教练房 管理 info',
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: '更新房间信息',
+                            },
+                        },
+                        {
+                            type: 'button',
+                            theme: 'primary',
+                            value: 'ok',
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: '呼叫',
+                            },
+                        },
+                        {
+                            type: 'button',
+                            theme: 'primary',
+                            value: 'ok',
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: '关闭房间',
+                            },
+                        },
+                    ],
+                },
+                {
+                    type: 'action-group',
+                    elements: [
+                        {
+                            type: 'button',
+                            theme: 'primary',
+                            value: 'ok',
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: '呼叫下一名',
+                            },
+                        },
+                        {
+                            type: 'button',
+                            theme: 'primary',
+                            value: 'ok',
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: '呼叫序号',
+                            },
+                        },
+                        {
+                            type: 'button',
+                            theme: 'primary',
+                            value: 'ok',
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: '设置结束序号',
+                            },
+                        },
+                    ],
+                },
+            ],
+        }),
+    ];
 }

@@ -4,7 +4,7 @@ import { Card, CardObject, KBotify } from 'kbotify';
 import configs from '../../../configs';
 import bot from '../../../init/bot_init';
 import TrainingArena, { TrainingArenaDoc } from '../../../models/TrainingArena';
-import { trainingArenaSort } from './training.arena-sort';
+
 import { trainingCallCard } from '../card/training.call.card';
 import { updateTraininginfo } from './training.update-info';
 import { log } from '../../../init/logger';
@@ -34,7 +34,7 @@ class TrainingCallManager extends EventEmitter {
 
     callNext = (arena: TrainingArenaDoc) => {
         let nextUser;
-        trainingArenaSort(arena);
+        arena.sortQueue();
         for (const user of arena.queue) {
             if (user.state == 0) {
                 nextUser = user;
@@ -60,7 +60,7 @@ class TrainingCallManager extends EventEmitter {
 
     kickNext(arena: TrainingArenaDoc) {
         let nextUser;
-        trainingArenaSort(arena);
+        arena.sortQueue();
         for (const user of arena.queue) {
             if (user.state && user.state >= 0) {
                 nextUser = user;

@@ -11,7 +11,10 @@ import { trainingInfoCard } from './card/training.info.card';
 import { log } from '../../init/logger';
 import { createHelpCard } from '../arena/card/arena.create.card';
 import Arena from '../../models/Arena';
-import { createTrainingHelpCard } from './card/training.create.card';
+import {
+    createTrainingHelpCard,
+    createTrainingSuccessCard,
+} from './card/training.create.card';
 import arenaConfig from '../../configs/arena';
 import { arenaCreate } from '../arena/arena.create.app';
 
@@ -38,7 +41,8 @@ class TrainingCreate extends AppCommand {
             ]);
         }
 
-        return await this.create(session);
+        await this.create(session);
+        return;
     };
 
     async helpCreate(session: GuildSession): Promise<string[]> {
@@ -82,7 +86,7 @@ class TrainingCreate extends AppCommand {
         }
         const [code, password, info, remark] = session.args;
 
-        return TrainingArena.findByIdAndUpdate(
+        const arena = await TrainingArena.findByIdAndUpdate(
             session.userId,
             {
                 nickname: session.user.nickname,
@@ -96,6 +100,7 @@ class TrainingCreate extends AppCommand {
                 startAt: new Date(),
                 createdAt: new Date(),
                 register: true,
+                endNumber: 0,
             },
             {
                 upsert: true,
@@ -103,6 +108,7 @@ class TrainingCreate extends AppCommand {
                 setDefaultsOnInsert: true,
             }
         ).exec();
+        session.sendCardTemp(createTrainingSuccessCard(arena));
     }
 }
 

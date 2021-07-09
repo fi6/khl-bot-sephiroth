@@ -3,8 +3,7 @@ import { channels } from '../../configs';
 import TrainingArena, { TrainingArenaDoc } from '../../models/TrainingArena';
 import { parseCard } from '../../utils/card-parser';
 import { trainingManageCard } from './card/training.manage.card';
-import { trainingCallCard } from './card/training.call.card';
-import { trainingArenaSort } from './shared/training.arena-sort';
+
 import { queueManager } from './shared/training.queue-manager';
 import { updateTraininginfo } from './shared/training.update-info';
 import { log } from '../../init/logger';
@@ -54,7 +53,7 @@ class TrainingManage extends AppCommand {
             // input arena info
 
             session.mentionTemp(
-                '请在60秒内输入房间号、房间密码，用空格分开\n如：65FC2 147'
+                '请在60秒内输入房间号、房间密码、房间信息，用空格分开\n如：65FC2 147 裸连4人'
             );
 
             const inputMsg = await session.awaitMessage(/^\w{5} +\d{0,8}/, 6e4);
@@ -62,10 +61,10 @@ class TrainingManage extends AppCommand {
             if (!inputMsg) {
                 return session.replyTemp('未收到输入，请重试');
             }
-            this.inputInfo(arena, inputMsg?.content);
-            this.client?.API.message.delete(inputMsg.msgId);
+            inputMsg.delete()
+            this.updateInfo(arena, inputMsg.content);
             return session.replyTemp(
-                `房间信息已更新为：${arena.code} ${arena.password}\n连接方式：${arena.connection}`
+                `房间信息已更新为：${arena.code} ${arena.password} ${arena.info}`
             );
         }
     };
@@ -105,12 +104,13 @@ class TrainingManage extends AppCommand {
         ]);
     }
 
-    // inputInfo(arena: TrainingArenaDoc, content: string) {
-    //     const info = content.split(/ +/);
-    //     arena.code = info[0];
-    //     arena.password = info[1];
-    //     arena.save();
-    // }
+    updateInfo(arena: TrainingArenaDoc, content: string) {
+        const info = content.split(/ +/);
+        arena.code = info[0];
+        arena.password = info[1];
+        arena.info = info[2]
+        arena.save();
+    }
 
     // callId = (arena: TrainingArenaDoc, id: string) => {
     //     const user = arena.queue.find((usr) => {

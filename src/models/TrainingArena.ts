@@ -7,19 +7,20 @@ export interface TrainingArenaDoc extends ArenaDoc {
     start: boolean;
     register: boolean;
     avatar: string;
+    endNumber: number;
     queue: {
         _id: string;
         nickname: string;
-        gameName: string;
         number: number;
         /**
          * -1: training finished / kicked, 0: in queue, 1: called, 2: checkin finished
          */
         state: number;
-        time: Date;
+        time?: Date;
     }[];
     joinValidation: (khlId: string) => void;
-    nextNumber: number;
+    lastNumber: number;
+    currentNumber: number;
     sortQueue: () => void;
 }
 
@@ -29,63 +30,54 @@ const TrainingArenaSchema = new Schema<
     TrainingArenaDoc
 >({
     start: { type: Boolean, required: true, default: false },
+    endNumber: Number,
     schedule: { type: Date, required: true },
     queue: [
         {
             _id: { type: String, required: true },
             nickname: { type: String, required: true },
-            gameName: { type: String, required: true },
             number: { type: Number, required: true },
             state: { type: Number, required: true },
-            time: { type: Date, required: true },
+            time: { type: Date },
         },
     ],
 });
 
-TrainingArenaSchema.virtual('nextNumber').get(function (
+TrainingArenaSchema.virtual('lastNumber').get(function (
     this: TrainingArenaDoc
 ) {
     this.sortQueue();
-    return this.queue.length ? this.queue[this.queue.length - 1].number + 1 : 1;
+    return this.queue.length ? this.queue[this.queue.length - 1].number : 0;
+});
+
+TrainingArenaSchema.virtual('member').get(function (this: TrainingArenaDoc) {
+    return this.queue.filter((m) => m.state == 2);
+});
+
+TrainingArenaSchema.virtual('currentNumber').get(function (
+    this: TrainingArenaDoc
+) {
+    this.sortQueue();
+    return this.queue.find((m) => m.state == 1) ?? this.lastNumber;
 });
 
 TrainingArenaSchema.method('sortQueue', function () {
     this.queue.sort((a, b) => {
-        return a.time.valueOf() - b.time.valueOf();
+        return a.number.valueOf() - b.number.valueOf();
     });
 });
 
 TrainingArenaSchema.method(
     'toInfoModule',
-    function (khlId: string, showPassword = false) {
-        const memberString =
-            this.memberString ?? '房间中还没有人。快来加入吧！';
-        const buttonJoin = {
-            type: 'button',
-            theme: this.join ? 'primary' : 'secondary',
-            value: `.房间 加入 ${this.id}`,
-            click: this.join ? 'return-val' : '',
-            text: {
-                type: 'plain-text',
-                content: this.join ? '加入' : '暂停加入',
-            },
-        };
-        const buttonLeave = {
-            type: 'button',
-            theme: 'danger',
-            value: `.房间 退出 ${this.id}`,
-            click: 'return-val',
-            text: {
-                type: 'plain-text',
-                content: '退出',
-            },
-        };
-
-        const playerInArena =
-            (khlId && this.checkMember(khlId)) || showPassword;
+    function (khlId?: string, showPassword = false) {
+        // const playerInArena =
+        //     (khlId && this.checkMember(khlId)) || showPassword;
+        const player = this.queue.find((m) => m._id === khlId);
 
         const codePass = `${this.code} ${
-            playerInArena ? this.password : `\*\*\*`
+            (player && player.state == 2) || showPassword
+                ? this.password
+                : `\*\*\*`
         }`;
 
         return [
@@ -93,9 +85,7 @@ TrainingArenaSchema.method(
                 type: 'header',
                 text: {
                     type: 'plain-text',
-                    content: this.title.includes(this.nickname)
-                        ? this.title
-                        : `${this.title} (By ${this.nickname})`,
+                    content: `教练房：${this.nickname}`,
                 },
             },
             {
@@ -118,21 +108,31 @@ TrainingArenaSchema.method(
                         },
                         {
                             type: 'kmarkdown',
-                            content: `**有效至**\n${formatTime(this.expireAt)}`,
+                            content: `**当前号码**\n${this.currentNumber}`,
                         },
                     ],
                 },
                 mode: 'right',
-                accessory: playerInArena ? buttonJoin : buttonLeave,
-            },
-            {
-                type: 'context',
-                elements: [
-                    {
+                accessory: {
+                    type: 'button',
+                    theme: !player
+                        ? 'primary'
+                        : player.state in [0, 1, 2]
+                        ? 'danger'
+                        : 'secondary',
+                    value: `.教练房 ${!player ? '加入' : '退出'} ${this.id}`,
+                    click: 'return-val',
+                    text: {
                         type: 'plain-text',
-                        content: memberString,
+                        content: !player
+                            ? '加入排队'
+                            : player.state in [0, 1]
+                            ? '退出排队'
+                            : player.state == 2
+                            ? '离开房间'
+                            : '已完成',
                     },
-                ],
+                },
             },
         ];
     }

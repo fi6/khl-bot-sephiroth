@@ -14,9 +14,13 @@ export async function arenaGetValid(): Promise<ArenaDoc[]> {
             expireAt: {
                 $gte: new Date(),
             },
-        })
-            .sort([['updatedAt', -1]])
-            .exec();
+        }).exec();
+        rawArenas.sort((a, b) => {
+            if (a.__t === 'TrainingArena' && b.__t !== 'TrainingArena')
+                return -1;
+            if (a.updatedAt === b.updatedAt) return 0;
+            return a.updatedAt > b.updatedAt ? -1 : 1;
+        });
         return rawArenas;
     } catch (e) {
         console.error('Error when trying to find arena', e);

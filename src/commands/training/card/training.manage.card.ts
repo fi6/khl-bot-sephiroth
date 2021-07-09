@@ -2,9 +2,7 @@ import { Card } from 'kbotify';
 import { TrainingArenaDoc } from '../../../models/TrainingArena';
 
 export const trainingManageCard = (arena: TrainingArenaDoc) => {
-    arena.queue.sort((a, b) => {
-        return a.time.valueOf() - b.time.valueOf();
-    });
+    arena.sortQueue();
     const modules: unknown[] = [];
     arena.queue.forEach((user) => {
         if (user.state != -1) modules.push(memberModule(user));
@@ -101,7 +99,7 @@ function memberModule(user: TrainingArenaDoc['queue'][number]) {
         type: 'section',
         text: {
             type: 'plain-text',
-            content: `${user.number} ${user.nickname} \t游戏名：${user.gameName}${state}`,
+            content: `${user.number} ${user.nickname} ${state}`,
         },
         mode: 'right',
         accessory: {

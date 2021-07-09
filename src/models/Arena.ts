@@ -2,6 +2,7 @@ import { Document, model, Model, Schema } from 'mongoose';
 import { formatTime } from '../utils/format-time';
 
 export interface ArenaDoc extends Document {
+    __t: any;
     id: string;
     _id: string;
     nickname: string;

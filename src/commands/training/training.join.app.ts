@@ -1,5 +1,6 @@
+import { Session } from 'inspector';
 import { AppCommand, AppFunc, BaseSession, GuildSession } from 'kbotify';
-import TrainingArena from 'models/TrainingArena';
+import TrainingArena, { TrainingArenaDoc } from 'models/TrainingArena';
 import { updateTraininginfo } from './shared/training.update-info';
 
 class TrainingJoin extends AppCommand {
@@ -21,8 +22,6 @@ class TrainingJoin extends AppCommand {
             return session.mentionTemp('停止排队啦……请等待下次的教练房');
         }
 
-
-
         //     console.log('queue:', arena.queue);
         //     const next_number = arena.queue.length
         //         ? arena.queue[arena.queue.length - 1].number + 1
@@ -37,30 +36,32 @@ class TrainingJoin extends AppCommand {
         //     if (!inputMsg?.content) {
         //         return session.mentionTemp('输入失败，请重试');
         //     }
-        //     const nickname = inputMsg.author.nickname;
-        //     const gameName = inputMsg.content;
-        //     session.client.API.message.delete(inputMsg.msgId);
-
-        //     arena.queue.push({
-        //         _id: session.userId,
-        //         nickname: nickname,
-        //         gameName: gameName,
-        //         number: next_number,
-        //         time: new Date(),
-        //     });
-        //     arena.isNew = false;
-        //     arena.markModified('queue');
-        //     await arena.save();
-        //     updateTraininginfo(arena);
-        //     return session.replyTemp(
-        //         ''.concat(
-        //             '成功加入排队：',
-        //             `\`${arena.nickname}的教练房\`\n`,
-        //             '当前排队人数：',
-        //             `${arena.queue.length}/${arena.limit}`,
-        //             '\n房间号、语音频道等信息将在排队到你后显示，请耐心等待。'
-        //         )
-        //     );
+    };
+    join = async (session: GuildSession, arena: TrainingArenaDoc) => {
+        arena.sortQueue();
+        const next_number = arena.queue.length
+            ? arena.queue[arena.queue.length - 1].number + 1
+            : 1;
+        arena.queue.push({
+            _id: session.user.id,
+            nickname: session.user.nickname ?? session.user.username,
+            number: next_number,
+            time: new Date(),
+            state: 0,
+        });
+        arena.isNew = false;
+        arena.markModified('queue');
+        await arena.save();
+        updateTraininginfo(arena);
+        return session.replyTemp(
+            ''.concat(
+                '成功加入排队：',
+                `\`${arena.nickname}的教练房\`\n`,
+                '当前排队人数：',
+                `${arena.queue.length}/${arena.limit}`,
+                '\n房间号、语音频道等信息将在排队到你后显示，请耐心等待。'
+            )
+        );
     };
 }
 
