@@ -9,14 +9,13 @@ import TrainingArena, { TrainingArenaDoc } from '../../models/TrainingArena';
 import { formatTime } from '../../utils/format-time';
 import { trainingInfoCard } from './card/training.info.card';
 import { log } from '../../init/logger';
-import { createHelpCard } from '../arena/card/arena.create.card';
+
 import Arena from '../../models/Arena';
-import {
-    createTrainingHelpCard,
-    createTrainingSuccessCard,
-} from './card/training.create.card';
+import { createTrainingHelpCard } from './card/training.create.card';
 import arenaConfig from '../../configs/arena';
 import { arenaCreate } from '../arena/arena.create.app';
+import { trainingManageCard } from './card/training.manage.card';
+import { voiceChannelManager } from '../arena/shared/arena.voice-manager';
 
 class TrainingCreate extends AppCommand {
     code = 'create';
@@ -61,9 +60,7 @@ class TrainingCreate extends AppCommand {
             // await input.delete();
             // if (!/\d\d[:：]\d\d/.test(input.content))
             //     throw new Error('开始时间格式错误，请重试');
-            await session.updateMessageTemp(configs.arena.mainCardId, [
-                createTrainingHelpCard(oldArena),
-            ]);
+            await session.sendCardTemp([createTrainingHelpCard(oldArena)]);
             let input = await session.awaitMessage(/.+/, 6e4);
             if (!input) throw new Error('未收到房间信息输入，请重试');
             await input.delete();
@@ -81,34 +78,45 @@ class TrainingCreate extends AppCommand {
 
         try {
             arenaCreate.argsChecker(session.args);
+            const [code, password, info, remark] = session.args;
+            const channel = await voiceChannelManager.create(session);
+            const expire = new Date();
+            expire.setDate(expire.getDate() + 1);
+            try {
+                await Arena.findByIdAndUpdate(session.user.id, {
+                    __t: 'TrainingArena',
+                }).exec();
+            } catch (error) {
+                log.error(error);
+            }
+            const arena = await TrainingArena.findByIdAndUpdate(
+                session.user.id,
+                {
+                    nickname: session.user.nickname,
+                    avatar: session.user.avatar,
+                    limit: parseInt(/\d/.exec(info)![0]),
+                    code: code,
+                    password: password,
+                    queue: [],
+                    info: info,
+                    remark: remark,
+                    start: true,
+                    createdAt: new Date(),
+                    join: true,
+                    endNumber: 0,
+                    expireAt: expire,
+                    voice: channel.id,
+                    invite: await channel.getInvite(),
+                },
+                {
+                    upsert: true,
+                    new: true,
+                }
+            ).exec();
+            session.sendCardTemp(trainingManageCard(arena as TrainingArenaDoc));
         } catch (error) {
             return await session.sendTemp(error.message);
         }
-        const [code, password, info, remark] = session.args;
-
-        const arena = await TrainingArena.findByIdAndUpdate(
-            session.userId,
-            {
-                nickname: session.user.nickname,
-                avatar: session.user.avatar,
-                limit: parseInt(/\d/.exec(info)![0]),
-                code: code,
-                password: password,
-                queue: [],
-                info: info,
-                remark: remark,
-                startAt: new Date(),
-                createdAt: new Date(),
-                register: true,
-                endNumber: 0,
-            },
-            {
-                upsert: true,
-                new: true,
-                setDefaultsOnInsert: true,
-            }
-        ).exec();
-        session.sendCardTemp(createTrainingSuccessCard(arena));
     }
 }
 

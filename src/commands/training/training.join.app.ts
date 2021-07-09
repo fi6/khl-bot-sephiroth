@@ -18,7 +18,7 @@ class TrainingJoin extends AppCommand {
             return session.mentionTemp('排队人数已满……请等待空位。');
         }
 
-        if (!arena.register) {
+        if (!arena.join) {
             return session.mentionTemp('停止排队啦……请等待下次的教练房');
         }
 

@@ -34,14 +34,14 @@ class TrainingManage extends AppCommand {
         if (!session.args.length) this.sendManageCard(session, arena);
         else if (session.args[0] == 'kick' && session.args.length == 2) {
             return this.kick(session, arena);
-        } else if (session.args[0] == 'register' && session.args.length == 2) {
+        } else if (session.args[0] == 'join' && session.args.length == 2) {
             // register related: on/off
             if (session.args[1] == '1') {
-                arena.register = true;
-                return this.sendManageCard(session, arena, '已开启注册');
+                arena.join = true;
+                return this.sendManageCard(session, arena, '已启动排队');
             } else if (session.args[1] == '0') {
-                arena.register = false;
-                return this.sendManageCard(session, arena, '已关闭注册');
+                arena.join = false;
+                return this.sendManageCard(session, arena, '已停止排队');
             }
         } else if (session.args[0] == 'call') {
             // call related: call next / call number
@@ -61,7 +61,7 @@ class TrainingManage extends AppCommand {
             if (!inputMsg) {
                 return session.replyTemp('未收到输入，请重试');
             }
-            inputMsg.delete()
+            inputMsg.delete();
             this.updateInfo(arena, inputMsg.content);
             return session.replyTemp(
                 `房间信息已更新为：${arena.code} ${arena.password} ${arena.info}`
@@ -100,7 +100,7 @@ class TrainingManage extends AppCommand {
             ...(content
                 ? [new Card().addText(content).setTheme('warning')]
                 : []),
-            trainingManageCard(arena),
+            ...trainingManageCard(arena),
         ]);
     }
 
@@ -108,7 +108,7 @@ class TrainingManage extends AppCommand {
         const info = content.split(/ +/);
         arena.code = info[0];
         arena.password = info[1];
-        arena.info = info[2]
+        arena.info = info[2];
         arena.save();
     }
 

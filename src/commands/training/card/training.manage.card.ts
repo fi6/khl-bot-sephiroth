@@ -8,80 +8,140 @@ export const trainingManageCard = (arena: TrainingArenaDoc) => {
         if (user.state != -1) modules.push(memberModule(user));
     });
 
-    // button: open / close register
-    let button;
-    if (arena.register == true) {
-        button = {
-            type: 'button',
-            theme: 'danger',
-            value: '.教练房 管理 register off',
-            click: 'return-val',
-            text: {
-                type: 'plain-text',
-                content: '关闭注册',
-            },
-        };
-    } else {
-        button = {
-            type: 'button',
-            theme: 'success',
-            value: '.教练房 管理 register on',
-            click: 'return-val',
-            text: {
-                type: 'plain-text',
-                content: '开启注册',
-            },
-        };
-    }
-
-    return new Card({
-        type: 'card',
-        theme: 'secondary',
-        size: 'lg',
-        modules: [
-            {
-                type: 'header',
-                text: {
-                    type: 'plain-text',
-                    content: '教练房管理',
-                },
-            },
-            {
-                type: 'section',
-                text: {
-                    type: 'kmarkdown',
-                    content: `房间信息：${arena.code} ${arena.password} ${arena.info}\n`,
-                },
-            },
-            {
-                type: 'action-group',
-                elements: [
-                    {
-                        type: 'button',
-                        theme: 'primary',
-                        value: '.教练房 管理 info',
-                        click: 'return-val',
-                        text: {
-                            type: 'plain-text',
-                            content: '更新房间信息',
-                        },
+    return [
+        new Card({
+            type: 'card',
+            theme: 'secondary',
+            size: 'lg',
+            modules: [
+                {
+                    type: 'header',
+                    text: {
+                        type: 'plain-text',
+                        content: '教学房间管理',
                     },
-                    button,
-                    {
-                        type: 'button',
-                        theme: 'danger',
-                        value: '.教练房 管理 kick next',
-                        click: 'return-val',
-                        text: {
-                            type: 'plain-text',
-                            content: '移除第一位',
-                        },
+                },
+                {
+                    type: 'section',
+                    text: {
+                        type: 'kmarkdown',
+                        content: '开黑啦是最好的~~语音~~软件:smile:',
                     },
-                ],
-            },
-            ...modules,
-        ],
-    });
+                },
+                {
+                    type: 'section',
+                    text: {
+                        type: 'paragraph',
+                        cols: 3,
+                        fields: [
+                            {
+                                type: 'kmarkdown',
+                                content: `**房间号/密码**\n${arena.code} ${arena.password}`,
+                            },
+                            {
+                                type: 'kmarkdown',
+                                content: `**房间信息**\n${arena.info}`,
+                            },
+                            {
+                                type: 'kmarkdown',
+                                content: `**排队状态**\n${
+                                    arena.join ? '允许排队' : '停止排队'
+                                }`,
+                            },
+                        ],
+                    },
+                },
+                {
+                    type: 'action-group',
+                    elements: [
+                        {
+                            type: 'button',
+                            theme: arena.join ? 'warning' : 'success',
+                            value: `.教练房 管理 join ${
+                                arena.join ? '0' : '1'
+                            }`,
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: arena.join ? '停止排队' : '允许排队',
+                            },
+                        },
+                        {
+                            type: 'button',
+                            theme: 'info',
+                            value: '.教练房 管理 info',
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: '更新房间信息',
+                            },
+                        },
+                        {
+                            type: 'button',
+                            theme: 'primary',
+                            value: 'ok',
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: '呼叫',
+                            },
+                        },
+                        {
+                            type: 'button',
+                            theme: 'primary',
+                            value: 'ok',
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: '关闭房间',
+                            },
+                        },
+                    ],
+                },
+                {
+                    type: 'action-group',
+                    elements: [
+                        {
+                            type: 'button',
+                            theme: 'primary',
+                            value: 'ok',
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: '呼叫下一名',
+                            },
+                        },
+                        {
+                            type: 'button',
+                            theme: 'primary',
+                            value: 'ok',
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: '呼叫序号',
+                            },
+                        },
+                        {
+                            type: 'button',
+                            theme: 'primary',
+                            value: 'ok',
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: '设置结束序号',
+                            },
+                        },
+                    ],
+                },
+            ],
+        }),
+        new Card({
+            type: 'card',
+            theme: 'secondary',
+            size: 'lg',
+            modules: [...modules],
+        }),
+    ];
 };
 
 function memberModule(user: TrainingArenaDoc['queue'][number]) {

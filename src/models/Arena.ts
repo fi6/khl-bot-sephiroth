@@ -11,7 +11,6 @@ export interface ArenaDoc extends Document {
     password: string;
     info: string;
     limit: number;
-    remark: string;
     createdAt: Date;
     expireAt: Date;
     voice: string;

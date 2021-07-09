@@ -4,5 +4,5 @@ export default {
     welcome: '9954629355254786',
     arenaBot: '8296996055347735',
     voiceCategory: '3908139649107418',
-    coach: ''
+    coach: '3598331589162189',
 };

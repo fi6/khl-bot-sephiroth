@@ -5,9 +5,9 @@ import Arena, { ArenaDoc } from './Arena';
 export interface TrainingArenaDoc extends ArenaDoc {
     schedule: Date;
     start: boolean;
-    register: boolean;
     avatar: string;
     endNumber: number;
+    remark: string;
     queue: {
         _id: string;
         nickname: string;
@@ -31,6 +31,8 @@ const TrainingArenaSchema = new Schema<
 >({
     start: { type: Boolean, required: true, default: false },
     endNumber: Number,
+    avatar: String,
+    remark: String,
     schedule: { type: Date, required: true },
     queue: [
         {

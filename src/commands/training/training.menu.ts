@@ -14,7 +14,7 @@ class TrainingMenu extends MenuCommand {
         const session = await GuildSession.fromSession(s, true);
         for (const role of [configs.roles.up, configs.roles.coach]) {
             if (session.user.roles?.includes(role)) {
-                return this.func(session);
+                return await this.func(session);
             }
         }
         await session.sendTemp(

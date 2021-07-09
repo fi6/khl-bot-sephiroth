@@ -44,7 +44,11 @@ bot.message.on('text', (msg) => {
     }
 });
 
-bot.execute = async (command: string, args: string[], msg: TextMessage) => {
+bot.execute = async (
+    command: string,
+    args: string[],
+    msg: any | TextMessage
+) => {
     // const channelList = ['4873200132116685', '3072169336937497'];
     // if (!channelList.includes(msg.channelId)) {
     //     bot.API.message.create(
