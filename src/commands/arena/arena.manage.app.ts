@@ -68,7 +68,7 @@ class ArenaManage extends AppCommand {
             );
         this.client?.API.message.delete(input.msgId);
         const [code, password, info, ...title] = [...input.content.split(/ +/)];
-        arena.code = code;
+        arena.code = code.toUpperCase();
         arena.password = password ?? arena.password;
         arena.info = info ?? arena.info;
         arena.title = title?.length ? title.join(' ') : arena.title;

@@ -61,7 +61,7 @@ class ArenaJoin extends AppCommand {
         arena.isNew = false;
         arena.markModified('member');
         await arena.save();
-        if (arena.memberCount >= arena.limit)
+        if (arena.memberCount >= arena.limit - 1)
             this.remindHost(session, arena, true);
         else this.remindHost(session, arena, false);
         updateArenaTitle();
@@ -96,9 +96,7 @@ class ArenaJoin extends AppCommand {
                         },
                     }
                 )
-                .addText(
-                    '**请尽量加入语音，有交流的对战会更有趣哦！**'
-                ),
+                .addText('**请尽量加入语音，有交流的对战会更有趣哦！**'),
         ]);
     };
 
