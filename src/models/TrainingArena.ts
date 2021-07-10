@@ -110,6 +110,20 @@ TrainingArenaSchema.method(
             {
                 type: 'section',
                 text: {
+                    type: 'kmarkdown',
+                    content: '房间留言: ' + this.remark,
+                },
+                mode: 'left',
+                accessory: {
+                    type: 'image',
+                    src: this.avatar,
+                    size: 'sm',
+                    circle: true,
+                },
+            },
+            {
+                type: 'section',
+                text: {
                     type: 'paragraph',
                     cols: 3,
                     fields: [
@@ -155,13 +169,6 @@ TrainingArenaSchema.method(
                             ? '离开房间'
                             : '已完成',
                     },
-                },
-            },
-            {
-                type: 'section',
-                text: {
-                    type: 'kmarkdown',
-                    content: '房间留言: ' + this.remark,
                 },
             },
         ];
