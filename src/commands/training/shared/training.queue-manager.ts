@@ -18,7 +18,7 @@ class TrainingCallManager extends EventEmitter {
         this.client = client;
     }
 
-    call(userId: string) {
+    markCalled(userId: string) {
         cache.set(userId, false);
         setTimeout(() => {
             if (cache.get(userId) === false) {
@@ -27,9 +27,15 @@ class TrainingCallManager extends EventEmitter {
         }, 5 * 6e4);
     }
 
-    response(userId: string) {
+    response(arena: TrainingArenaDoc, userId: string) {
+        const user = arena.queue.find((item) => (item._id = userId));
+        if (!user) throw new Error('没有在房间中找到对应的用户');
+        user.state = 2;
+        arena.markModified('queue');
+        arena.save();
         cache.set(userId, true);
         log.debug('user check-in', userId);
+        return user;
     }
 
     callNext = (arena: TrainingArenaDoc) => {
@@ -47,15 +53,21 @@ class TrainingCallManager extends EventEmitter {
         return nextUser;
     };
 
+    _callId = (arena: TrainingArenaDoc, userId: string) => {
+        const user = arena.queue.find((usr) => usr._id == userId);
+        if (user) this._callUser(arena, user);
+        throw new Error('no user found');
+    };
+
     _callUser = (
         arena: TrainingArenaDoc,
         user: TrainingArenaDoc['queue'][number]
     ) => {
+        if (user.state == 2) throw new Error('玩家已签到，不可以再呼叫');
         user.state = 1;
         arena.markModified('queue');
         this._remind(user._id, trainingCallCard(arena, user._id), 10);
-        queueManager.call(user._id);
-        updateTraininginfo(arena);
+        queueManager.markCalled(user._id);
     };
 
     kickNext(arena: TrainingArenaDoc) {
@@ -80,7 +92,7 @@ class TrainingCallManager extends EventEmitter {
         if (!user) {
             throw new Error('cannot find user');
         }
-        user.state = -1;
+        arena.queue = arena.queue.filter((item) => item._id !== userId);
         arena.markModified('queue');
         arena.save();
         return user;
@@ -90,12 +102,14 @@ class TrainingCallManager extends EventEmitter {
         this.client.API.message.create(
             type,
             configs.channels.chat,
-            JSON.stringify(content)
+            JSON.stringify(content),
+            undefined,
+            userId
         );
         this.client?.API.message.create(
             type,
             configs.channels.arenaBot,
-            `${content}`,
+            JSON.stringify(content),
             undefined,
             userId
         );

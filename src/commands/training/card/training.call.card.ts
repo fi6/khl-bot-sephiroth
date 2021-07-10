@@ -28,7 +28,7 @@ export function trainingCallCard(arena: TrainingArenaDoc, userId: string) {
                     type: 'section',
                     text: {
                         type: 'kmarkdown',
-                        content: `(met)${user._id}(met) 请于5分钟内进入${arena.nickname}的语音频道，然后点击签到按钮。签到成功后将显示房间信息。`,
+                        content: `(met)${user._id}(met) 请于5分钟内点击签到按钮，签到成功后将显示房间信息和语音频道。`,
                     },
                     mode: 'right',
                     accessory: {
@@ -54,7 +54,7 @@ export function trainingCallCard(arena: TrainingArenaDoc, userId: string) {
                     text: {
                         type: 'kmarkdown',
                         content:
-                            '在前一名玩家特训结束后请上台与教练进行对战。在对战前请在台下等候，避免进入观战，防止卡顿。',
+                            '在对战前请在擂台外侧等候，尽量避免进入观战，防止卡顿。',
                     },
                 },
             ],

@@ -1,7 +1,7 @@
-import { Session } from 'inspector';
-import { AppCommand, AppFunc, BaseSession, GuildSession } from 'kbotify';
+import { AppCommand, AppFunc, BaseSession, Card, GuildSession } from 'kbotify';
 import TrainingArena, { TrainingArenaDoc } from 'models/TrainingArena';
-import { updateTraininginfo } from './shared/training.update-info';
+import configs from '../../configs';
+import { queueManager } from './shared/training.queue-manager';
 
 class TrainingJoin extends AppCommand {
     trigger = '排队';
@@ -38,30 +38,38 @@ class TrainingJoin extends AppCommand {
         //     }
     };
     join = async (session: GuildSession, arena: TrainingArenaDoc) => {
-        arena.sortQueue();
-        const next_number = arena.queue.length
-            ? arena.queue[arena.queue.length - 1].number + 1
-            : 1;
         arena.queue.push({
             _id: session.user.id,
             nickname: session.user.nickname ?? session.user.username,
-            number: next_number,
+            number: arena.lastNumber + 1,
             time: new Date(),
             state: 0,
         });
         arena.isNew = false;
         arena.markModified('queue');
         await arena.save();
-        updateTraininginfo(arena);
-        return session.replyTemp(
-            ''.concat(
-                '成功加入排队：',
-                `\`${arena.nickname}的教练房\`\n`,
-                '当前排队人数：',
-                `${arena.queue.length}/${arena.limit}`,
-                '\n房间号、语音频道等信息将在排队到你后显示，请耐心等待。'
-            )
-        );
+        if (
+            arena.member.length < arena.limit - 1 &&
+            arena.nextCallableUser._id == session.user.id
+        ) {
+            queueManager._callId(arena, session.user.id);
+            return await session.updateMessageTemp(configs.arena.mainCardId, [
+                new Card().addText(
+                    '成功加入排队。\n你已被呼叫，请尽快签到并加入房间，否则需要重新排队。'
+                ),
+            ]);
+        }
+        return session.updateMessageTemp(configs.arena.mainCardId, [
+            new Card().addText(
+                ''.concat(
+                    '成功加入排队：',
+                    `\`${arena.nickname}的教练房\`\n`,
+                    '当前排队人数：',
+                    `${arena.queue.length}/${arena.limit}`,
+                    '\n房间号、语音频道等信息将在排到你后显示，请耐心等待。'
+                )
+            ),
+        ]);
     };
 }
 

@@ -2,26 +2,29 @@ import { Model, model, Schema } from 'mongoose';
 import { formatTime } from '../utils/format-time';
 import Arena, { ArenaDoc } from './Arena';
 
+export interface QueueMember {
+    _id: string;
+    nickname: string;
+    number: number;
+    /**
+     * -1: training finished / kicked, 0: in queue, 1: called, 2: checkin finished
+     */
+    state: number;
+    time?: Date;
+}
+
 export interface TrainingArenaDoc extends ArenaDoc {
     schedule?: Date;
     start: boolean;
     avatar: string;
     endNumber: number;
     remark: string;
-    queue: {
-        _id: string;
-        nickname: string;
-        number: number;
-        /**
-         * -1: training finished / kicked, 0: in queue, 1: called, 2: checkin finished
-         */
-        state: number;
-        time?: Date;
-    }[];
+    queue: QueueMember[];
     joinValidation: (khlId: string) => void;
     lastNumber: number;
     currentNumber: number;
     sortQueue: () => void;
+    nextCallableUser: QueueMember;
 }
 
 const TrainingArenaSchema = new Schema<
@@ -61,6 +64,17 @@ TrainingArenaSchema.virtual('currentNumber').get(function (
 ) {
     this.sortQueue();
     return this.queue.find((m) => m.state == 1) ?? this.lastNumber;
+});
+
+TrainingArenaSchema.virtual('nextCallableUser').get(function (
+    this: TrainingArenaDoc
+) {
+    this.sortQueue();
+    for (const user of this.queue) {
+        if (user.state == 0) {
+            return user;
+        }
+    }
 });
 
 TrainingArenaSchema.method('sortQueue', function () {
@@ -151,7 +165,7 @@ TrainingArenaSchema.method('joinValidation', function (khlId: string) {
                 );
             } else if (user.state in [1, 2]) {
                 throw new Error('你正在被呼叫或已完成签到，请不要重复加入队伍');
-            }
+            } else throw new Error('你已经在队伍中了');
         }
     }
 });

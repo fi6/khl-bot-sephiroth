@@ -13,6 +13,10 @@ export function arenaManageCard(arena: ArenaDoc) {
                 )
         );
     const memberCard = new Card().setTheme('primary').addTitle('成员管理');
+    if (!arena.member.length)
+        memberCard.addText(
+            '暂时没有成员……未来会上线广播功能，可以将房间广播到其他群内。'
+        );
     for (const item of arena.member) {
         memberCard.addModule({
             type: 'section',
@@ -33,6 +37,7 @@ export function arenaManageCard(arena: ArenaDoc) {
             },
         });
     }
+
     return [
         ...expireCard,
         new Card({

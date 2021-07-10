@@ -85,7 +85,7 @@ class TrainingManage extends AppCommand {
             this.sendManageCard(session, arena, `已移出` + user.nickname);
             queueManager._remind(user._id, [
                 new Card().addText(
-                    '你被教练移出房间了……下次记得结束后主动点击退出'
+                    '你被教练移出房间了……如果结束后没有主动点击退出，下次请记得点击哦'
                 ),
             ]);
         } catch (error) {
