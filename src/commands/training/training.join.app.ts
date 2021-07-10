@@ -8,8 +8,8 @@ class TrainingJoin extends AppCommand {
 
     help = '特训房排队请输入`.房间 排队 @房主`';
     func: AppFunc<BaseSession> = async (s: BaseSession) => {
+        if (s.args.length != 1) return;
         const session = await GuildSession.fromSession(s, true);
-        if (session.args.length !== 1) return;
 
         const arena = await TrainingArena.findById(session.args[0]).exec();
         if (!arena) return session.replyTemp('没有找到对应的房间');
@@ -36,6 +36,7 @@ class TrainingJoin extends AppCommand {
         //     if (!inputMsg?.content) {
         //         return session.mentionTemp('输入失败，请重试');
         //     }
+        this.join(session, arena);
     };
     join = async (session: GuildSession, arena: TrainingArenaDoc) => {
         arena.queue.push({
@@ -53,7 +54,7 @@ class TrainingJoin extends AppCommand {
             arena.nextCallableUser?._id == session.user.id
         ) {
             queueManager._callId(arena, session.user.id);
-            return await session.updateMessageTemp(configs.arena.mainCardId, [
+            return session.updateMessageTemp(configs.arena.mainCardId, [
                 new Card().addText(
                     '成功加入排队。\n你已被呼叫，请尽快签到并加入房间，否则需要重新排队。'
                 ),

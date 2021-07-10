@@ -124,11 +124,16 @@ class ExpireManager {
     async shutdown(arena: ArenaDoc, remind = false) {
         voiceChannelManager.recycle(arena.voice);
         this.getCurrent(arena, true);
-        arena.expireAt = new Date();
-        arena._closed = true;
-        arena.member = [];
-        arena.markModified('member');
-        arena.save();
+        arena = (await Arena.findByIdAndUpdate(
+            arena.id,
+            { expireAt: new Date(), _closed: true, member: [], __t: undefined },
+            { new: true }
+        ).exec()) as ArenaDoc;
+        // arena.expireAt = new Date();
+        // arena._closed = true;
+        // arena.member = [];
+        // arena.markModified('member');
+        // arena.save();
         if (remind) {
             bot.API.message.create(
                 9,

@@ -9,53 +9,45 @@ import { trainingCallCard } from '../card/training.call.card';
 import { updateTraininginfo } from './training.update-info';
 import { log } from '../../../init/logger';
 
-const cache = new LRUCache<string, boolean>({ max: 16, maxAge: 330 * 1e3 });
-
 class TrainingCallManager extends EventEmitter {
-    client: KBotify;
-    constructor(client: KBotify) {
+    calledCache = new LRUCache<string, boolean>({ max: 16, maxAge: 330 * 1e3 });
+    constructor() {
         super();
-        this.client = client;
     }
 
-    markCalled(userId: string) {
-        cache.set(userId, false);
-        setTimeout(() => {
-            if (cache.get(userId) === false) {
-                cache.del(userId);
+    markCalled(userId: string, arenaId: string) {
+        this.calledCache.set(userId, false);
+        setTimeout(async () => {
+            const arena = await TrainingArena.findById(arenaId).exec();
+            if (!arena || arena.expired) return;
+            const user = arena.queue.find((usr) => usr._id == userId);
+            if (user && user.state == 1) {
+                this.remindKick(arena, userId);
             }
-        }, 5 * 6e4);
+        }, 3 * 6e4);
     }
 
     response(arena: TrainingArenaDoc, userId: string) {
-        const user = arena.queue.find((item) => (item._id = userId));
+        const user = arena.queue.find((p) => p._id === userId && p.state == 1);
         if (!user) throw new Error('没有在房间中找到对应的用户');
         user.state = 2;
         arena.markModified('queue');
         arena.save();
-        cache.set(userId, true);
+        // this.calledCache.set(userId, true);
         log.debug('user check-in', userId);
         return user;
     }
 
     callNext = (arena: TrainingArenaDoc) => {
-        let nextUser;
-        arena.sortQueue();
-        for (const user of arena.queue) {
-            if (user.state == 0) {
-                nextUser = user;
-                break;
-            }
-        }
-        if (!nextUser) throw new Error('no next user');
+        if (!arena.nextCallableUser) throw new Error('no next user');
         // call user
-        this._callUser(arena, nextUser);
-        return nextUser;
+        this._callUser(arena, arena.nextCallableUser);
+        return arena.nextCallableUser;
     };
 
     _callId = (arena: TrainingArenaDoc, userId: string) => {
         const user = arena.queue.find((usr) => usr._id == userId);
-        if (user) this._callUser(arena, user);
+        if (user) return this._callUser(arena, user);
         throw new Error('no user found');
     };
 
@@ -67,7 +59,7 @@ class TrainingCallManager extends EventEmitter {
         user.state = 1;
         arena.markModified('queue');
         this._remind(user._id, trainingCallCard(arena, user._id), 10);
-        queueManager.markCalled(user._id);
+        queueManager.markCalled(user._id, arena.id);
     };
 
     kickNext(arena: TrainingArenaDoc) {
@@ -80,12 +72,11 @@ class TrainingCallManager extends EventEmitter {
             }
         }
         if (!nextUser) throw new Error('no next user');
-
-        this.kick(nextUser?._id, arena);
+        this.kick(arena, nextUser?._id);
         return nextUser;
     }
 
-    kick(userId: string, arena: TrainingArenaDoc) {
+    kick(arena: TrainingArenaDoc, userId: string) {
         const user = arena.queue.find((usr) => {
             return usr._id === userId && usr.state !== -1;
         });
@@ -95,18 +86,21 @@ class TrainingCallManager extends EventEmitter {
         arena.queue = arena.queue.filter((item) => item._id !== userId);
         arena.markModified('queue');
         arena.save();
+        try {
+            if (!arena.full) this.callNext(arena);
+        } catch (error) {
+            log.error('error after kick: ', error);
+        }
         return user;
     }
 
-    _remind(userId: string, content: CardObject[], type = 9) {
-        this.client.API.message.create(
+    _remind(userId: string, content: CardObject[], type = 10) {
+        bot.API.message.create(
             type,
             configs.channels.chat,
-            JSON.stringify(content),
-            undefined,
-            userId
+            JSON.stringify(content)
         );
-        this.client?.API.message.create(
+        bot.API.message.create(
             type,
             configs.channels.arenaBot,
             JSON.stringify(content),
@@ -114,12 +108,9 @@ class TrainingCallManager extends EventEmitter {
             userId
         );
     }
-    remindKick = async (arenaId: string, userId: string) => {
-        const arena = await TrainingArena.findOne({
-            _id: arenaId,
-        }).exec();
-        if (!arena) return;
-        if (this.kick(userId, arena)) {
+
+    remindKick = async (arena: TrainingArenaDoc, userId: string) => {
+        if (this.kick(arena, userId)) {
             this._remind(userId, [
                 new Card().addText(
                     `(met)${userId}(met)` +
@@ -131,4 +122,4 @@ class TrainingCallManager extends EventEmitter {
     };
 }
 
-export const queueManager = new TrainingCallManager(bot);
+export const queueManager = new TrainingCallManager();

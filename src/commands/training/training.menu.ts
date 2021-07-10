@@ -10,18 +10,18 @@ class TrainingMenu extends MenuCommand {
     trigger = '教练房';
     menu = [trainingMenuCard()] as any;
     useCardMenu = true;
-    exec = async (s: BaseSession) => {
-        const session = await GuildSession.fromSession(s, true);
-        for (const role of [configs.roles.up, configs.roles.coach]) {
-            if (session.user.roles?.includes(role)) {
-                return await this.func(session);
-            }
-        }
-        await session.sendTemp(
-            '只有教练和Up主可以使用此功能。请向冰飞申请，以开放使用权。'
-        );
-        return;
-    };
+    // exec = async (s: BaseSession) => {
+    //     const session = await GuildSession.fromSession(s, true);
+    //     for (const role of [configs.roles.up, configs.roles.coach]) {
+    //         if (session.user.roles?.includes(role)) {
+    //             return await this.func(session);
+    //         }
+    //     }
+    //     await session.sendTemp(
+    //         '只有教练和Up主可以使用此功能。请向冰飞申请，以开放使用权。'
+    //     );
+    //     return;
+    // };
 }
 
 export const trainingMenu = new TrainingMenu(

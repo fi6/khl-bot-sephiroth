@@ -80,13 +80,13 @@ class TrainingManage extends AppCommand {
             if (args[1] == 'next') {
                 user = queueManager.kickNext(arena);
             } else {
-                user = queueManager.kick(args[1], arena);
+                user = queueManager.kick(arena, args[1]);
             }
             // updateTraininginfo(arena);
             this.sendManageCard(session, arena, `已移出` + user.nickname);
             queueManager._remind(user._id, [
                 new Card().addText(
-                    '你被教练移出房间了……如果结束后没有主动点击退出，下次请记得点击哦'
+                    '你被教练移出房间了……如果结束后没有主动点击退出，下次请不要忘记哦'
                 ),
             ]);
         } catch (error) {

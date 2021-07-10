@@ -63,7 +63,7 @@ TrainingArenaSchema.virtual('currentNumber').get(function (
     this: TrainingArenaDoc
 ) {
     this.sortQueue();
-    return this.queue.find((m) => m.state == 1) ?? this.lastNumber;
+    return this.queue.find((m) => m.state == 1)?.number ?? this.lastNumber;
 });
 
 TrainingArenaSchema.virtual('nextCallableUser').get(function (
@@ -126,7 +126,9 @@ TrainingArenaSchema.method(
                         },
                         {
                             type: 'kmarkdown',
-                            content: `**当前号码**\n${this.currentNumber}`,
+                            content: `**当前/你的号码**\n${
+                                this.currentNumber
+                            }/${player?.number ?? '无'}`,
                         },
                     ],
                 },
@@ -138,7 +140,7 @@ TrainingArenaSchema.method(
                         : player.state in [0, 1, 2]
                         ? 'danger'
                         : 'secondary',
-                    value: `.教练房 ${!player ? '加入' : '退出'} ${this.id}`,
+                    value: `.教练房 ${!player ? '排队' : '退出'} ${this.id}`,
                     click: 'return-val',
                     text: {
                         type: 'plain-text',
@@ -150,6 +152,13 @@ TrainingArenaSchema.method(
                             ? '离开房间'
                             : '已完成',
                     },
+                },
+            },
+            {
+                type: 'section',
+                text: {
+                    type: 'kmarkdown',
+                    content: '房间留言: ' + this.remark,
                 },
             },
         ];

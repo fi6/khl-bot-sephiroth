@@ -58,10 +58,9 @@ export function arenaManageCard(arena: ArenaDoc, coach = false) {
                         type: 'kmarkdown',
                         content:
                             '**房间已满时无法加入**，需要踢出玩家恢复空位。\n**房间未满但不希望别人加入**，可以手动暂停。\n当前人数：' +
-                            `${arena.member.length}/${arena.limit}`,
+                            `${arena.member.length + 1}/${arena.limit}`,
                     },
                 },
-
                 {
                     type: 'divider',
                 },

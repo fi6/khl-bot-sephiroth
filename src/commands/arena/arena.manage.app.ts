@@ -24,7 +24,7 @@ class ArenaManage extends AppCommand {
             ]);
             return;
         }
-        if (arena.__t == 'TrainingArena') {
+        if (arena.__t == 'TrainingArena' && !s.args.length) {
             return trainingManage.sendManageCard(
                 s as GuildSession,
                 arena as TrainingArenaDoc

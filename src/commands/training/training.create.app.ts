@@ -28,7 +28,7 @@ class TrainingCreate extends AppCommand {
         //.教练房 创建 76VR2 147 裸连 5 随意
         // error handling
         if (!session.user.roles?.includes(configs.roles.coach)) {
-            return session.replyTemp('权限不足，只有教练组可以发起特训房。');
+            return session.replyTemp('权限不足，只有教练组可以发起教练房。');
         }
         try {
             if (!session.args.length)

@@ -28,7 +28,7 @@ export function trainingCallCard(arena: TrainingArenaDoc, userId: string) {
                     type: 'section',
                     text: {
                         type: 'kmarkdown',
-                        content: `(met)${user._id}(met) 请于5分钟内点击签到按钮，签到成功后将显示房间信息和语音频道。`,
+                        content: `(met)${user._id}(met) 请于3分钟内点击签到按钮，签到成功后将显示房间信息和语音频道。`,
                     },
                     mode: 'right',
                     accessory: {

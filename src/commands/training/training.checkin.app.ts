@@ -22,7 +22,7 @@ class TrainingCheckIn extends AppCommand {
         return session._send(
             '签到成功！以下是房间信息：\n' +
                 `${arena.code} ${arena.password} ${arena.info}` +
-                `\n请加入语音频道：${arena.voice}`,
+                `\n请加入语音频道：${arena.invite}`,
             undefined,
             { msgType: 1, temp: true }
         );
