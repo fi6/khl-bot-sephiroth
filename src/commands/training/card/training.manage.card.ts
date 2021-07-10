@@ -25,7 +25,7 @@ export const trainingManageCard = (arena: TrainingArenaDoc) => {
                     type: 'section',
                     text: {
                         type: 'kmarkdown',
-                        content: '开黑啦是最好的~~语音~~软件:smile:',
+                        content: '这里还不知道要写什么……',
                     },
                 },
                 {
@@ -78,18 +78,8 @@ export const trainingManageCard = (arena: TrainingArenaDoc) => {
                         },
                         {
                             type: 'button',
-                            theme: 'primary',
-                            value: 'ok',
-                            click: 'return-val',
-                            text: {
-                                type: 'plain-text',
-                                content: '呼叫',
-                            },
-                        },
-                        {
-                            type: 'button',
-                            theme: 'primary',
-                            value: 'ok',
+                            theme: 'danger',
+                            value: '.房间 管理 关闭',
                             click: 'return-val',
                             text: {
                                 type: 'plain-text',
@@ -103,34 +93,38 @@ export const trainingManageCard = (arena: TrainingArenaDoc) => {
                     elements: [
                         {
                             type: 'button',
-                            theme: 'primary',
-                            value: 'ok',
-                            click: 'return-val',
+                            theme: arena.nextCallableUser
+                                ? 'primary'
+                                : 'secondary',
+                            value: '.教练房 call next',
+                            click: arena.nextCallableUser ? 'return-val' : '',
                             text: {
                                 type: 'plain-text',
-                                content: '呼叫下一名',
+                                content: `呼叫 ${
+                                    arena.nextCallableUser?.nickname ?? '下一位'
+                                }`,
                             },
                         },
-                        {
-                            type: 'button',
-                            theme: 'primary',
-                            value: 'ok',
-                            click: 'return-val',
-                            text: {
-                                type: 'plain-text',
-                                content: '呼叫序号',
-                            },
-                        },
-                        {
-                            type: 'button',
-                            theme: 'primary',
-                            value: 'ok',
-                            click: 'return-val',
-                            text: {
-                                type: 'plain-text',
-                                content: '设置结束序号',
-                            },
-                        },
+                        // {
+                        //     type: 'button',
+                        //     theme: 'primary',
+                        //     value: '.教练房 call',
+                        //     click: 'return-val',
+                        //     text: {
+                        //         type: 'plain-text',
+                        //         content: '呼叫序号',
+                        //     },
+                        // },
+                        // {
+                        //     type: 'button',
+                        //     theme: 'primary',
+                        //     value: 'ok',
+                        //     click: 'return-val',
+                        //     text: {
+                        //         type: 'plain-text',
+                        //         content: '设置结束序号',
+                        //     },
+                        // },
                     ],
                 },
             ],

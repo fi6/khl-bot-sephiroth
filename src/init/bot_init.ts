@@ -3,13 +3,10 @@ import { arenaCreate } from '../commands/arena/arena.create.app';
 // import { arenaList } from 'commands/arena/arena.list.app';
 // import { arenaMenu } from 'commands/arena/arena.menu';
 import auth from 'configs/auth';
-import { BaseSession, createSession, KBotify } from 'kbotify';
+import { createSession, KBotify } from 'kbotify';
 
-// import profileCommand from '../commands/profile'
-import { callCloud } from '../utils/utils';
 import { arenaMenu } from '../commands/arena/arena.menu';
-import { arenaManage } from '../commands/arena/arena.manage.app';
-import { arenaList } from '../commands/arena/arena.list.app';
+
 import { utilApp } from '../commands/util.app';
 import { welcomeEntry } from '../commands/welcome/welcome.entry';
 import { TextMessage } from 'kbotify/dist/core/message';
@@ -18,7 +15,7 @@ import { log } from './logger';
 import configs from '../configs';
 
 const bot = new KBotify({
-    mode: 'websocket',
+    mode: 'webhook',
     token: auth.khltoken,
     port: auth.khlport,
     verifyToken: auth.khlverify,

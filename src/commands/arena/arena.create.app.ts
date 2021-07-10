@@ -26,14 +26,13 @@ class ArenaCreate extends AppCommand {
     intro =
         '将房间添加至房间列表，将会覆盖之前创建的房间。\n`.房间 创建 房间号 密码 加速/人数 留言`';
 
-    func: AppFunc<BaseSession> = async (session: BaseSession) => {
+    func: AppFunc<BaseSession> = async (s: BaseSession) => {
+        const session = await GuildSession.fromSession(s, true);
         let args = session.args;
         let helpFlag = false;
         try {
             if (!args.length) {
-                args = await this.helpCreate(
-                    await GuildSession.fromSession(session)
-                );
+                args = await this.helpCreate(session);
                 helpFlag = true;
             } else if (session.msg instanceof TextMessage)
                 session.client.API.message.delete(session.msg.msgId);

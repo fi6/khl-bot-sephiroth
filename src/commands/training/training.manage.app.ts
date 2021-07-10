@@ -1,11 +1,9 @@
 import { AppCommand, AppFunc, BaseSession, Card, GuildSession } from 'kbotify';
-import { channels } from '../../configs';
+import configs, { channels } from '../../configs';
 import TrainingArena, { TrainingArenaDoc } from '../../models/TrainingArena';
-import { parseCard } from '../../utils/card-parser';
 import { trainingManageCard } from './card/training.manage.card';
 
 import { queueManager } from './shared/training.queue-manager';
-import { updateTraininginfo } from './shared/training.update-info';
 import { log } from '../../init/logger';
 import { arenaManage } from '../arena/arena.manage.app';
 
@@ -19,8 +17,7 @@ class TrainingManage extends AppCommand {
     }
 
     func: AppFunc<BaseSession> = async (s: BaseSession) => {
-        if (!(s instanceof GuildSession)) return;
-        const session = s as GuildSession;
+        const session = await GuildSession.fromSession(s);
 
         // find arena
         const arena = await TrainingArena.findOne({
@@ -55,9 +52,11 @@ class TrainingManage extends AppCommand {
         } else if (session.args[0] == 'info') {
             // input arena info
 
-            session.mentionTemp(
-                '请在60秒内输入房间号、房间密码、房间信息，用空格分开\n如：65FC2 147 裸连4人'
-            );
+            session.updateMessageTemp(configs.arena.mainCardId, [
+                new Card().addText(
+                    '请在60秒内输入房间号、房间密码、房间信息，用空格分开\n如：65FC2 147 裸连4人'
+                ),
+            ]);
 
             const inputMsg = await session.awaitMessage(/^\w{5} +\d{0,8}/, 6e4);
 
@@ -66,9 +65,11 @@ class TrainingManage extends AppCommand {
             }
             inputMsg.delete();
             this.updateInfo(arena, inputMsg.content);
-            return session.replyTemp(
-                `房间信息已更新为：${arena.code} ${arena.password} ${arena.info}`
-            );
+            return session.updateMessageTemp(configs.arena.mainCardId, [
+                new Card().addText(
+                    `房间信息已更新为：${arena.code} ${arena.password} ${arena.info}`
+                ),
+            ]);
         }
     };
 
@@ -99,7 +100,7 @@ class TrainingManage extends AppCommand {
         arena: TrainingArenaDoc,
         content?: string
     ) {
-        session.sendCardTemp([
+        session.updateMessageTemp(configs.arena.mainCardId, [
             ...(content
                 ? [new Card().addText(content).setTheme('warning')]
                 : []),
@@ -109,7 +110,7 @@ class TrainingManage extends AppCommand {
 
     updateInfo(arena: TrainingArenaDoc, content: string) {
         const info = content.split(/ +/);
-        arena.code = info[0];
+        arena.code = info[0].toUpperCase();
         arena.password = info[1];
         arena.info = info[2];
         arena.save();

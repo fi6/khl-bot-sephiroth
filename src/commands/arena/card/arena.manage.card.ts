@@ -2,7 +2,7 @@ import { BaseSession, Card } from 'kbotify';
 import { ArenaDoc } from '../../../models/Arena';
 import { formatTime } from '../../../utils/format-time';
 
-export function arenaManageCard(arena: ArenaDoc) {
+export function arenaManageCard(arena: ArenaDoc, coach = false) {
     const expireCard = [];
     if (arena.expired)
         expireCard.push(
@@ -142,6 +142,25 @@ export function arenaManageCard(arena: ArenaDoc) {
                         },
                     ],
                 },
+                ...(coach
+                    ? [
+                          {
+                              type: 'action-group',
+                              elements: [
+                                  {
+                                      type: 'button',
+                                      theme: 'primary',
+                                      value: `.教练房 创建`,
+                                      click: 'return-val',
+                                      text: {
+                                          type: 'plain-text',
+                                          content: '创建教练房',
+                                      },
+                                  },
+                              ],
+                          },
+                      ]
+                    : []),
             ],
         }),
         memberCard,

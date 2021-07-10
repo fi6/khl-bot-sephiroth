@@ -24,7 +24,7 @@ export interface TrainingArenaDoc extends ArenaDoc {
     lastNumber: number;
     currentNumber: number;
     sortQueue: () => void;
-    nextCallableUser: QueueMember;
+    nextCallableUser: QueueMember | undefined;
 }
 
 const TrainingArenaSchema = new Schema<

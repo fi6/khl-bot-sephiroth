@@ -50,7 +50,7 @@ class TrainingJoin extends AppCommand {
         await arena.save();
         if (
             arena.member.length < arena.limit - 1 &&
-            arena.nextCallableUser._id == session.user.id
+            arena.nextCallableUser?._id == session.user.id
         ) {
             queueManager._callId(arena, session.user.id);
             return await session.updateMessageTemp(configs.arena.mainCardId, [

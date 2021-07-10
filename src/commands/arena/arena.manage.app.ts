@@ -3,6 +3,8 @@ import Arena, { ArenaDoc } from 'models/Arena';
 import configs, { roles } from '../../configs';
 import arenaConfig from '../../configs/arena';
 import { log } from '../../init/logger';
+import { TrainingArenaDoc } from '../../models/TrainingArena';
+import { trainingManage } from '../training/training.manage.app';
 import { arenaManageCard } from './card/arena.manage.card';
 import { arenaUpdateCard } from './card/arena.update.card';
 import { expireManager } from './shared/arena.expire-manager';
@@ -22,11 +24,20 @@ class ArenaManage extends AppCommand {
             ]);
             return;
         }
-        const session = await GuildSession.fromSession(s);
+        if (arena.__t == 'TrainingArena') {
+            return trainingManage.sendManageCard(
+                s as GuildSession,
+                arena as TrainingArenaDoc
+            );
+        }
+        const session = await GuildSession.fromSession(s, true);
         if (!session.args.length) {
             session.updateMessageTemp(
                 arenaConfig.mainCardId,
-                arenaManageCard(arena)
+                arenaManageCard(
+                    arena,
+                    session.user.roles?.includes(configs.roles.coach)
+                )
             );
             return;
         }

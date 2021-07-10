@@ -27,7 +27,7 @@ class TrainingCreate extends AppCommand {
         // console.log('receive create training', session);
         //.教练房 创建 76VR2 147 裸连 5 随意
         // error handling
-        if (!checkRoles((await session.user.full()).roles, 'coach')) {
+        if (!session.user.roles?.includes(configs.roles.coach)) {
             return session.replyTemp('权限不足，只有教练组可以发起特训房。');
         }
         try {
@@ -45,7 +45,6 @@ class TrainingCreate extends AppCommand {
     };
 
     async helpCreate(session: GuildSession): Promise<string[]> {
-        const oldArena = await Arena.findById(session.user.id).exec();
         // await session.updateMessageTemp(configs.arena.mainCardId, [
         //     new Card()
         //         .addText(
@@ -60,7 +59,9 @@ class TrainingCreate extends AppCommand {
             // await input.delete();
             // if (!/\d\d[:：]\d\d/.test(input.content))
             //     throw new Error('开始时间格式错误，请重试');
-            await session.sendCardTemp([createTrainingHelpCard(oldArena)]);
+            await session.updateMessageTemp(configs.arena.mainCardId, [
+                createTrainingHelpCard(null),
+            ]);
             let input = await session.awaitMessage(/.+/, 6e4);
             if (!input) throw new Error('未收到房间信息输入，请重试');
             await input.delete();
@@ -113,7 +114,10 @@ class TrainingCreate extends AppCommand {
                     new: true,
                 }
             ).exec();
-            session.sendCardTemp(trainingManageCard(arena as TrainingArenaDoc));
+            session.updateMessageTemp(
+                configs.arena.mainCardId,
+                trainingManageCard(arena as TrainingArenaDoc)
+            );
         } catch (error) {
             return await session.sendTemp(error.message);
         }
