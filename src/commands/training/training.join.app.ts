@@ -55,12 +55,30 @@ class TrainingJoin extends AppCommand {
         if (!arena.full && arena.nextCallableUser?._id == session.user.id) {
             log.debug('arena not full, calling this user');
             queueManager._callId(arena, session.user.id);
+            this.client?.API.message.create(
+                9,
+                configs.channels.chat,
+                `\`${
+                    session.user.nickname ?? session.user.username
+                }\`已加入排队，房间未满，已呼叫`,
+                undefined,
+                arena.id
+            );
             return session.updateMessageTemp(configs.arena.mainCardId, [
                 new Card().addText(
                     '成功加入排队。\n你已被呼叫，请尽快签到并加入房间，否则需要重新排队。'
                 ),
             ]);
         }
+        this.client?.API.message.create(
+            9,
+            configs.channels.chat,
+            `\`${
+                session.user.nickname ?? session.user.username
+            }\`已加入排队，房间已满，等待叫号`,
+            undefined,
+            arena.id
+        );
         return session.updateMessageTemp(configs.arena.mainCardId, [
             new Card().addText(
                 ''.concat(

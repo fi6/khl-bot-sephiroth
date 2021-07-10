@@ -25,7 +25,8 @@ export const trainingManageCard = (arena: TrainingArenaDoc) => {
                     type: 'section',
                     text: {
                         type: 'kmarkdown',
-                        content: '这里还不知道要写什么……',
+                        content:
+                            '有人加入后，系统会自动发出提醒。\n房间满员后加入的人会进入排队，排到后叫号签到进入房间。',
                     },
                 },
                 {

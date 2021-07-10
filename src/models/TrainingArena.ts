@@ -104,14 +104,14 @@ TrainingArenaSchema.method(
                 type: 'header',
                 text: {
                     type: 'plain-text',
-                    content: `教练房：${this.nickname}`,
+                    content: `${this.nickname} 的教练房`,
                 },
             },
             {
                 type: 'section',
                 text: {
                     type: 'kmarkdown',
-                    content: '房间留言: ' + this.remark,
+                    content: '留言: ' + this.remark,
                 },
                 mode: 'left',
                 accessory: {
@@ -145,7 +145,7 @@ TrainingArenaSchema.method(
                             type: 'kmarkdown',
                             content: `**当前/你的号码**\n${
                                 this.currentNumber
-                            }/${player?.number ?? '无'}`,
+                            }/${player?.number ?? '未排队'}`,
                         },
                     ],
                 },
