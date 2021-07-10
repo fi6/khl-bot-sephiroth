@@ -1,25 +1,38 @@
 import { BaseSession, Card } from 'kbotify';
 import { ArenaDoc } from '../../../models/Arena';
 import { formatTime } from '../../../utils/format-time';
-import { ArenaSession } from '../arena.types';
 
 export function arenaManageCard(arena: ArenaDoc) {
-    let memberString = '房间中还没有人。试着分享给其他人吧！';
-    if (arena.member?.length) {
-        let nickList = arena.member.map((member) => {
-            return member.nickname;
-        });
-        memberString = nickList.join(', ') + ' 在房间中';
-    }
     const expireCard = [];
     if (arena.expired)
         expireCard.push(
             new Card()
                 .setTheme('warning')
                 .addText(
-                    '你的房间已关闭，不会显示在房间列表中。\n你可以点击延长有效期来刷新，或重新创建。'
+                    '你的房间已关闭，不会显示在房间列表中。你可以重新创建。'
                 )
         );
+    const memberCard = new Card().setTheme('primary').addTitle('成员管理');
+    for (const item of arena.member) {
+        memberCard.addModule({
+            type: 'section',
+            text: {
+                type: 'plain-text',
+                content: `${item.nickname}`,
+            },
+            mode: 'right',
+            accessory: {
+                type: 'button',
+                theme: 'danger',
+                click: 'return-val',
+                value: `.房间 管理 kick ${item._id}`,
+                text: {
+                    type: 'plain-text',
+                    content: '踢出玩家',
+                },
+            },
+        });
+    }
     return [
         ...expireCard,
         new Card({
@@ -38,7 +51,9 @@ export function arenaManageCard(arena: ArenaDoc) {
                     type: 'section',
                     text: {
                         type: 'kmarkdown',
-                        content: '你也可以直接发送`.关房`关闭房间',
+                        content:
+                            '**房间已满时无法加入**，需要踢出玩家恢复空位。\n**房间未满但不希望别人加入**，可以手动暂停。\n当前人数：' +
+                            `${arena.member.length}/${arena.limit}`,
                     },
                 },
 
@@ -51,7 +66,7 @@ export function arenaManageCard(arena: ArenaDoc) {
                         type: 'plain-text',
                         content: `${arena.nickname} 的房间 (${
                             arena.join ? '允许加入中' : '已暂停加入'
-                        })`,
+                        }${arena.full ? ', 已满' : ''})`,
                     },
                 },
                 {
@@ -122,16 +137,8 @@ export function arenaManageCard(arena: ArenaDoc) {
                         },
                     ],
                 },
-                {
-                    type: 'context',
-                    elements: [
-                        {
-                            type: 'plain-text',
-                            content: memberString,
-                        },
-                    ],
-                },
             ],
         }),
+        memberCard,
     ];
 }

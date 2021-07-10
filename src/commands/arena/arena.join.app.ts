@@ -61,9 +61,9 @@ class ArenaJoin extends AppCommand {
         arena.isNew = false;
         arena.markModified('member');
         await arena.save();
-        if (arena.memberCount >= arena.limit - 1)
-            this.remindHost(session, arena, true);
-        else this.remindHost(session, arena, false);
+
+        this.remindHost(session, arena, arena.full);
+
         updateArenaTitle();
         session._send(
             // eslint-disable-next-line no-useless-escape
@@ -138,7 +138,7 @@ class ArenaJoin extends AppCommand {
         if (full)
             reminder =
                 reminder +
-                `\n房间似乎已满……请在(chn)${channels.arenaBot}(chn)点击管理房间-暂停加入。`;
+                `\n房间似乎已满……其他人暂时无法加入。\n你可以提醒离开的玩家点击退出，或在(chn)${channels.arenaBot}(chn)管理房间并踢出玩家。`;
 
         this.client?.API.message.create(
             9,

@@ -41,6 +41,10 @@ class ArenaManage extends AppCommand {
             return;
         } else if (session.args[0] == '延期') {
             this.extend(session, arena);
+            return;
+        } else if (session.args[0] == 'kick') {
+            this.kick(session, arena);
+            return;
         }
     };
 
@@ -109,6 +113,27 @@ class ArenaManage extends AppCommand {
 
         return session.updateMessageTemp(configs.arena.mainCardId, [
             new Card().addText('房间有效期已延长90分钟'),
+            ...arenaManageCard(arena),
+        ]);
+    };
+
+    kick = async (session: GuildSession, arena: ArenaDoc) => {
+        const kickId = session.args[1];
+        arena.member = arena.member.filter((item) => item._id !== kickId);
+        arena.markModified('member');
+        arena.save();
+        this.client?.API.message.create(
+            9,
+            configs.channels.chat,
+            `(met)${kickId}(met) 你被房主踢出房间了……\n下次请记得在离开房间后主动点击退出～`,
+            undefined,
+            kickId
+        );
+        return session.updateMessageTemp(configs.arena.mainCardId, [
+            new Card().addText(
+                '已踢出玩家，当前房间玩家人数为' +
+                    ` ${arena.member.length}/${arena.limit}`
+            ),
             ...arenaManageCard(arena),
         ]);
     };

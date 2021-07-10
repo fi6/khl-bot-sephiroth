@@ -8,7 +8,7 @@ import { trainingManage } from './training.manage.app';
 
 class TrainingMenu extends MenuCommand {
     trigger = '教练房';
-    menu = [trainingMenuCard()];
+    menu = [trainingMenuCard()] as any;
     useCardMenu = true;
     exec = async (s: BaseSession) => {
         const session = await GuildSession.fromSession(s, true);

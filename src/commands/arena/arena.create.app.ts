@@ -143,6 +143,7 @@ class ArenaCreate extends AppCommand {
                 join: true,
                 _empty: true,
                 _closed: false,
+                __t: undefined,
                 limit: /\d/.exec(info)?.length
                     ? parseInt(/\d/.exec(info)![0])
                     : 4,

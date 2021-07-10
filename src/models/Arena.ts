@@ -16,6 +16,7 @@ export interface ArenaDoc extends Document {
     voice: string;
     invite: string;
     join: boolean;
+    full: boolean;
     _empty: boolean;
     _closed: boolean;
     member: {
@@ -68,6 +69,10 @@ ArenaSchema.virtual('memberCount').get(function (this: any) {
     return (this as any).member.length + 1;
 });
 
+ArenaSchema.virtual('full').get(function (this: ArenaDoc) {
+    return this.member.length >= this.limit - 1;
+});
+
 ArenaSchema.virtual('memberString').get(function (this: any) {
     if (!this.member?.length) return;
     const nickList = this.member.map((member: { nickname: string }) => {
@@ -101,12 +106,12 @@ ArenaSchema.method(
             this.memberString ?? '房间中还没有人。快来加入吧！';
         const buttonJoin = {
             type: 'button',
-            theme: this.join ? 'primary' : 'secondary',
+            theme: this.join && !this.full ? 'primary' : 'secondary',
             value: `.房间 加入 ${this.id}`,
-            click: this.join ? 'return-val' : '',
+            click: this.join && !this.full ? 'return-val' : '',
             text: {
                 type: 'plain-text',
-                content: this.join ? '加入' : '暂停加入',
+                content: this.join && !this.full ? '加入' : '暂停加入',
             },
         };
         const buttonLeave = {
