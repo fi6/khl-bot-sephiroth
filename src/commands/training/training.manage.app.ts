@@ -117,7 +117,7 @@ class TrainingManage extends AppCommand {
         arena.info = info[2];
         arena.limit = /\d/.exec(info[2])?.length
             ? parseInt(/\d/.exec(info[2])![0])
-            : 4;
+            : arena.limit;
         arena.save();
     }
 
