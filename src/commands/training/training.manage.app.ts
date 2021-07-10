@@ -6,6 +6,7 @@ import { trainingManageCard } from './card/training.manage.card';
 import { queueManager } from './shared/training.queue-manager';
 import { log } from '../../init/logger';
 import { arenaManage } from '../arena/arena.manage.app';
+import { mentionUser } from '../../utils/khl';
 
 class TrainingManage extends AppCommand {
     trigger = '管理';
@@ -82,15 +83,18 @@ class TrainingManage extends AppCommand {
             if (args[1] == 'next') {
                 user = queueManager.kickNext(arena);
             } else {
-                user = queueManager.kick(arena, args[1]);
+                user = await queueManager.kick(arena, args[1]);
             }
             // updateTraininginfo(arena);
             this.sendManageCard(session, arena, `已移出` + user.nickname);
-            queueManager._remind(user._id, [
-                new Card().addText(
-                    '你被教练移出房间了……如果结束后没有主动点击退出，下次请不要忘记哦'
-                ),
-            ]);
+            this.client?.API.message.create(
+                9,
+                configs.channels.chat,
+                mentionUser(user._id) +
+                    '你被教练移出房间了……如果结束后没有主动点击退出，下次请不要忘记哦',
+                undefined,
+                user._id
+            );
         } catch (error) {
             log.error(error, session);
             session.send('出现错误: ' + error.message);

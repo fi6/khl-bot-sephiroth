@@ -102,7 +102,7 @@ class TrainingCallManager extends EventEmitter {
         bot.API.message.create(
             type,
             configs.channels.chat,
-            JSON.stringify(content)
+            JSON.stringify(content),
         );
         bot.API.message.create(
             type,
