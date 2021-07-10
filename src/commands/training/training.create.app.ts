@@ -96,7 +96,7 @@ class TrainingCreate extends AppCommand {
                     nickname: session.user.nickname,
                     avatar: session.user.avatar,
                     limit: parseInt(/\d/.exec(info)![0]),
-                    code: code,
+                    code: code.toUpperCase(),
                     password: password,
                     queue: [],
                     info: info,

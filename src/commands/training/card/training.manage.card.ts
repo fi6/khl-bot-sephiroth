@@ -96,7 +96,9 @@ export const trainingManageCard = (arena: TrainingArenaDoc) => {
                             theme: arena.nextCallableUser
                                 ? 'primary'
                                 : 'secondary',
-                            value: '.教练房 call next',
+                            value: `.教练房 管理 call ${
+                                arena.nextCallableUser?._id ?? 'next'
+                            }`,
                             click: arena.nextCallableUser ? 'return-val' : '',
                             text: {
                                 type: 'plain-text',
@@ -158,12 +160,12 @@ function memberModule(user: TrainingArenaDoc['queue'][number]) {
         mode: 'right',
         accessory: {
             type: 'button',
-            theme: 'primary',
-            value: `.教练房 管理 call ${user._id}`,
+            theme: 'danger',
+            value: `.教练房 管理 kick ${user._id}`,
             click: 'return-val',
             text: {
                 type: 'plain-text',
-                content: '呼叫',
+                content: '踢出',
             },
         },
     };

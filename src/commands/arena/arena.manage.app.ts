@@ -87,6 +87,9 @@ class ArenaManage extends AppCommand {
         arena.password = password ?? arena.password;
         arena.info = info ?? arena.info;
         arena.title = title?.length ? title.join(' ') : arena.title;
+        arena.limit = /\d/.exec(info)
+            ? parseInt(/\d/.exec(info)![0])
+            : arena.limit;
         arena.save();
 
         return session.updateMessageTemp(

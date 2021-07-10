@@ -44,9 +44,11 @@ class TrainingManage extends AppCommand {
                 return this.sendManageCard(session, arena, '已停止排队');
             }
         } else if (session.args[0] == 'call') {
+            let user: TrainingArenaDoc['queue'][number];
+            if (session.args.length >= 2 && session.args[1] != 'next')
+                user = queueManager._callId(arena, session.args[1]);
             // call related: call next / call number
-            const user: TrainingArenaDoc['queue'][number] =
-                queueManager.callNext(arena);
+            else user = queueManager.callNext(arena);
             this.sendManageCard(session, arena, '已呼叫' + user.nickname);
             return;
         } else if (session.args[0] == 'info') {
@@ -113,6 +115,9 @@ class TrainingManage extends AppCommand {
         arena.code = info[0].toUpperCase();
         arena.password = info[1];
         arena.info = info[2];
+        arena.limit = /\d/.exec(info[2])?.length
+            ? parseInt(/\d/.exec(info[2])![0])
+            : 4;
         arena.save();
     }
 

@@ -20,6 +20,7 @@ export interface TrainingArenaDoc extends ArenaDoc {
     endNumber: number;
     remark: string;
     queue: QueueMember[];
+    full: boolean;
     joinValidation: (khlId: string) => void;
     lastNumber: number;
     currentNumber: number;
@@ -55,8 +56,10 @@ TrainingArenaSchema.virtual('lastNumber').get(function (
     return this.queue.length ? this.queue[this.queue.length - 1].number : 0;
 });
 
-TrainingArenaSchema.virtual('member').get(function (this: TrainingArenaDoc) {
-    return this.queue.filter((m) => m.state == 2);
+TrainingArenaSchema.virtual('full').get(function (this: TrainingArenaDoc) {
+    const member = this.queue.filter((m) => [1, 2].includes(m.state));
+    if (member.length >= this.limit - 1) return true;
+    return false;
 });
 
 TrainingArenaSchema.virtual('currentNumber').get(function (
@@ -137,7 +140,7 @@ TrainingArenaSchema.method(
                     type: 'button',
                     theme: !player
                         ? 'primary'
-                        : player.state in [0, 1, 2]
+                        : [0, 1, 2].includes(player.state)
                         ? 'danger'
                         : 'secondary',
                     value: `.教练房 ${!player ? '排队' : '退出'} ${this.id}`,
@@ -146,7 +149,7 @@ TrainingArenaSchema.method(
                         type: 'plain-text',
                         content: !player
                             ? '加入排队'
-                            : player.state in [0, 1]
+                            : [0, 1].includes(player.state)
                             ? '退出排队'
                             : player.state == 2
                             ? '离开房间'
@@ -172,7 +175,7 @@ TrainingArenaSchema.method('joinValidation', function (khlId: string) {
                 throw new Error(
                     '你未能按时签到，或已完成特训。请等待下次的教练房。'
                 );
-            } else if (user.state in [1, 2]) {
+            } else if ([1, 2].includes(user.state)) {
                 throw new Error('你正在被呼叫或已完成签到，请不要重复加入队伍');
             } else throw new Error('你已经在队伍中了');
         }

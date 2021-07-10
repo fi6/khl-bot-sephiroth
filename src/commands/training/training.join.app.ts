@@ -1,6 +1,7 @@
 import { AppCommand, AppFunc, BaseSession, Card, GuildSession } from 'kbotify';
 import TrainingArena, { TrainingArenaDoc } from 'models/TrainingArena';
 import configs from '../../configs';
+import { log } from '../../init/logger';
 import { queueManager } from './shared/training.queue-manager';
 
 class TrainingJoin extends AppCommand {
@@ -38,21 +39,21 @@ class TrainingJoin extends AppCommand {
         //     }
         this.join(session, arena);
     };
+
     join = async (session: GuildSession, arena: TrainingArenaDoc) => {
+        const num = arena.lastNumber + 1;
         arena.queue.push({
             _id: session.user.id,
             nickname: session.user.nickname ?? session.user.username,
-            number: arena.lastNumber + 1,
+            number: num,
             time: new Date(),
             state: 0,
         });
         arena.isNew = false;
         arena.markModified('queue');
         await arena.save();
-        if (
-            arena.member.length < arena.limit - 1 &&
-            arena.nextCallableUser?._id == session.user.id
-        ) {
+        if (!arena.full && arena.nextCallableUser?._id == session.user.id) {
+            log.debug('arena not full, calling this user');
             queueManager._callId(arena, session.user.id);
             return session.updateMessageTemp(configs.arena.mainCardId, [
                 new Card().addText(
@@ -65,8 +66,8 @@ class TrainingJoin extends AppCommand {
                 ''.concat(
                     '成功加入排队：',
                     `\`${arena.nickname}的教练房\`\n`,
-                    '当前排队人数：',
-                    `${arena.queue.length}/${arena.limit}`,
+                    '当前/你的号码：',
+                    `${arena.currentNumber}/${num}`,
                     '\n房间号、语音频道等信息将在排到你后显示，请耐心等待。'
                 )
             ),

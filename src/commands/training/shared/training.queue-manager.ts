@@ -47,7 +47,10 @@ class TrainingCallManager extends EventEmitter {
 
     _callId = (arena: TrainingArenaDoc, userId: string) => {
         const user = arena.queue.find((usr) => usr._id == userId);
-        if (user) return this._callUser(arena, user);
+        if (user) {
+            this._callUser(arena, user);
+            return user;
+        }
         throw new Error('no user found');
     };
 
@@ -58,6 +61,7 @@ class TrainingCallManager extends EventEmitter {
         if (user.state == 2) throw new Error('玩家已签到，不可以再呼叫');
         user.state = 1;
         arena.markModified('queue');
+        arena.save();
         this._remind(user._id, trainingCallCard(arena, user._id), 10);
         queueManager.markCalled(user._id, arena.id);
     };
