@@ -80,7 +80,7 @@ class TrainingCallManager extends EventEmitter {
         return nextUser;
     }
 
-    kick(arena: TrainingArenaDoc, userId: string) {
+    kick = async (arena: TrainingArenaDoc, userId: string) => {
         const user = arena.queue.find((usr) => {
             return usr._id === userId && usr.state !== -1;
         });
@@ -89,14 +89,14 @@ class TrainingCallManager extends EventEmitter {
         }
         arena.queue = arena.queue.filter((item) => item._id !== userId);
         arena.markModified('queue');
-        arena.save();
+        await arena.save();
         try {
             if (!arena.full) this.callNext(arena);
         } catch (error) {
             log.error('error after kick: ', error);
         }
         return user;
-    }
+    };
 
     _remind(userId: string, content: CardObject[], type = 10) {
         bot.API.message.create(
