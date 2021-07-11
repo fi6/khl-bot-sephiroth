@@ -1,7 +1,7 @@
 import { AppCommand, AppFunc, BaseSession, Card, GuildSession } from 'kbotify';
 import Arena, { ArenaDoc } from 'models/Arena';
 import configs, { channels } from '../../configs';
-import { log } from '../../init/logger';
+import { logger } from '../../init/logger';
 import { arenaLeave } from './arena.leave.app';
 import LRUCache from 'lru-cache';
 import { arenaCheckMember } from './shared/arena.check-member';
@@ -16,7 +16,7 @@ class ArenaJoin extends AppCommand {
         maxAge: 10 * 6e4,
     });
     func: AppFunc<BaseSession> = async (s) => {
-        log.info('session:', s);
+        logger.info('session:', s);
         const session = await GuildSession.fromSession(s, true);
 
         const arena = await Arena.findOne({
@@ -49,7 +49,7 @@ class ArenaJoin extends AppCommand {
                 leaveMessage = `已退出${arena.nickname}的房间。\n`;
             }
         });
-        log.info('queue:', arena.member);
+        logger.info('queue:', arena.member);
         if (!arena.member) {
             arena.member = [];
         }

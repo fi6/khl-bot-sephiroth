@@ -7,7 +7,7 @@ import TrainingArena, { TrainingArenaDoc } from '../../../models/TrainingArena';
 
 import { trainingCallCard } from '../card/training.call.card';
 import { updateTraininginfo } from './training.update-info';
-import { log } from '../../../init/logger';
+import { logger } from '../../../init/logger';
 
 class TrainingCallManager extends EventEmitter {
     calledCache = new LRUCache<string, boolean>({ max: 16, maxAge: 330 * 1e3 });
@@ -34,7 +34,7 @@ class TrainingCallManager extends EventEmitter {
         arena.markModified('queue');
         arena.save();
         // this.calledCache.set(userId, true);
-        log.debug('user check-in', userId);
+        logger.debug('user check-in', userId);
         return user;
     }
 
@@ -93,7 +93,7 @@ class TrainingCallManager extends EventEmitter {
         try {
             if (!arena.full) this.callNext(arena);
         } catch (error) {
-            log.error('error after kick: ', error);
+            logger.error('error after kick: ', error);
         }
         return user;
     };

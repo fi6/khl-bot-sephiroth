@@ -4,7 +4,7 @@ import TrainingArena, { TrainingArenaDoc } from '../../models/TrainingArena';
 import { trainingManageCard } from './card/training.manage.card';
 
 import { queueManager } from './shared/training.queue-manager';
-import { log } from '../../init/logger';
+import { logger } from '../../init/logger';
 import { arenaManage } from '../arena/arena.manage.app';
 import { mentionUser } from '../../utils/khl';
 
@@ -96,7 +96,7 @@ class TrainingManage extends AppCommand {
                 user._id
             );
         } catch (error) {
-            log.error(error, session);
+            logger.error(error, session);
             session.send('出现错误: ' + error.message);
         }
     };

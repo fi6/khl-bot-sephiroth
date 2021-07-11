@@ -11,7 +11,7 @@ import { utilApp } from '../commands/util.app';
 import { welcomeEntry } from '../commands/welcome/welcome.entry';
 import { TextMessage } from 'kbotify/dist/core/message';
 import { trainingMenu } from '../commands/training/training.menu';
-import { log } from './logger';
+import { logger } from './logger';
 import configs from '../configs';
 
 const bot = new KBotify({
@@ -33,7 +33,7 @@ bot.addAlias(arenaCreate, '建房');
 // bot.addAlias(arenaDelete, '关房');
 
 bot.on('unknownEvent', (e) => {
-    log.debug(e);
+    logger.debug(e);
 });
 
 bot.message.on('text', (msg) => {
@@ -58,7 +58,7 @@ bot.execute = async (
     //     return;
     // }
     const input: [string, string[], TextMessage] = [command, args, msg];
-    log.debug(input);
+    logger.debug(input);
     const cloudReg = /克劳德/;
     const regex = /^[\u4e00-\u9fa5]/;
     const cmd = bot.commandMap.get(command);
@@ -70,7 +70,7 @@ bot.execute = async (
         msg.mention.user.includes(bot.userId)
     )
         return trainingMenu.exec(createSession(trainingMenu, args, msg));
-    log.debug(command, args);
+    logger.debug(command, args);
 };
 
 export default bot;

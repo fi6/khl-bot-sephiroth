@@ -8,7 +8,7 @@ import configs, { channels, roles } from '../../configs';
 import TrainingArena, { TrainingArenaDoc } from '../../models/TrainingArena';
 import { formatTime } from '../../utils/format-time';
 import { trainingInfoCard } from './card/training.info.card';
-import { log } from '../../init/logger';
+import { logger } from '../../init/logger';
 
 import Arena from '../../models/Arena';
 import { createTrainingHelpCard } from './card/training.create.card';
@@ -34,7 +34,7 @@ class TrainingCreate extends AppCommand {
             if (!session.args.length)
                 session.args = await this.helpCreate(session);
         } catch (error) {
-            log.error(error);
+            logger.error(error);
             return session.updateMessageTemp(arenaConfig.mainCardId, [
                 new Card().addText(error.message),
             ]);
@@ -68,7 +68,7 @@ class TrainingCreate extends AppCommand {
             return input.content.split(/ +/);
         } catch (e) {
             await session.user.revokeRole(roles.tempInput);
-            log.info(e);
+            logger.info(e);
             throw e;
         }
     }
@@ -88,7 +88,7 @@ class TrainingCreate extends AppCommand {
                     __t: 'TrainingArena',
                 }).exec();
             } catch (error) {
-                log.error(error);
+                logger.error(error);
             }
             const arena = await TrainingArena.findByIdAndUpdate(
                 session.user.id,

@@ -10,7 +10,7 @@ import Arena, { ArenaDoc } from 'models/Arena';
 import configs, { channels } from '../../configs';
 import arenaConfig from '../../configs/arena';
 import roles from '../../configs/roles';
-import { log } from '../../init/logger';
+import { logger } from '../../init/logger';
 import { createHelpCard, createSuccessCard } from './card/arena.create.card';
 
 import { expireManager } from './shared/arena.expire-manager';
@@ -163,7 +163,7 @@ class ArenaCreate extends AppCommand {
         const arena = await Arena.findById(session.user.id).exec();
         if (!arena || !arena._empty || arena._closed) return;
         if (!(await voiceChannelManager.isChannelEmpty(arena.voice))) return;
-        log.info('closing arena due to empty 10min', arena);
+        logger.info('closing arena due to empty 10min', arena);
         expireManager.expire(arena.id, false);
         session.mentionTemp(
             '房间中似乎没有人，自动关闭了……\n下次可以分享邀请小伙伴加入房间哦～'

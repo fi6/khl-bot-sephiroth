@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 import { Channel, GuildSession, KBotify } from 'kbotify';
 import configs, { channels, roles } from '../../../configs';
 import bot from '../../../init/bot_init';
-import { log } from '../../../init/logger';
+import { logger } from '../../../init/logger';
 import Arena, { ArenaDoc } from '../../../models/Arena';
 
 class VoiceChannelManager extends EventEmitter {
@@ -50,12 +50,12 @@ class VoiceChannelManager extends EventEmitter {
             const arena = await Arena.findOne({ voice: channel.id }).exec();
 
             if (!arena) {
-                log.info('arena not found for channel, recycling', channel);
+                logger.info('arena not found for channel, recycling', channel);
                 this.recycle(channel.id, true);
                 return;
             }
             if (arena.expired && (await this.isChannelEmpty(channel.id))) {
-                log.info(
+                logger.info(
                     'arena expired with no people, recycling voice channel',
                     channel
                 );
@@ -69,7 +69,7 @@ class VoiceChannelManager extends EventEmitter {
             const result = await bot.API.channel.view(channelId);
             return result;
         } catch (error) {
-            log.debug('channel not found', channelId);
+            logger.debug('channel not found', channelId);
         }
     };
 
@@ -98,7 +98,7 @@ class VoiceChannelManager extends EventEmitter {
             if (result.data.data.length === 0) return true;
             else return false;
         } catch (e) {
-            log.error('is channel empty error: ', e);
+            logger.error('is channel empty error: ', e);
             return false;
         }
     };

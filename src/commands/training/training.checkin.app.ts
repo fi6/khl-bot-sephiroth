@@ -1,6 +1,6 @@
 import { AppCommand, AppFunc, BaseSession, GuildSession } from 'kbotify';
 import configs from '../../configs';
-import { log } from '../../init/logger';
+import { logger } from '../../init/logger';
 import TrainingArena from '../../models/TrainingArena';
 import { queueManager } from './shared/training.queue-manager';
 
@@ -29,7 +29,7 @@ class TrainingCheckIn extends AppCommand {
                 { msgType: 1, temp: true }
             );
         } catch (error) {
-            log.debug('error when response', error);
+            logger.debug('error when response', error);
             return session.sendTemp(error.message);
         }
     };

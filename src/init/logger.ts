@@ -38,7 +38,7 @@ class ConsoleTransport extends winston.transports.Console {
     }
 }
 
-export const log = winston.createLogger({
+export const logger = winston.createLogger({
     level: 'debug',
     format: format.combine(
         format.timestamp(),

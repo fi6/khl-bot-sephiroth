@@ -4,7 +4,7 @@ import schedule, { scheduleJob } from 'node-schedule';
 import configs, { channels } from '../../../configs';
 import bot from '../../../init/bot_init';
 import { voiceChannelManager } from './arena.voice-manager';
-import { log } from '../../../init/logger';
+import { logger } from '../../../init/logger';
 
 interface Jobs {
     expireReminder?: schedule.Job;
@@ -20,14 +20,14 @@ class ExpireManager {
     getCurrent(arena: ArenaDoc, cancel = false): Jobs {
         const current = this.cache.get(arena.id) ?? {};
         if (cancel) {
-            log.info(
+            logger.info(
                 'cancelling current job',
                 arena.id,
                 arena.nickname,
                 arena.expireAt
             );
             if (current.expireReminder || current.expire) {
-                log.info('current job exists');
+                logger.info('current job exists');
             }
             current.expireReminder?.cancel();
             current.expire?.cancel();
@@ -39,22 +39,22 @@ class ExpireManager {
         const current = this.getCurrent(arena, true);
         const expireRemind = new Date(arena.expireAt.valueOf() - 15 * 6e4);
         current.expireReminder = scheduleJob(expireRemind, () => {
-            log.info('running expire reminder', arena);
+            logger.info('running expire reminder', arena);
             this.remind(arena.id);
         });
         current.expire = scheduleJob(
             new Date(arena.expireAt.valueOf() + 3e4),
             () => {
-                log.info('running expire', arena);
+                logger.info('running expire', arena);
                 try {
                     this.expire(arena.id, true);
                 } catch (error) {
-                    log.error(error);
+                    logger.error(error);
                 }
             }
         );
         this.cache.set(arena.id, current);
-        log.debug(
+        logger.debug(
             'new jobs set',
             arena.id,
             arena.nickname,
@@ -93,7 +93,7 @@ class ExpireManager {
         arena.expireAt = expire;
         arena.save();
         expireManager.setJobs(arena);
-        log.info('arena extended', minutes, arena);
+        logger.info('arena extended', minutes, arena);
     }
 
     async expire(arenaId: string, remind = false) {
@@ -115,7 +115,7 @@ class ExpireManager {
                 undefined,
                 arena.id
             );
-            log.info('arena voice channel not empty, expire += 1h', arena);
+            logger.info('arena voice channel not empty, expire += 1h', arena);
             return;
         }
         this.shutdown(arena, remind);

@@ -2,7 +2,7 @@ import { AppCommand, BaseSession, Card, GuildSession } from 'kbotify';
 import Arena, { ArenaDoc } from 'models/Arena';
 import configs, { roles } from '../../configs';
 import arenaConfig from '../../configs/arena';
-import { log } from '../../init/logger';
+import { logger } from '../../init/logger';
 import { TrainingArenaDoc } from '../../models/TrainingArena';
 import { trainingManage } from '../training/training.manage.app';
 import { arenaManageCard } from './card/arena.manage.card';
@@ -99,7 +99,7 @@ class ArenaManage extends AppCommand {
     };
 
     close = async (session: GuildSession, arena: ArenaDoc | undefined) => {
-        log.info('closing arena', arena);
+        logger.info('closing arena', arena);
         try {
             if (!arena) {
                 return session.updateMessageTemp(configs.arena.mainCardId, [

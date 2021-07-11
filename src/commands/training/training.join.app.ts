@@ -1,7 +1,7 @@
 import { AppCommand, AppFunc, BaseSession, Card, GuildSession } from 'kbotify';
 import TrainingArena, { TrainingArenaDoc } from 'models/TrainingArena';
 import configs from '../../configs';
-import { log } from '../../init/logger';
+import { logger } from '../../init/logger';
 import { queueManager } from './shared/training.queue-manager';
 
 class TrainingJoin extends AppCommand {
@@ -53,7 +53,7 @@ class TrainingJoin extends AppCommand {
         arena.markModified('queue');
         await arena.save();
         if (!arena.full && arena.nextCallableUser?._id == session.user.id) {
-            log.debug('arena not full, calling this user');
+            logger.debug('arena not full, calling this user');
             queueManager._callId(arena, session.user.id);
             this.client?.API.message.create(
                 9,
