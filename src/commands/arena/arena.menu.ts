@@ -1,5 +1,5 @@
 import { BaseSession, MenuCommand } from 'kbotify';
-import { arenaAlert } from './arena.alert.app';
+import { arenaBroadcast } from './arena.broadcast.app';
 import { arenaCreate } from './arena.create.app';
 import { arenaManage } from './arena.manage.app';
 import { arenaJoin } from './arena.join.app';
@@ -33,10 +33,10 @@ export const arenaMenu = new ArenaMenu(
     arenaCreate,
     arenaList,
     arenaManage,
-    arenaAlert,
     arenaJoin,
     arenaLeave,
-    arenaTitle
+    arenaTitle,
+    arenaBroadcast
 );
 
 function cardMenu() {

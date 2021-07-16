@@ -17,12 +17,15 @@ export interface ArenaDoc extends Document {
     invite: string;
     join: boolean;
     full: boolean;
+    public: boolean;
     _empty: boolean;
     _closed: boolean;
+    allowBroadcast: Date;
     member: {
         _id: string;
         nickname: string;
     }[];
+    header: string;
     updatedAt: Date;
     expired: boolean;
     memberCount: number;
@@ -33,9 +36,10 @@ export interface ArenaDoc extends Document {
         infoOnly?: boolean,
         showPassword?: boolean
     ) => unknown[];
+    toInfoString: () => string;
 }
 
-const ArenaSchema = new Schema<ArenaDoc, Model<ArenaDoc>, ArenaDoc>(
+const ArenaSchema = new Schema<ArenaDoc /*, Model<ArenaDoc>, ArenaDoc*/>(
     {
         _id: { type: String, required: true, alias: 'id' },
         nickname: { type: String, required: true, alias: 'userNick' },
@@ -46,11 +50,13 @@ const ArenaSchema = new Schema<ArenaDoc, Model<ArenaDoc>, ArenaDoc>(
         limit: { type: Number, required: true },
         createdAt: { type: Date, required: true },
         expireAt: { type: Date, required: true },
+        public: { type: Boolean, required: true, default: false },
         voice: { type: String, required: true },
         invite: { type: String, required: true },
         join: { type: Boolean, required: true, default: true },
         _empty: { type: Boolean, required: true },
         _closed: { type: Boolean, required: true },
+        allowBroadcast: { type: Date, required: true, default: Date.now },
         member: [
             {
                 _id: { type: String, required: true },
@@ -61,19 +67,19 @@ const ArenaSchema = new Schema<ArenaDoc, Model<ArenaDoc>, ArenaDoc>(
     { timestamps: { updatedAt: true } }
 );
 
-ArenaSchema.virtual('expired').get(function (this: any) {
-    return (this as any).expireAt < new Date();
+ArenaSchema.virtual('expired').get(function (this: ArenaDoc) {
+    return this.expireAt < new Date();
 });
 
-ArenaSchema.virtual('memberCount').get(function (this: any) {
-    return (this as any).member.length + 1;
+ArenaSchema.virtual('memberCount').get(function (this: ArenaDoc) {
+    return this.member.length + 1;
 });
 
 ArenaSchema.virtual('full').get(function (this: ArenaDoc) {
     return this.member.length >= this.limit - 1;
 });
 
-ArenaSchema.virtual('memberString').get(function (this: any) {
+ArenaSchema.virtual('memberString').get(function (this: ArenaDoc) {
     if (!this.member?.length) return;
     const nickList = this.member.map((member: { nickname: string }) => {
         return member.nickname;
@@ -82,6 +88,15 @@ ArenaSchema.virtual('memberString').get(function (this: any) {
         `(${this.memberCount}/${this.limit}) ` +
         nickList.join(', ') +
         ` 在房间中`
+    );
+});
+
+ArenaSchema.virtual('header').get(function (this: ArenaDoc) {
+    return (
+        (this.public ? '公开: ' : '') +
+        (this.title.includes(this.nickname)
+            ? this.title
+            : `${this.title} (By ${this.nickname})`)
     );
 });
 
@@ -101,7 +116,7 @@ ArenaSchema.method('checkMember', function (khlId: string) {
 
 ArenaSchema.method(
     'toInfoModule',
-    function (khlId?: string, infoOnly = false, showPassword = false) {
+    function (khlId?: string, infoOnly = false, showPassword?: boolean) {
         const memberString =
             this.memberString ?? '房间中还没有人。快来加入吧！';
         const buttonJoin = {
@@ -126,6 +141,7 @@ ArenaSchema.method(
         };
         let button;
         let arenaContent;
+        if (showPassword === undefined) showPassword = this.public;
         if ((khlId && this.checkMember(khlId)) || showPassword) {
             button = buttonLeave;
             arenaContent = `**房间号/密码**\n${this.code} ${this.password}`;
@@ -138,9 +154,7 @@ ArenaSchema.method(
                 type: 'header',
                 text: {
                     type: 'plain-text',
-                    content: this.title.includes(this.nickname)
-                        ? this.title
-                        : `${this.title} (By ${this.nickname})`,
+                    content: this.header,
                 },
             },
             {
@@ -178,5 +192,11 @@ ArenaSchema.method(
         ];
     }
 );
+
+ArenaSchema.method('toInfoString', function () {
+    return `${
+        this.header
+    }\n${this.code} ${this.public ? this.password : '***'} 人数：${this.memberCount}/${this.limit}`;
+});
 
 export default model<ArenaDoc>('Arena', ArenaSchema);

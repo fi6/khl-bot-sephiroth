@@ -56,6 +56,8 @@ class ArenaManage extends AppCommand {
         } else if (session.args[0] == 'kick') {
             this.kick(session, arena);
             return;
+        } else if (session.args[0] == 'public') {
+            this.public(session, arena);
         }
     };
 
@@ -150,6 +152,15 @@ class ArenaManage extends AppCommand {
             ),
             ...arenaManageCard(arena),
         ]);
+    };
+    public = async (session: GuildSession, arena: ArenaDoc) => {
+        if (session.args[1] == '1') arena.public = true;
+        else arena.public = false;
+        arena.save();
+        return session.updateMessageTemp(
+            configs.arena.mainCardId,
+            arenaManageCard(arena)
+        );
     };
 }
 

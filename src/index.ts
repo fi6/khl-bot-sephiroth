@@ -2,6 +2,7 @@ import bot from './init/bot_init';
 import db from './init/database_init';
 import { arenaCardJob } from './init/routine.init';
 import { logger } from './init/logger';
+import './init/socket-io';
 
 db.on('error', console.error.bind(console, 'connection error:'));
 

@@ -28,11 +28,9 @@ export interface TrainingArenaDoc extends ArenaDoc {
     nextCallableUser: QueueMember | undefined;
 }
 
-const TrainingArenaSchema = new Schema<
-    TrainingArenaDoc,
+const TrainingArenaSchema = new Schema<TrainingArenaDoc /*,
     Model<TrainingArenaDoc>,
-    TrainingArenaDoc
->({
+    TrainingArenaDoc*/>({
     start: { type: Boolean, required: true, default: false },
     endNumber: Number,
     avatar: String,

@@ -15,7 +15,7 @@ export function arenaManageCard(arena: ArenaDoc, coach = false) {
     const memberCard = new Card().setTheme('primary').addTitle('成员管理');
     if (!arena.member.length)
         memberCard.addText(
-            '暂时没有成员……未来会上线广播功能，可以将房间广播到其他群内。'
+            '暂时没有成员……你可以点击广播，ヒカリ将自动发送广播信息至各个微信、QQ群'
         );
     for (const item of arena.member) {
         memberCard.addModule({
@@ -57,7 +57,7 @@ export function arenaManageCard(arena: ArenaDoc, coach = false) {
                     text: {
                         type: 'kmarkdown',
                         content:
-                            '**房间已满时无法加入**，需要踢出玩家恢复空位。\n**房间未满但不希望别人加入**，可以手动暂停。\n当前人数：' +
+                            '**房间已满时无法加入**，需要踢出玩家恢复空位。你也可以手动暂停加入。\n当前人数：' +
                             `${arena.member.length + 1}/${arena.limit}`,
                     },
                 },
@@ -68,7 +68,7 @@ export function arenaManageCard(arena: ArenaDoc, coach = false) {
                     type: 'header',
                     text: {
                         type: 'plain-text',
-                        content: `${arena.nickname} 的房间 (${
+                        content: `${arena.header} (${
                             arena.join ? '允许加入中' : '已暂停加入'
                         }${arena.full ? ', 已满' : ''})`,
                     },
@@ -141,11 +141,35 @@ export function arenaManageCard(arena: ArenaDoc, coach = false) {
                         },
                     ],
                 },
-                ...(coach
-                    ? [
-                          {
-                              type: 'action-group',
-                              elements: [
+                {
+                    type: 'action-group',
+                    elements: [
+                        {
+                            type: 'button',
+                            theme: arena.public ? 'warning' : 'primary',
+                            value: `.房间 管理 public ${
+                                arena.public ? '0' : '1'
+                            }`,
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: arena.public
+                                    ? '取消公开密码'
+                                    : '公开密码',
+                            },
+                        },
+                        {
+                            type: 'button',
+                            theme: 'info',
+                            value: `.房间 广播`,
+                            click: 'return-val',
+                            text: {
+                                type: 'plain-text',
+                                content: '进行广播',
+                            },
+                        },
+                        ...(coach
+                            ? [
                                   {
                                       type: 'button',
                                       theme: 'primary',
@@ -156,10 +180,10 @@ export function arenaManageCard(arena: ArenaDoc, coach = false) {
                                           content: '创建教练房',
                                       },
                                   },
-                              ],
-                          },
-                      ]
-                    : []),
+                              ]
+                            : []),
+                    ],
+                },
             ],
         }),
         memberCard,

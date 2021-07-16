@@ -149,6 +149,7 @@ class ArenaCreate extends AppCommand {
             },
             {
                 upsert: true,
+                setDefaultsOnInsert: true,
                 new: true,
             }
         ).exec();

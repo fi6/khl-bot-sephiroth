@@ -1,14 +1,29 @@
 import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
+import { arenaListSocket } from '../commands/arena/socket/arena.list.socket';
+import { SocketCommandInterface } from '../commands/command.socket';
 import { logger } from './logger';
 
 const httpServer = createServer();
-const io = new Server(httpServer, {
-    // ...
+export const io = new Server(httpServer, {
+    path: '/',
 });
 
-io.on('connection', (socket: Socket) => {
-    logger.debug('new socket io connection established', socket);
+export let fiSocket: Socket;
+
+io.of('/arena').on('connection', (socket: Socket) => {
+    fiSocket = socket;
 });
 
-httpServer.listen(3000);
+function addCommand(...commands: SocketCommandInterface[]) {
+    commands.forEach((command) => {
+        io.of(command.namespace).on('connection', (socket: Socket) => {
+            logger.info('arena socket connected', socket);
+            socket.on(command.event, command.callback);
+        });
+    });
+}
+
+addCommand(arenaListSocket);
+
+httpServer.listen(31986);
