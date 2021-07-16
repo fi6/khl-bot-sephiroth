@@ -92,7 +92,7 @@ class ArenaAlert extends AppCommand {
     broadcast = (session: GuildSession, arena: ArenaDoc, comment: string) => {
         const text = `${
             arena.nickname
-        }的房间正在寻找玩家，房间信息⬇️\n${arena.toInfoString()}\n留言: ${comment}\n查看全部房间请发送'.找房'`;
+        }的房间正在寻找玩家，房间信息⬇️\n${arena.toInfoString()}\n留言: ${comment}\n查看全部房间请发送' .找房 '`;
         fiSocket.emit('arena:broadcast', text, (response: any) => {
             if (response.status == 'OK') {
                 session.sendTemp('广播成功，请等待其他玩家加入～');
