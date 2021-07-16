@@ -141,6 +141,7 @@ ArenaSchema.method(
         };
         let button;
         let arenaContent;
+        if (khlId === this._id) infoOnly = true;
         if (showPassword === undefined) showPassword = this.public;
         if ((khlId && this.checkMember(khlId)) || showPassword) {
             button = buttonLeave;
