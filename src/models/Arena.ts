@@ -145,15 +145,12 @@ ArenaSchema.method(
                 content: '退出',
             },
         };
-        let button;
         let arenaContent;
         if (khlId === this._id) infoOnly = true;
         if (showPassword === undefined) showPassword = this.public;
         if ((khlId && this.checkMember(khlId)) || showPassword) {
-            button = buttonLeave;
             arenaContent = `**房间号/密码**\n${this.code} ${this.password}`;
         } else {
-            button = buttonJoin;
             arenaContent = `**房间号/密码**\n${this.code} \*\*\*`;
         }
         return [
@@ -185,7 +182,11 @@ ArenaSchema.method(
                     ],
                 },
                 mode: 'right',
-                accessory: infoOnly ? {} : button,
+                accessory: infoOnly
+                    ? {}
+                    : khlId && this.checkMember(khlId)
+                    ? buttonLeave
+                    : buttonJoin,
             },
             {
                 type: 'context',
