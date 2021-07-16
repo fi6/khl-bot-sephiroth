@@ -85,7 +85,7 @@ ArenaSchema.virtual('memberString').get(function (this: ArenaDoc) {
         return member.nickname;
     });
     return (
-        `(${this.memberCount}/${this.limit}) ` +
+        `(${this.memberCount}${this.public ? '+' : ''}/${this.limit}) ` +
         nickList.join(', ') +
         ` 在房间中`
     );
@@ -117,7 +117,7 @@ ArenaSchema.method('checkMember', function (khlId: string) {
 ArenaSchema.method('toInfoString', function () {
     return `${
         this.header
-    }\n${this.code} ${this.public ? this.password : '***'} 人数：${this.memberCount}/${this.limit}`;
+    }\n${this.code} ${this.public ? this.password : '***'} 人数：${this.memberCount}${this.public ? '+' : ''}/${this.limit}`;
 });
 
 ArenaSchema.method(
