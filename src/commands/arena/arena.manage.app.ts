@@ -116,7 +116,7 @@ class ArenaManage extends AppCommand {
                 ),
             ]);
         } catch (e) {
-            console.error('Error when deleting arena', e, session);
+            logger.error('Error when deleting arena', e, session);
             // data.result_status = ArenaResultStatus.error;
             // data.result.details = e;
             return session.replyTemp(

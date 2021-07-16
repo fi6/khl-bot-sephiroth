@@ -119,7 +119,7 @@ class VoiceChannelManager extends EventEmitter {
                 channel_id: channelId,
             });
         } catch (e) {
-            console.error(e);
+            logger.error(e);
         }
         // bot.post('v3/channel-role/update', {
         //     channel_id: channelId,
@@ -137,7 +137,7 @@ class VoiceChannelManager extends EventEmitter {
         try {
             await bot.API.channelRole.create(channelId, 'user_id', userId);
         } catch (error) {
-            console.error(error);
+            logger.error(error);
         }
         // bot.API.channelRole.update(channelId, 'user_id', userId, owner ? 146900992 : 146833408, 0)
         bot.post('v3/channel-role/update', {

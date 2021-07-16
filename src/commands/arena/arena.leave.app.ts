@@ -26,7 +26,7 @@ class ArenaLeave extends AppCommand {
                 this.leave(a, session.userId);
             });
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             return session.sendTemp('出现未知错误');
         }
         let content = '已离开：\n';
@@ -34,7 +34,7 @@ class ArenaLeave extends AppCommand {
             content += `\`${a.title}\`\n`;
         }
         await updateArenaTitle();
-        
+
         const arenas = await arenaGetValid();
         return session.updateMessageTemp(configs.arena.mainCardId, [
             new Card().addText(content).setTheme('secondary'),

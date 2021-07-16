@@ -165,7 +165,7 @@ class ArenaCreate extends AppCommand {
         if (!arena || !arena._empty || arena._closed) return;
         if (!(await voiceChannelManager.isChannelEmpty(arena.voice))) return;
         logger.info('closing arena due to empty 10min', arena);
-        expireManager.expire(arena.id, false);
+        expireManager.shutdown(arena, false);
         session.mentionTemp(
             '房间中似乎没有人，自动关闭了……\n下次可以分享邀请小伙伴加入房间哦～'
         );

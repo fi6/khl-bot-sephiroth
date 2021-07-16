@@ -114,6 +114,12 @@ ArenaSchema.method('checkMember', function (khlId: string) {
     return false;
 });
 
+ArenaSchema.method('toInfoString', function () {
+    return `${
+        this.header
+    }\n${this.code} ${this.public ? this.password : '***'} 人数：${this.memberCount}/${this.limit}`;
+});
+
 ArenaSchema.method(
     'toInfoModule',
     function (khlId?: string, infoOnly = false, showPassword?: boolean) {
@@ -193,11 +199,5 @@ ArenaSchema.method(
         ];
     }
 );
-
-ArenaSchema.method('toInfoString', function () {
-    return `${
-        this.header
-    }\n${this.code} ${this.public ? this.password : '***'} 人数：${this.memberCount}/${this.limit}`;
-});
 
 export default model<ArenaDoc>('Arena', ArenaSchema);

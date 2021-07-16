@@ -84,6 +84,10 @@ TrainingArenaSchema.method('sortQueue', function () {
     });
 });
 
+TrainingArenaSchema.method('toInfoString', function () {
+    return `${this.nickname} 的教练房\n留言: ${this.remark}\n排队请前往斗天堂服务器`;
+});
+
 TrainingArenaSchema.method(
     'toInfoModule',
     function (khlId?: string, showPassword = false) {

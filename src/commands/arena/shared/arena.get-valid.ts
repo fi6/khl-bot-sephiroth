@@ -1,6 +1,7 @@
 import arenaConfig from 'configs/arena';
 // import Arena, { ArenaDoc } from 'models/Arena';
 import Arena, { ArenaDoc } from 'models/Arena';
+import { logger } from '../../../init/logger';
 
 export async function arenaGetValid(): Promise<ArenaDoc[]> {
     const arenaExpireTime = new Date(
@@ -23,7 +24,7 @@ export async function arenaGetValid(): Promise<ArenaDoc[]> {
         });
         return rawArenas;
     } catch (e) {
-        console.error('Error when trying to find arena', e);
+        logger.error('Error when trying to find arena', e);
         throw e;
     }
     // console.log(arenas)

@@ -1,4 +1,5 @@
 import { Card } from 'kbotify';
+import { logger } from '../../../init/logger';
 import { TrainingArenaDoc } from '../../../models/TrainingArena';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -7,7 +8,7 @@ export function trainingCallCard(arena: TrainingArenaDoc, userId: string) {
         return usr._id === userId;
     });
     if (!user) {
-        console.error(user, arena);
+        logger.error(user, arena);
         throw new Error('user not in arena');
     }
 
