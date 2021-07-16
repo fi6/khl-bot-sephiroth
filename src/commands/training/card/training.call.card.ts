@@ -8,7 +8,7 @@ export function trainingCallCard(arena: TrainingArenaDoc, userId: string) {
         return usr._id === userId;
     });
     if (!user) {
-        logger.error(user, arena);
+        logger.error('error training call card', user, arena);
         throw new Error('user not in arena');
     }
 
