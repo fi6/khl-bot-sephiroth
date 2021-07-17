@@ -17,7 +17,7 @@ const AnonArenaSchema = new Schema<ArenaDoc /*, Model<ArenaDoc>, ArenaDoc*/>(
 );
 
 AnonArenaSchema.method('toInfoString', function () {
-    return `${this.code} ${this.password} ${this.title}`;
+    return `临时：${this.code} ${this.password} ${this.title}`;
 });
 
 AnonArenaSchema.method('toInfoModule', function () {
@@ -26,7 +26,7 @@ AnonArenaSchema.method('toInfoModule', function () {
             type: 'section',
             text: {
                 type: 'kmarkdown',
-                content: '匿名房间',
+                content: '临时房间',
             },
         },
         {

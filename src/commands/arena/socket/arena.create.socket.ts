@@ -18,7 +18,7 @@ class ArenaCreateSocket implements SocketCommandInterface {
         }
         const arena = await this.create(id, ...args);
         fn(
-            `创建成功，有效期30分钟。其他人可以通过' .找房 '搜索到此房间。\n${arena.toInfoString()}\n语音、排队等功能请查看说明：https://b23.tv/MaohFT`
+            `创建成功，有效期30分钟。其他人可以通过' .找房 '搜索到此房间。\n${arena.toInfoString()}\n语音房等功能请查看说明：https://b23.tv/MaohFT`
         );
     };
     argsChecker(args?: string[]) {
