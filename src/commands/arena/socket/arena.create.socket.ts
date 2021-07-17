@@ -16,7 +16,7 @@ class ArenaCreateSocket implements SocketCommandInterface {
             fn(error.message);
             return;
         }
-        const arena = await this.create(id, args[0], args[1], args[2]);
+        const arena = await this.create(id, ...args);
         fn(
             `创建成功，有效期30分钟。其他人可以通过' .找房 '搜索到此房间。\n${arena.toInfoString()}\n语音、排队等功能请查看说明：https://b23.tv/MaohFT`
         );
@@ -35,9 +35,9 @@ class ArenaCreateSocket implements SocketCommandInterface {
             );
         if (!/\d/.test(args[2]))
             throw new Error(
-                `创建失败，房间信息中需包含人数，如\`裸连3人\`\n${args.join(
+                `创建失败……${args.join(
                     ' '
-                )}`
+                )}\n第三项中需要人数信息，例：5F23C 147 裸连3人萌新对打`
             );
         return;
     }
@@ -45,7 +45,7 @@ class ArenaCreateSocket implements SocketCommandInterface {
         id: string,
         code: string,
         password: string,
-        title: string
+        ...title: string[]
     ) => {
         const expire = new Date();
         expire.setMinutes(expire.getMinutes() + 30);
@@ -56,7 +56,7 @@ class ArenaCreateSocket implements SocketCommandInterface {
                 code: code.toUpperCase(),
                 password: password,
                 info: '',
-                title: title,
+                title: title.join(' '),
                 member: [],
                 createdAt: new Date(),
                 expireAt: expire,
