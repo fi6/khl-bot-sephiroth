@@ -41,12 +41,8 @@ class ArenaCreateSocket implements SocketCommandInterface {
             );
         return;
     }
-    create = async (
-        id: string,
-        code: string,
-        password: string,
-        ...title: string[]
-    ) => {
+    create = async (id: string, ...args: string[]) => {
+        const [code, password, ...title] = args;
         const expire = new Date();
         expire.setMinutes(expire.getMinutes() + 30);
         const arena = await AnonArena.findByIdAndUpdate(
