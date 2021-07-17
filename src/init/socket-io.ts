@@ -1,5 +1,6 @@
 import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
+import { arenaCreateSocket } from '../commands/arena/socket/arena.create.socket';
 import { arenaListSocket } from '../commands/arena/socket/arena.list.socket';
 import { SocketCommandInterface } from '../commands/command.socket';
 import { logger } from './logger';
@@ -25,5 +26,6 @@ function addCommand(...commands: SocketCommandInterface[]) {
 }
 
 addCommand(arenaListSocket);
+addCommand(arenaCreateSocket);
 
 httpServer.listen(31986);

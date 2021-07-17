@@ -192,7 +192,7 @@ ArenaSchema.method(
                 type: 'context',
                 elements: [
                     {
-                        type: 'plain-text',
+                        type: 'kmarkdown',
                         content: memberString,
                     },
                 ],
