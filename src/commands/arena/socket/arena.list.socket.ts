@@ -19,7 +19,7 @@ class ArenaListSocket implements SocketCommandInterface {
                 text += '\n';
                 text += arena.toInfoString();
             });
-            text += '\n星号密码需加入才能查看。\n发送 .帮助 以获取帮助。';
+            text += '\n非公开房间需加入查看密码。\n发送 .帮助 以获取帮助。';
             fn(text);
         }
     };

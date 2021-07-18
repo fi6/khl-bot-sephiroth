@@ -23,9 +23,7 @@ class ArenaAlert extends AppCommand {
         const arena = await Arena.findById(session.user.id).exec();
         let comment = '!';
         if (!arena)
-            return session.sendTemp(
-                '没有找到可广播的房间。请先发送`.建房`创建房间。'
-            );
+            return session.sendTemp('没有找到可广播的房间。请先创建房间。');
         if (arena.expired)
             return session.sendTemp('房间已过有效期，请先更新房间信息');
         // if (!isNotifyTime(new Date()))
