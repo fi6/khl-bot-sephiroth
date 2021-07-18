@@ -34,7 +34,9 @@ class ArenaAlert extends AppCommand {
         //     );
         if (!arena.public) {
             if (arena.public === undefined) arena.update({ public: false });
-            return session.mentionTemp('请先在房间管理中将房间密码设置为公开');
+            return session.updateMessageTemp(configs.arena.mainCardId, [
+                new Card().addText('请先在房间管理中将房间密码设置为公开'),
+            ]);
         }
         if (!fiSocket?.connected) {
             return session.updateMessageTemp(configs.arena.mainCardId, [
@@ -62,7 +64,8 @@ class ArenaAlert extends AppCommand {
                         '请在60秒内输入广播留言，如：`练习一八对策，求一八大佬`。\n广播功能每天限一次，请确保你的房间信息准确无误，记得使用文明用语（'
                     )
                     .addText('输入`取消`以取消广播')
-                    .addCountdown('second', new Date().valueOf() + 6e4),
+                    .addCountdown('second', new Date().valueOf() + 6e4)
+                    .setTheme('warning'),
             ]);
             const input = await session.awaitMessage(/.+/, 6e4);
             session.user.revokeRole(configs.roles.tempInput);
