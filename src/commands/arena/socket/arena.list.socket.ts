@@ -30,6 +30,8 @@ class ArenaListSocket implements SocketCommandInterface {
                 '如需使用帮助，请发送 .帮助',
                 '发送 .帮助以获取帮助',
                 '非公开房间需加入，请发送 .帮助',
+                '发送 .建房 可以创建房间',
+                '创建房间请发送 .建房',
             ];
             text += '\n' + tails[Math.floor(Math.random() * tails.length)];
             fn(text);
