@@ -162,7 +162,7 @@ class ArenaCreate extends AppCommand {
     }
     checkEmpty = async (session: BaseSession) => {
         const arena = await Arena.findById(session.user.id).exec();
-        if (!arena || !arena._empty || arena._closed) return;
+        if (!arena || !arena._empty || arena._closed || arena.public) return;
         if (!(await voiceChannelManager.isChannelEmpty(arena.voice))) return;
         logger.info('closing arena due to empty 10min', arena);
         expireManager.shutdown(arena, false);
