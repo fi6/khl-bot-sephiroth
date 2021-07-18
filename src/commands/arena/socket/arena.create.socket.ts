@@ -22,7 +22,12 @@ class ArenaCreateSocket implements SocketCommandInterface {
         );
     };
     argsChecker(args?: string[]) {
-        if (!args || args.length < 3) {
+        if (!args || !args.length) {
+            throw new Error(
+                '.建房 房间号 密码 房间信息\n语音房、广播等功能可查看https://b23.tv/MaohFT'
+            );
+        }
+        if (args.length < 3) {
             throw new Error(
                 `参数不符合要求……请输入房间号、密码、房间信息，并用空格分开。\n例：5F23C 147 裸连3人萌新对打`
             );
