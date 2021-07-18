@@ -1,14 +1,14 @@
-import { SocketCommandInterface } from '../../command.socket';
+import { SocketCommandInterface } from './command.socket';
 import { arenaGetValid } from '../shared/arena.get-valid';
 
 class ArenaListSocket implements SocketCommandInterface {
     namespace = '/arena';
     event = 'arena:list';
     callback = async (
-        id: string,
-        args: string[],
+        data: { id: string; args: string[] },
         fn: (response: string) => void
     ) => {
+        const [id, args] = [data.id, data.args];
         const arenas = await arenaGetValid();
         if (!arenas.length) {
             fn('当前没有房间，你可以进行创建。\n发送 .帮助 以获取帮助。');
@@ -30,14 +30,17 @@ class ArenaListSocket implements SocketCommandInterface {
             });
             const tails = [
                 '如需使用帮助，请发送 .帮助',
-                '发送 .帮助以获取帮助',
-                '非公开房间需加入，请发送 .帮助',
+                '发送 .帮助 以获取帮助',
+                '发送 .帮助 可以查看帮助',
                 '发送 .建房 可以创建房间',
                 '创建房间请发送 .建房',
             ];
             text +=
                 '\n' + star
-                    ? '如需查看星号密码请发送 .帮助'
+                    ? [
+                          '如需查看星号密码请发送 .帮助',
+                          '星号密码房间需加入，请发送 .帮助',
+                      ]
                     : tails[Math.floor(Math.random() * tails.length)];
             fn(text);
         }

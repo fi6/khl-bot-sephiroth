@@ -1,15 +1,15 @@
 import AnonArena from '../../../models/AnonArena';
-import { SocketCommandInterface } from '../../command.socket';
+import { SocketCommandInterface } from './command.socket';
 import { arenaGetValid } from '../shared/arena.get-valid';
 
 class ArenaCreateSocket implements SocketCommandInterface {
     namespace = '/arena';
     event = 'arena:create';
     callback = async (
-        id: string,
-        args: string[],
+        data: { id: string; args: string[] },
         fn: (response: string) => void
     ) => {
+        const [id, args] = [data.id, data.args];
         try {
             this.argsChecker(args);
         } catch (error) {

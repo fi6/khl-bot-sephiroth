@@ -2,7 +2,7 @@ import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import { arenaCreateSocket } from '../commands/arena/socket/arena.create.socket';
 import { arenaListSocket } from '../commands/arena/socket/arena.list.socket';
-import { SocketCommandInterface } from '../commands/command.socket';
+import { SocketCommandInterface } from '../commands/arena/socket/command.socket';
 import { logger } from './logger';
 
 const httpServer = createServer();
