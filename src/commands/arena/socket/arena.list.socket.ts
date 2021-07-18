@@ -22,9 +22,11 @@ class ArenaListSocket implements SocketCommandInterface {
                 '房间查询',
             ];
             let text = headers[Math.floor(Math.random() * headers.length)];
+            let star = false;
             arenas.forEach((arena) => {
                 text += '\n';
                 text += arena.toInfoString();
+                if (!arena.public) star = true;
             });
             const tails = [
                 '如需使用帮助，请发送 .帮助',
@@ -33,7 +35,10 @@ class ArenaListSocket implements SocketCommandInterface {
                 '发送 .建房 可以创建房间',
                 '创建房间请发送 .建房',
             ];
-            text += '\n' + tails[Math.floor(Math.random() * tails.length)];
+            text +=
+                '\n' + star
+                    ? '如需查看星号密码请发送 .帮助'
+                    : tails[Math.floor(Math.random() * tails.length)];
             fn(text);
         }
     };
