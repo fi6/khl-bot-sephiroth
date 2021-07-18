@@ -140,6 +140,13 @@ export function createSuccessCard(arena: ArenaDoc, helpFlag = false) {
                     content: `如需更改房间信息或关闭房间，请点击上方管理房间按钮。\n如果无人加入，房间将于10分钟后自动关闭。`,
                 },
             },
+            {
+                type: 'section',
+                text: {
+                    type: 'kmarkdown',
+                    content: `你可以点击房间管理-广播，将房间信息推送至各大QQ/微信群。`,
+                },
+            },
         ],
     });
     const card2 = new Card({

@@ -117,7 +117,7 @@ ArenaSchema.method('checkMember', function (khlId: string) {
 ArenaSchema.method('toInfoString', function () {
     return `${
         this.header
-    }\n${this.code} ${this.public ? this.password : '***'} 人数：${this.memberCount}${this.public ? '+' : ''}/${this.limit}`;
+    }\n${this.code} ${this.public ? this.password : '***'} ${this.info} 当前人数${this.memberCount}${this.public ? '+' : ''}`;
 });
 
 ArenaSchema.method(
