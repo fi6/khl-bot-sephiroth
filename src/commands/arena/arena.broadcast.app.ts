@@ -59,7 +59,7 @@ class ArenaAlert extends AppCommand {
             await session.updateMessageTemp(configs.arena.mainCardId, [
                 new Card()
                     .addText(
-                        '请在60秒内输入广播留言，如：`练习一八对策，求一八大佬`。\n广播功能每天限一次，请确保你的房间信息准确无误，记得使用文明用语（'
+                        '请在60秒内输入广播留言，如：`练习一八对策，求一八大佬`，广播功能每天限一次。\n**请确保你的房间信息准确无误，务必使用文明用语，封号了谁都没得用！！！！**'
                     )
                     .addText('输入`取消`以取消广播')
                     .addCountdown('second', new Date().valueOf() + 6e4)
