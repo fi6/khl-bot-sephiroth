@@ -35,13 +35,13 @@ class ArenaListSocket implements SocketCommandInterface {
                 '发送 .建房 可以创建房间',
                 '创建房间请发送 .建房',
             ];
-            text +=
-                '\n' + star
-                    ? this.sample([
-                          '如需查看星号密码请发送 .帮助',
-                          '星号密码房间需加入，请发送 .帮助',
-                      ])
-                    : this.sample(tails);
+            text += '\n';
+            text += star
+                ? this.sample([
+                      '如需查看星号密码请发送 .帮助',
+                      '星号密码房间需加入，请发送 .帮助',
+                  ])
+                : this.sample(tails);
             fn(text);
         }
     };
