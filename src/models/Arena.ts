@@ -117,7 +117,7 @@ ArenaSchema.method('checkMember', function (khlId: string) {
 ArenaSchema.method('toInfoString', function () {
     return `${
         this.title
-    }: ${this.code} ${this.public ? this.password : '***'} ${this.memberCount}${this.public ? '+' : ''}/${this.info}${this.title.includes(this.nickname) ? '' : ` (${this.nickname})`}`;
+    }${this.title.includes(this.nickname) ? '' : `(${this.nickname})`}: ${this.code} ${this.public ? this.password : '***'} ${this.memberCount}${this.public ? '+' : ''}/${this.info}`;
 });
 
 ArenaSchema.method(

@@ -21,7 +21,7 @@ class ArenaListSocket implements SocketCommandInterface {
                 '找房功能',
                 '房间查询',
             ];
-            let text = headers[Math.floor(Math.random() * headers.length)];
+            let text = this.sample(headers);
             let star = false;
             arenas.forEach((arena) => {
                 text += '\n';
@@ -37,13 +37,16 @@ class ArenaListSocket implements SocketCommandInterface {
             ];
             text +=
                 '\n' + star
-                    ? [
+                    ? this.sample([
                           '如需查看星号密码请发送 .帮助',
                           '星号密码房间需加入，请发送 .帮助',
-                      ]
-                    : tails[Math.floor(Math.random() * tails.length)];
+                      ])
+                    : this.sample(tails);
             fn(text);
         }
+    };
+    sample = (list: Array<string>) => {
+        return list[Math.floor(Math.random() * list.length)];
     };
 }
 
