@@ -12,8 +12,8 @@ import { logger } from './logger';
 import configs from '../configs';
 
 const bot = new KBotify({
-    mode: 'websocket',
-    // mode: 'webhook',
+    // mode: 'websocket',
+    mode: 'webhook',
     token: auth.khltoken,
     port: auth.khlport,
     verifyToken: auth.khlverify,
@@ -44,22 +44,10 @@ bot.execute = async (
     args: string[],
     msg: any | TextMessage
 ) => {
-    // const channelList = ['4873200132116685', '3072169336937497'];
-    // if (!channelList.includes(msg.channelId)) {
-    //     bot.API.message.create(
-    //         1,
-    //         msg.channelId,
-    //         'bot当前仅在闲聊频道使用，仅内测用户可用',
-    //         msg.msgId
-    //     );
-    //     return;
-    // }
     const input: [string, string[], TextMessage] = [command, args, msg];
     logger.debug(input);
-    const cloudReg = /克劳德/;
     const regex = /^[\u4e00-\u9fa5]/;
     const cmd = bot.commandMap.get(command);
-    // console.debug(bot.commandMap);
     if (cmd) return cmd.exec(createSession(cmd, args, msg));
 
     if (
