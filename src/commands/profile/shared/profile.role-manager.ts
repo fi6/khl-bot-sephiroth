@@ -1,7 +1,7 @@
 import Holidays from 'date-holidays';
 import Profile, { ProfileDoc } from '../../../models/Profile';
 import { DateTime } from 'luxon';
-import bot from '../../../init/bot_init';
+import bot from '../../../init/client';
 import { isNotifyTime } from '../../../utils/notif-time';
 import { logger } from '../../../init/logger';
 

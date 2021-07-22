@@ -1,7 +1,4 @@
 import { arenaCreate } from '../commands/arena/arena.create.app';
-// import { arenaDelete } from 'commands/arena/arena.delete.app';
-// import { arenaList } from 'commands/arena/arena.list.app';
-// import { arenaMenu } from 'commands/arena/arena.menu';
 import auth from 'configs/auth';
 import { createSession, KBotify } from 'kbotify';
 
@@ -15,8 +12,8 @@ import { logger } from './logger';
 import configs from '../configs';
 
 const bot = new KBotify({
-    // mode: 'websocket',
-    mode: 'webhook',
+    mode: 'websocket',
+    // mode: 'webhook',
     token: auth.khltoken,
     port: auth.khlport,
     verifyToken: auth.khlverify,

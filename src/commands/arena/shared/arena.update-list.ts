@@ -1,7 +1,7 @@
 import { Card } from 'kbotify/dist/core/card';
 import { channels } from '../../../configs';
 import arenaConfig from '../../../configs/arena';
-import bot from '../../../init/bot_init';
+import bot from '../../../init/client';
 import { ArenaDoc } from '../../../models/Arena';
 import { formatTime } from '../../../utils/format-time';
 import { infoModules } from '../card/arena.info.section';

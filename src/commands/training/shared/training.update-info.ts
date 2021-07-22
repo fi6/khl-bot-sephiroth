@@ -1,5 +1,5 @@
 import { channels } from '../../../configs';
-import bot from '../../../init/bot_init';
+import bot from '../../../init/client';
 import { TrainingArenaDoc } from '../../../models/TrainingArena';
 import { trainingInfoCard } from '../card/training.info.card';
 

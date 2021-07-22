@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import { Channel, GuildSession, KBotify } from 'kbotify';
 import configs, { channels, roles } from '../../../configs';
-import bot from '../../../init/bot_init';
+import bot from '../../../init/client';
 import { logger } from '../../../init/logger';
 import Arena, { ArenaDoc } from '../../../models/Arena';
 

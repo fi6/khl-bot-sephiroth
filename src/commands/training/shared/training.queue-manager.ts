@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 import LRUCache from 'lru-cache';
 import { Card, CardObject, KBotify } from 'kbotify';
 import configs from '../../../configs';
-import bot from '../../../init/bot_init';
+import bot from '../../../init/client';
 import TrainingArena, { TrainingArenaDoc } from '../../../models/TrainingArena';
 
 import { trainingCallCard } from '../card/training.call.card';

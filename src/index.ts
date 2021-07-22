@@ -1,4 +1,4 @@
-import bot from './init/bot_init';
+import bot from './init/client';
 import db from './init/database_init';
 import { arenaCardJob } from './init/routine.init';
 import { logger } from './init/logger';

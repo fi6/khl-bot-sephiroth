@@ -2,7 +2,7 @@ import LRUCache from 'lru-cache';
 import Arena, { ArenaDoc } from '../../../models/Arena';
 import schedule, { scheduleJob } from 'node-schedule';
 import configs, { channels } from '../../../configs';
-import bot from '../../../init/bot_init';
+import bot from '../../../init/client';
 import { voiceChannelManager } from './arena.voice-manager';
 import { logger } from '../../../init/logger';
 
