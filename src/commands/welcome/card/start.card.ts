@@ -28,6 +28,16 @@ export function startCard() {
                     content: `参与DioTV活动请点击紫色字->(chn)1104525558162107(chn)`,
                 },
             },
+            {
+                type: 'context',
+                elements: [
+                    {
+                        type: 'plain-text',
+                        content:
+                            '如果无法点击，请尝试使用电脑网页版/手机App，或点击左上角并进入活动报名频道',
+                    },
+                ],
+            },
         ],
     });
 }
