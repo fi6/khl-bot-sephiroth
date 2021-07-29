@@ -5,4 +5,5 @@ export default {
     arenaBot: '8296996055347735',
     voiceCategory: '3908139649107418',
     coach: '3598331589162189',
+    dioEvent: '4409038681518383',
 };

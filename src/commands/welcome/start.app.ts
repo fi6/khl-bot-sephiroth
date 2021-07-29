@@ -6,7 +6,7 @@ import { startCard } from './card/start.card';
 import { termCard } from './card/terms.card';
 
 class WelcomeStartApp extends AppCommand {
-    trigger: string = '开始';
+    trigger = '开始';
     func: AppFunc<BaseSession> = async (session) => {
         if (!session.args.length) return;
         switch (session.args[0]) {
@@ -22,7 +22,7 @@ class WelcomeStartApp extends AppCommand {
                     '1843044184972950'
                 );
                 if (result.roles.includes(15186))
-                    return session.sendCardTemp(parseCard(startCard()));
+                    return session.sendCardTemp(startCard());
                 else
                     return session.mentionTemp(
                         `授予角色失败了……如果你已经完成了手机认证，请在 (chn)${channels.feedback}(chn) 反馈问题。`

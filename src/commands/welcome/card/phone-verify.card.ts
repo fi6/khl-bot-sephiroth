@@ -15,8 +15,7 @@ export function verifyCard() {
                 type: 'section',
                 text: {
                     type: 'kmarkdown',
-                    content:
-                        '欢迎加入斗天堂服务器！',
+                    content: '欢迎加入斗天堂服务器！',
                 },
             },
             {
@@ -24,7 +23,7 @@ export function verifyCard() {
                 text: {
                     type: 'kmarkdown',
                     content:
-                        '**请完成手机认证**，然后点击按钮继续。非手机认证的账户为临时账户，无法发言，也无法使用房间功能。',
+                        '**请完成手机认证**，然后点击按钮继续。非手机认证的账户为临时账户，无法发言，也无法使用房间功能、参与活动等。',
                 },
             },
             {

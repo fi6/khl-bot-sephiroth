@@ -1,6 +1,5 @@
 import bunyan from 'bunyan';
 import fs from 'fs';
-import { DateTime } from 'luxon';
 import path from 'path';
 import winston, { format } from 'winston';
 import { getNow } from '../utils/format-time';

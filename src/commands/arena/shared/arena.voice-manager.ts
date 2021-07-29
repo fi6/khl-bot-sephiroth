@@ -164,13 +164,7 @@ class VoiceChannelManager extends EventEmitter {
         } catch (error) {
             console.error(error);
         }
-        bot.post('v3/channel-role/update', {
-            channel_id: channelId,
-            value: value,
-            type: type,
-            allow: allow,
-            deny: deny,
-        });
+        bot.API.channelRole.update(channelId, type, value, allow, deny);
     };
 }
 

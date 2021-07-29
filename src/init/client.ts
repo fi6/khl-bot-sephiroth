@@ -10,6 +10,7 @@ import { TextMessage } from 'kbotify/dist/core/message';
 import { trainingMenu } from '../commands/training/training.menu';
 import { logger } from './logger';
 import configs from '../configs';
+import { eventMenu } from '../commands/event/event.menu';
 
 const bot = new KBotify({
     // mode: 'websocket',
@@ -24,7 +25,7 @@ const bot = new KBotify({
 
 bot.connect();
 
-bot.addCommands(arenaMenu, utilApp, welcomeEntry, trainingMenu);
+bot.addCommands(arenaMenu, utilApp, welcomeEntry, trainingMenu, eventMenu);
 bot.addAlias(arenaCreate, '建房');
 // bot.addAlias(arenaList, '找房');
 // bot.addAlias(arenaDelete, '关房');

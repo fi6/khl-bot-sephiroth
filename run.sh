@@ -1,6 +1,7 @@
 #!/bin/bash
 NOW=$(date +"%H-%M-%S")
 DATE=$(date +"%Y-%m-%d")
+DIR=$(pwd)
 
 PID=$(cat run.pid)
 PID_EXIST=$(ps aux | awk '{print $2}'| grep -w $PID)
@@ -14,7 +15,7 @@ fi
 
 mkdir -p logs
 cat /dev/null > logs/latest.log
-nohup node --nolazy -r ts-node/register -r tsconfig-paths/register src/index.ts &> logs/latest.log & echo $! > run.pid
+nohup node --nolazy -r ts-node/register -r tsconfig-paths/register $DIR/src/index.ts &> logs/latest.log & echo $! > run.pid
 echo "run at pid $(cat run.pid)"
 
 # tail -vf -n 30 logs/latest.log
