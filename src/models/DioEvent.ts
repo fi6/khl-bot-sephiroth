@@ -10,6 +10,7 @@ export interface DioEventMember {
     fighter: string;
     register: Date;
     number: number;
+    msgId: string;
 }
 
 export interface DioEventDoc extends Document {
@@ -39,6 +40,7 @@ const DioEventSchema =
                 fighter: String,
                 register: Date,
                 number: Number,
+                msgId: String,
             },
         ],
     });

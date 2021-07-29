@@ -35,16 +35,7 @@ class EventRegister extends AppCommand {
             const hours = /\d+/.exec(lines[0]);
             if (!hours) throw new Error('未找到对战时长……请重试');
             const memberNumber = event.lastNumber + 1;
-            await event.addMember({
-                _id: session.user.id,
-                nickname: session.user.nickname,
-                time: parseInt(hours[0]),
-                fighter: lines[1],
-                reason: lines[2],
-                number: memberNumber,
-                register: new Date(),
-            });
-            this.client?.API.message.create(
+            const sent = await this.client?.API.message.create(
                 10,
                 configs.channels.dioEvent,
                 new Card()
@@ -53,6 +44,25 @@ class EventRegister extends AppCommand {
                     .addText(input.content)
                     .toString()
             );
+            await event.addMember({
+                _id: session.user.id,
+                nickname: session.user.nickname,
+                time: parseInt(hours[0]),
+                fighter: lines[1],
+                reason: lines[2],
+                number: memberNumber,
+                register: new Date(),
+                msgId: sent!.msgId,
+            });
+            // const sent = await this.client?.API.message.create(
+            //     10,
+            //     configs.channels.dioEvent,
+            //     new Card()
+            //         .addText(`(met)${session.user.id}(met) 的报名`)
+            //         .addDivider()
+            //         .addText(input.content)
+            //         .toString()
+            // );
             await session.user.grantRole(323723);
             session.sendTemp(
                 '报名成功！已为你添加活动相关频道，请查看左侧频道列表（手机点击左上角）。\n活动前我们会在本频道公示选中的小伙伴，本次预计10人左右。'
