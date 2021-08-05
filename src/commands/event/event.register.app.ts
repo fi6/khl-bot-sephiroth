@@ -67,7 +67,7 @@ class EventRegister extends AppCommand {
             await session.user.grantRole(323723);
             session.sendCardTemp(
                 new Card().addText(
-                    '报名成功！已为你添加活动相关频道，请查看左侧频道列表（手机点击左上角）。\n活动前我们会在本频道公示选中的小伙伴，本次预计10人左右。'
+                    '报名成功！已为你添加活动相关频道，请查看左侧频道列表（手机点击左上角）。\n活动前我们会在本频道公示选中的小伙伴，本次预计5人左右。'
                 )
             );
         } catch (error) {
