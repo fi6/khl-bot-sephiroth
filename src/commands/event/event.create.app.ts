@@ -25,7 +25,7 @@ class EventCreate extends AppCommand {
                         text: {
                             type: 'kmarkdown',
                             content:
-                                '角色表演赛即将于本周五晚9点开始！[DioTV直播间地址](https://live.bilibili.com/9900640)\n在表演赛结束后，本期嘉宾 **奶丝BestNaisi** 将会和大家进行简短的切磋交流。',
+                                '角色表演赛即将于本周五晚9点开始！[DioTV直播间地址](https://live.bilibili.com/9900640)\n在表演赛结束后，本期嘉宾 **大雄猫PandasMQ** 将会和大家进行简短的切磋交流。',
                         },
                     },
                     {
@@ -45,7 +45,7 @@ class EventCreate extends AppCommand {
                             {
                                 type: 'button',
                                 theme: 'success',
-                                value: '.活动 报名 dio-show-ness',
+                                value: '.活动 报名 dio-show-inkling',
                                 click: 'return-val',
                                 text: {
                                     type: 'plain-text',
@@ -58,8 +58,8 @@ class EventCreate extends AppCommand {
             }).toString()
         );
         const event = await DioEvent.create({
-            code: 'dio-show-ness',
-            title: 'DioTV 表演赛 奈斯',
+            code: 'dio-show-inkling',
+            title: 'DioTV 表演赛 墨灵',
             members: [],
         });
         logger.info('event created', event);
