@@ -8,6 +8,7 @@ export interface DioEventMember {
     reason: string;
     time: number;
     fighter: string;
+    network: string;
     register: Date;
     number: number;
     msgId: string;
@@ -38,6 +39,7 @@ const DioEventSchema =
                 reason: String,
                 time: Number,
                 fighter: String,
+                network: String,
                 register: Date,
                 number: Number,
                 msgId: String,

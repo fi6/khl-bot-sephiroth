@@ -30,7 +30,7 @@ class EventRegister extends AppCommand {
             if (!input?.content) throw new Error('未收到输入，请重试');
             input.delete();
             const lines = input.content.split(/\r?\n/);
-            if (lines.length !== 3) throw new Error('格式似乎不对……请重试');
+            if (lines.length !== 4) throw new Error('格式似乎不对……请重试');
 
             const hours = /\d+/.exec(lines[0]);
             if (!hours) throw new Error('未找到对战时长……请重试');
@@ -50,6 +50,7 @@ class EventRegister extends AppCommand {
                 time: parseInt(hours[0]),
                 fighter: lines[1],
                 reason: lines[2],
+                network: lines[3],
                 number: memberNumber,
                 register: new Date(),
                 msgId: sent!.msgId,
@@ -64,8 +65,10 @@ class EventRegister extends AppCommand {
             //         .toString()
             // );
             await session.user.grantRole(323723);
-            session.sendTemp(
-                '报名成功！已为你添加活动相关频道，请查看左侧频道列表（手机点击左上角）。\n活动前我们会在本频道公示选中的小伙伴，本次预计10人左右。'
+            session.sendCardTemp(
+                new Card().addText(
+                    '报名成功！已为你添加活动相关频道，请查看左侧频道列表（手机点击左上角）。\n活动前我们会在本频道公示选中的小伙伴，本次预计10人左右。'
+                )
             );
         } catch (error) {
             session.sendCardTemp(
