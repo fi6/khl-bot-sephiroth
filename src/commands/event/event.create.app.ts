@@ -25,7 +25,7 @@ class EventCreate extends AppCommand {
                         text: {
                             type: 'kmarkdown',
                             content:
-                                '角色表演赛即将于本周五晚9点开始！[DioTV直播间地址](https://live.bilibili.com/9900640)\n在表演赛结束后(约10点30），本期嘉宾 **Unicorner** 将会和大家进行简短的切磋交流。',
+                                '角色表演赛即将于本周五晚9点开始！[DioTV直播间地址](https://live.bilibili.com/9900640)\n在表演赛结束后(约10点30），本期嘉宾 **Boo☆XZQ** 将会和大家进行简短的切磋交流。',
                         },
                     },
                     {
