@@ -17,18 +17,19 @@ export interface ProfileDoc extends Document {
     ggUser: ggUser;
 }
 
-const ProfileSchema = new Schema<ProfileDoc, Model<ProfileDoc>, ProfileDoc>({
-    _id: { type: String, required: true },
-    nickname: { type: String, required: true },
-    ggUser: {
-        slug: { type: String, required: true },
-        playerId: { type: String, required: true },
-        userId: { type: String, required: true },
-        prefix: String,
-        name: String,
-        onSetId: String,
-        temp: { type: String, required: true },
-    },
-});
+const ProfileSchema =
+    new Schema<ProfileDoc /*, Model<ProfileDoc>, ProfileDoc*/>({
+        _id: { type: String, required: true },
+        nickname: { type: String, required: true },
+        ggUser: {
+            slug: { type: String, required: true },
+            playerId: { type: String, required: true },
+            userId: { type: String, required: true },
+            prefix: String,
+            name: String,
+            onSetId: String,
+            temp: { type: String, required: true },
+        },
+    });
 
 export default model<ProfileDoc>('Profile', ProfileSchema);

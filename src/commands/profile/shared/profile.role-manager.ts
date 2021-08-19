@@ -15,7 +15,7 @@ export const roleManager = async (time: Date, profiles?: ProfileDoc[]) => {
         profiles = await Profile.find({ notif: 1 });
     }
     const khlIds = profiles.map((profile) => {
-        return profile.kid;
+        return profile.id;
     });
     // no profile given update all
     if (isNotifyTime(time)) {

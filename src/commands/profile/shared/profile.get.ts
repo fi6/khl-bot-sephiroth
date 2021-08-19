@@ -9,13 +9,13 @@ export async function profileGetorCreate(
         { upsert: true }
     ).exec();
     if (!profile) {
-        profile = await Profile.create(
+        profile = (await Profile.findOneAndUpdate(
             {
                 khlId: session.userId,
                 nickname: session.user.username,
             },
-            { new: true }
-        );
+            { upsert: true, new: true }
+        ).exec()) as ProfileDoc;
     }
     // if (!profile) throw new Error('profile not found!');
     return profile;
