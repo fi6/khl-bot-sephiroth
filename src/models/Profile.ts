@@ -1,22 +1,34 @@
-import mongoose from 'mongoose';
-import { createSchema, ExtractDoc, Type, typedModel } from 'ts-mongoose';
+import { Document, model, Model, Schema } from 'mongoose';
 
-const ProfileSchema = createSchema({
-    _id: Type.string({ required: true, default: mongoose.Types.ObjectId() }),
-    kid: Type.string({
-        required: true,
-        index: true,
-        unique: true,
-    }),
-    nickname: Type.string(), // khl nickname in author
-    smashMain: Type.array().of(Type.number()),
-    fc: Type.string(),
-    network: Type.array().of(Type.string()),
-    notif: Type.number(),
-    region: Type.array().of(Type.number()),
-    alertUsedAt: Type.date({ default: new Date(0) }),
+export interface ggUser {
+    slug: string;
+    playerId: string;
+    userId: string;
+    prefix?: string;
+    name?: string;
+    onSetId?: string;
+    temp: boolean;
+}
+
+export interface ProfileDoc extends Document {
+    id: string; // this is actually khl id
+    _id: string;
+    nickname: string;
+    ggUser: ggUser;
+}
+
+const ProfileSchema = new Schema<ProfileDoc, Model<ProfileDoc>, ProfileDoc>({
+    _id: { type: String, required: true },
+    nickname: { type: String, required: true },
+    ggUser: {
+        slug: { type: String, required: true },
+        playerId: { type: String, required: true },
+        userId: { type: String, required: true },
+        prefix: String,
+        name: String,
+        onSetId: String,
+        temp: { type: String, required: true },
+    },
 });
 
-export type ProfileDoc = ExtractDoc<typeof ProfileSchema>;
-
-export default typedModel('Profile', ProfileSchema);
+export default model<ProfileDoc>('Profile', ProfileSchema);
