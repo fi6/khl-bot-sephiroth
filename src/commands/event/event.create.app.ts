@@ -45,7 +45,7 @@ class EventCreate extends AppCommand {
                             {
                                 type: 'button',
                                 theme: 'success',
-                                value: '.活动 报名 dio-show-inkling',
+                                value: '.活动 报名 dio-show-bayonetta',
                                 click: 'return-val',
                                 text: {
                                     type: 'plain-text',
