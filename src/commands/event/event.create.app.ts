@@ -5,6 +5,7 @@ import DioEvent from '../../models/DioEvent';
 class EventCreate extends AppCommand {
     trigger = 'create';
     func: AppFunc<BaseSession> = async (s) => {
+        const code = 'dio-show-bayonetta';
         const session = await GuildSession.fromSession(s, true);
         session.updateMessage(
             '8acc245e-d7ab-4d15-b49b-cbf3717462f7',
@@ -45,7 +46,7 @@ class EventCreate extends AppCommand {
                             {
                                 type: 'button',
                                 theme: 'success',
-                                value: '.活动 报名 dio-show-bayonetta',
+                                value: `.活动 报名 ${code}`,
                                 click: 'return-val',
                                 text: {
                                     type: 'plain-text',
@@ -58,7 +59,7 @@ class EventCreate extends AppCommand {
             }).toString()
         );
         const event = await DioEvent.create({
-            code: 'dio-show-bayonetta',
+            code: code,
             title: 'DioTV 表演赛 BAYONETTA',
             members: [],
         });
