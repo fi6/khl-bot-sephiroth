@@ -65,15 +65,15 @@ class ArenaJoin extends AppCommand {
         this.remindHost(session, arena, arena.full);
 
         updateArenaTitle();
-        session._send(
-            // eslint-disable-next-line no-useless-escape
-            `\[${arena.title}\]${arena.invite}\n点击下方按钮加入语音房间`,
-            undefined,
-            {
-                msgType: 1,
-                temp: true,
-            }
-        );
+        // session._send(
+        //     // eslint-disable-next-line no-useless-escape
+        //     `\[${arena.title}\]${arena.invite}\n点击下方按钮加入语音房间`,
+        //     undefined,
+        //     {
+        //         msgType: 1,
+        //         temp: true,
+        //     }
+        // );
         return await session.updateMessageTemp(configs.arena.mainCardId, [
             new Card()
                 .addTitle('加入房间')
@@ -96,7 +96,8 @@ class ArenaJoin extends AppCommand {
                         },
                     }
                 )
-                .addText('**请尽量加入语音，有交流的对战会更有趣哦！**'),
+                .addText('**请尽量加入语音，有交流的对战会更有趣哦！**')
+                .addModule({ type: 'invite', code: arena.invite } as any),
         ]);
     };
 
